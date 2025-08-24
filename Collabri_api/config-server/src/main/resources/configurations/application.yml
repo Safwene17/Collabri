@@ -1,0 +1,13 @@
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+jwt:
+  secret: "177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32"
+  access-token-expiration-ms: 900000     # 15 minutes
+  refresh-token-expiration-ms: 1209600000 # 14 days

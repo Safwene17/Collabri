@@ -1,0 +1,40 @@
+services:
+  postgres:
+    container_name: collabri_pg_sql
+    image: postgres
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: safwene17
+        PG_DATA: /var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - collabri-net
+    restart:
+        unless-stopped
+
+  pgadmin:
+    container_name: collabri_pg_admin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmib.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-pgadmin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      -   pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:80
+    networks:
+      - collabri-net
+    restart: unless-stopped
+
+
+networks:
+  collabri-net:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
