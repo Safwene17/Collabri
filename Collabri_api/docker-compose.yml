@@ -12,8 +12,9 @@ services:
       - 5432:5432
     networks:
       - collabri-net
-    restart:
-        unless-stopped
+    restart: unless-stopped
+
+
 
   pgadmin:
     container_name: collabri_pg_admin

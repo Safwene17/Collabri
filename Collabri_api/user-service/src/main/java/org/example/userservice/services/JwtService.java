@@ -63,6 +63,16 @@ public class JwtService {
                 .compact();
     }
 
+    public int getAccessTokenExpirationSeconds() {
+        long seconds = accessTokenExpirationMs / 1000L;
+        return (int) Math.min(seconds, Integer.MAX_VALUE);
+    }
+
+    public int getRefreshTokenExpirationSeconds() {
+        long seconds = refreshTokenExpirationMs / 1000L;
+        return (int) Math.min(seconds, Integer.MAX_VALUE);
+    }
+
     // extract username
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

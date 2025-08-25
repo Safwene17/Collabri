@@ -19,18 +19,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter jwtAuthFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthFilter jwtAuthFilter,
+            OAuth2AuthenticationSuccessHandler successHandler
+    ) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/v1/users/register",
-                        "/api/v1/users/login"
-                        ).permitAll()
+                        "/api/v1/users/login",
+                        "/oauth2/**",                // allow oauth endpoints
+                        "/login/**",
+                        "/error"
+                ).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/tasks/**").hasAnyRole("USER","ADMIN")
                 .anyRequest().authenticated()
             )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(successHandler))
+
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
