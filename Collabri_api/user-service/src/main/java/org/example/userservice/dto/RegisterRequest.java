@@ -10,9 +10,7 @@ public record RegisterRequest(
             @NotNull(message = "Email cannot be null")
          String email,
             @NotNull(message = "Password cannot be null")
-         String password,
-         @NotNull()
-         String phoneNumber
+         String password
 
 ) {}
 

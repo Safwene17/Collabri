@@ -1,15 +1,16 @@
 package org.example.userservice.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.entities.User;
 import org.example.userservice.enums.Role;
 import org.example.userservice.repositories.UserRepository;
 import org.example.userservice.services.JwtService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -18,11 +19,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
@@ -39,69 +41,106 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${security.cookies.http-only:true}")
     private boolean cookieHttpOnly;
 
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
 
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
-        String email = extractEmail(oauthUser.getAttributes());
-        String firstname = (String) oauthUser.getAttributes().getOrDefault("given_name",
-                oauthUser.getAttributes().getOrDefault("name", "unknown"));
+        try {
+//            String email = extractEmail(oauthUser);
+            String email = safeString(oauthUser.getAttributes().get("email"));
+            String givenName = safeString(oauthUser.getAttributes().get("given_name"));
+            String familyName = safeString(oauthUser.getAttributes().get("family_name"));
 
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        User user = optionalUser.orElseGet(() -> {
-            User u = User.builder()
-                    .email(email)
-                    .firstname(firstname)
-                    .role(Role.USER)
-                    .password("") // OAuth user has no local password
+            // fallback to generic "name" (GitHub often provides a full name in "name")
+            if (givenName == null || givenName.isBlank()) {
+                String full = safeString(oauthUser.getAttributes().get("name"));
+                if (full != null) {
+                    String[] parts = splitName(full);
+                    givenName = parts.length > 0 ? parts[0] : null;
+                    familyName = parts.length > 1 ? parts[1] : null;
+                }
+            }
+
+
+
+
+            // find or create user; for creation we populate available fields (do not invent meaningful defaults)
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+            User user;
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            } else {
+                user = User.builder()
+                        .email(email)
+                        .firstname(givenName)
+                        .lastname(familyName)
+                        .role(Role.USER)
+                        .password("") // OAuth user has no local password by default
+                        .build();
+                userRepository.save(user);
+            }
+
+
+
+            // build a lightweight UserDetails for token generation
+            UserDetails userDetails = org.springframework.security.core.userdetails.User
+                    .withUsername(user.getEmail())
+                    .password(user.getPassword())
+                    .authorities("ROLE_" + user.getRole().name())
                     .build();
-            return userRepository.save(u);
-        });
 
-        // build a lightweight UserDetails for token generation
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword() == null ? "" : user.getPassword())
-                .authorities("ROLE_" + user.getRole().name())
-                .build();
+            String accessToken = jwtService.generateAccessToken(userDetails);
+            String refreshToken = jwtService.generateRefreshToken(userDetails); // consider storing server-side for revocation
 
-        String accessToken = jwtService.generateAccessToken(userDetails);
-        String refreshToken = jwtService.generateRefreshToken(userDetails); // consider storing server-side for revocation
+            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
+                    .httpOnly(cookieHttpOnly)
+                    .secure(cookieSecure)
+                    .path("/")
+                    .maxAge(jwtService.getAccessTokenExpirationSeconds())
+                    .build();
 
-        // --- Option A (recommended): set secure HttpOnly cookies instead of query params ---
-        // Access token cookie (short-lived)
-        Cookie accessCookie = new Cookie("ACCESS_TOKEN", accessToken);
-        accessCookie.setHttpOnly(cookieHttpOnly);
-        accessCookie.setSecure(cookieSecure);
-        accessCookie.setPath("/");
-        accessCookie.setMaxAge((int) (jwtService.getAccessTokenExpirationSeconds())); // provide getter
-        // optionally set SameSite via response header if container does not support setAttribute
-        response.addCookie(accessCookie);
+            ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken)
+                    .httpOnly(true)
+                    .secure(cookieSecure)
+                    .path("/")
+                    .maxAge(jwtService.getRefreshTokenExpirationSeconds())
+                    .build();
 
-        // If you really need refresh token accessible to frontend, set another cookie (HttpOnly)
-        Cookie refreshCookie = new Cookie("REFRESH_TOKEN", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(cookieSecure);
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge((int) (jwtService.getRefreshTokenExpirationSeconds()));
-        response.addCookie(refreshCookie);
+            // add cookies via Set-Cookie headers
+            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        // Redirect to frontend without tokens in URL
-        String redirect = UriComponentsBuilder.fromUriString(frontendSuccessUrl).build().toUriString();
-        response.sendRedirect(redirect);
+            // redirect to frontend (no tokens in URL)
+            String redirect = UriComponentsBuilder.fromUriString(frontendSuccessUrl).build().toUriString();
+            response.sendRedirect(redirect);
 
+        } catch (Exception ex) {
+            // don't leak internal details to the user; log and redirect to error page if you have one
+            log.error("Error handling OAuth2 success", ex);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "OAuth processing failed");
+        }
     }
 
-    private String extractEmail(Map<String, Object> attributes) {
-        if (attributes.containsKey("email") && attributes.get("email") != null) {
-            return (String) attributes.get("email");
-        }
-        // For GitHub, email often not present in /user; `user:email` scope + custom OAuth2UserService is recommended.
-        if (attributes.containsKey("login")) {
-            return attributes.get("login") + "@github.local";
-        }
-        return "unknown@example.com";
+
+    private static String safeString(Object o) {
+        if (o == null) return null;
+        String s = o.toString().trim();
+        return s.isEmpty() ? null : s;
+    }
+
+    /**
+     * Splits a full name into [first, restJoined]
+     * Example: "Jean Claude Van Damme" -> ["Jean", "Claude Van Damme"]
+     */
+    private static String[] splitName(String fullName) {
+        if (fullName == null || fullName.isBlank()) return new String[0];
+        String[] parts = fullName.trim().split("\\s+");
+        if (parts.length == 1) return new String[]{parts[0], ""};
+        String first = parts[0];
+        String rest = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
+        return new String[]{first, rest};
     }
 }

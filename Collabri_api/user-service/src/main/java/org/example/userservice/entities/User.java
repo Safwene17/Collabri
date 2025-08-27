@@ -24,7 +24,6 @@ public class User implements UserDetails {
     private Long id;
     private String firstname;
     private String lastname;
-    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Role role;

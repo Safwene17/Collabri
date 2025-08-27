@@ -16,9 +16,12 @@ spring:
           github:
             client-id: Iv23li1GCByW3aUFl4dL
             client-secret: 9abf1a6f6533730648c32f409471972072e07585
+            scope: user:email,read:user
           google:
             client-id: 600958755979-11ppe07cnkr51j20lgra73tnsap0ml3p.apps.googleusercontent.com
             client-secret: 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
+            scope: openid,profile,email
+
 
 
 frontend:
