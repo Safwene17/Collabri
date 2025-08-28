@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/v1/users/get/**",
                                 "/api/v1/users/register",
                                 "/api/v1/users/login",
                                 "/oauth2/**",                // allow oauth endpoints

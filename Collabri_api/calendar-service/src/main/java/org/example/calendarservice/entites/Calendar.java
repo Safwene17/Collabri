@@ -2,6 +2,7 @@ package org.example.calendarservice.entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.calendarservice.enums.Visibility;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -28,11 +29,13 @@ public class Calendar {
     @Column(nullable = false)
     private UUID ownerId;
 
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
+
+    private String timeZone;
 
     @OneToMany(mappedBy = "calendar")
     private List<Member> members;
-
-    private String timeZone;
 
     @CreatedDate
     private LocalDateTime createdAt;

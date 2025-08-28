@@ -18,6 +18,12 @@ spring:
               predicates:
                 - Path=/api/v1/calendars/**
 
+            - id: calendar-members-service
+              uri: lb://calendar
+              predicates:
+                - Path=/api/v1/members/**
+
+
 server:
   port: 8222
 

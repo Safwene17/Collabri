@@ -19,7 +19,8 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
+    @NonNull
+    private UUID userId;
     private String email;
     private String displayName;
 
@@ -28,9 +29,6 @@ public class Member {
     private Calendar calendar;
 
     @Enumerated(EnumType.STRING)
-    private Role role=Role.VIEWER;
+    private Role role = Role.VIEWER;
 
-    private LocalDateTime invitedAt;
-    private LocalDateTime joinedAt;
-    private boolean accepted;
 }

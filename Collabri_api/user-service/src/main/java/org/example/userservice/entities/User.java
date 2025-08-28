@@ -16,18 +16,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name = "collabri_users")
+@Table(name = "users")
 @Builder
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false)
     private String firstname;
+
+    @Column(nullable = false)
     private String lastname;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
     @Column(unique = true, nullable = false)
     private String email;
