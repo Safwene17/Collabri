@@ -3,9 +3,11 @@ package org.example.calendarservice.services;
 import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.entites.Calendar;
+import org.example.calendarservice.entites.Member;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 public class CalendarMapper {
@@ -15,9 +17,8 @@ public class CalendarMapper {
         return calendar.builder()
                 .name(request.name())
                 .description(request.description())
-                .ownerId(request.ownerId())
                 .visibility(request.visibility())
-                .members(request.members())
+                .members(new ArrayList<>())
                 .timeZone(request.timeZone())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

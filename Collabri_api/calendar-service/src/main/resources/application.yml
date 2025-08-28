@@ -13,6 +13,22 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: safwenenacheb17@gmail.com
+    password: iooi jafd arsi cwfy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 
 server:
   port: 8070
+
+jwt:
+  secret: 177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32

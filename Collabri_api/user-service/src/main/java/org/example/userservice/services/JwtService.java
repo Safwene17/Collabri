@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.example.userservice.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,9 +44,12 @@ public class JwtService {
                 .stream()
                 .map(GrantedAuthority::getAuthority) // e.g. "ROLE_USER"
                 .collect(Collectors.toList());
+        User user = (User) userDetails;
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", roles)
+                .claim("userId", user.getId())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + accessTokenExpirationMs))
                 .signWith(signingKey, SignatureAlgorithm.HS256)

@@ -5,6 +5,7 @@ import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.services.CalendarService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class CalendarController {
     private final CalendarService service;
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@RequestBody CalendarRequest request) {
-        return ResponseEntity.ok(service.createCalendar(request));
+    public ResponseEntity<Void> createCategory(@RequestBody CalendarRequest request, Authentication authentication) {
+        return ResponseEntity.ok(service.createCalendar(request, authentication));
     }
 
     @GetMapping("/search")
