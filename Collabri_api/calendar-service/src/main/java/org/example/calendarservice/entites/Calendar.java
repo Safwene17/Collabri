@@ -1,5 +1,6 @@
 package org.example.calendarservice.entites;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calendarservice.enums.Visibility;
@@ -34,7 +35,8 @@ public class Calendar {
 
     private String timeZone;
 
-    @OneToMany(mappedBy = "calendar")
+    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Member> members;
 
     @CreatedDate

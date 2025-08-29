@@ -1,5 +1,6 @@
 package org.example.calendarservice.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calendarservice.enums.Role;
@@ -26,6 +27,7 @@ public class Member {
 
     @ManyToOne
     @JoinColumn(name = "calendar_id", nullable = false)
+    @JsonBackReference
     private Calendar calendar;
 
     @Enumerated(EnumType.STRING)

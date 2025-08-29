@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/Collabri_api/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/Collabri_api/user-service/pom.xml" />
         <option value="$PROJECT_DIR$/Collabri_api/calendar-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Collabri_api/notification-service/pom.xml" />
       </list>
     </option>
   </component>

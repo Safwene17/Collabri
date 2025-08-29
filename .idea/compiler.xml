@@ -10,6 +10,7 @@
         <module name="config-server" />
         <module name="discovery" />
         <module name="gateway" />
+        <module name="notification-service" />
       </profile>
       <profile name="Annotation profile for calendar-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -29,6 +30,7 @@
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

@@ -74,4 +74,50 @@ public class CalendarService {
                 .map(calendarMapper::fromCalendar)
                 .toList();
     }
+
+    public CalendarResponse getCalendarById(UUID id) {
+        return calendarRepository.findById(id)
+                .map(calendarMapper::fromCalendar)
+                .orElseThrow(() -> new IllegalArgumentException("Calendar not found"));
+    }
+
+    public void deleteCalendarById(UUID id, Authentication authentication) {
+        Calendar calendar = calendarRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Calendar not found"));
+        // Extract user ID from JWT token
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID userId = UUID.fromString(jwt.getClaim("userId").toString());
+        // Check if the authenticated user is the owner of the calendar
+        if (!calendar.getOwnerId().equals(userId)) {
+            throw new SecurityException("Only the owner can delete the calendar");
+
+        }
+        // Proceed to delete the calendar
+        calendarRepository.deleteById(id);
+    }
+
+    public void updateCalendar(CalendarRequest request, UUID id, Authentication authentication) {
+        Calendar calendar = calendarRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Calendar not found"));
+
+        // Extract user ID from JWT token
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        UUID userId = UUID.fromString(jwt.getClaim("userId").toString());
+
+        // Check if the authenticated user is the owner of the calendar
+        if (!calendar.getOwnerId().equals(userId)) {
+            throw new SecurityException("Only the owner can update the calendar");
+        }
+
+        // Update calendar fields
+        calendar.setName(request.name());
+        calendar.setDescription(request.description());
+        calendar.setVisibility(request.visibility());
+        calendar.setTimeZone(request.timeZone());
+        calendar.setUpdatedAt(java.time.LocalDateTime.now());
+
+        // Save updated calendar
+        calendarRepository.save(calendar);
+
+    }
 }

@@ -32,7 +32,8 @@ public class CalendarMapper {
                 calendar.getDescription(),
                 calendar.getOwnerId(),
                 calendar.getVisibility(),
-                calendar.getTimeZone()
+                calendar.getTimeZone(),
+                calendar.getMembers()
         );
     }
 }

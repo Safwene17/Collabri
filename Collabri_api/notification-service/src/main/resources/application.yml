@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: notification
+  config:
+    import: optional:configserver:http://localhost:8888
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: safwenenacheb17@gmail.com
+    password: iooi jafd arsi cwfy
+    properties:
+      mail:
+        smtp:
+        auth: true
+        starttls:
+          enable: true
+        connection-timeout: 5000
+        timeout: 3000
+        write-timeout: 5000
+
+server:
+  port: 8080

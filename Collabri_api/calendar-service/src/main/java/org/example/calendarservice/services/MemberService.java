@@ -43,8 +43,6 @@ public class MemberService {
 
         Member member = mapper.toMember(userResponse);
         member.setCalendar(calendar);
-        memberRepository.save(member);  // Save member first
-        calendar.getMembers().add(member);
-        calendarRepository.save(calendar);
+        memberRepository.save(member);
     }
 }

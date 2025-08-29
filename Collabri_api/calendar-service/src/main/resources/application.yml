@@ -13,17 +13,15 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: update
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: safwenenacheb17@gmail.com
-    password: iooi jafd arsi cwfy
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: orderConfirmation:org.example.order.kafka.OrderConfirmation
+
 
 
 
