@@ -18,6 +18,11 @@ spring:
               predicates:
                 - Path=/api/v1/calendars/**
 
+            - id: calendar-service
+              uri: lb://calendar
+              predicates:
+                - Path=/api/v1/invites/**
+
             - id: calendar-members-service
               uri: lb://calendar
               predicates:

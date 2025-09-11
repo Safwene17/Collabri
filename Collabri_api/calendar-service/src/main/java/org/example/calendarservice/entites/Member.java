@@ -20,6 +20,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @NonNull
     private UUID userId;
     private String email;

@@ -93,4 +93,10 @@ public class UserService {
 
         repository.save(user);
     }
+
+    public UserResponse findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(mapper::fromUser)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }

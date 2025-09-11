@@ -20,9 +20,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: orderConfirmation:org.example.order.kafka.OrderConfirmation
-
-
+        spring.json.type.mapping: CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent
 
 
 server:

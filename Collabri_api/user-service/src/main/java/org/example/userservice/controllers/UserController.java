@@ -41,6 +41,11 @@ public class UserController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @GetMapping("/by-email")
+    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(service.findByEmail(email));
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(service.findAll());

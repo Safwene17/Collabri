@@ -1,12 +1,16 @@
 package org.example.calendarservice.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.entites.Calendar;
+import org.example.calendarservice.entites.CalendarInvite;
 import org.example.calendarservice.entites.Member;
+import org.example.calendarservice.enums.InviteStatus;
 import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.enums.Visibility;
+import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.example.calendarservice.repositories.CalendarRepository;
 import org.example.calendarservice.repositories.MemberRepository;
 import org.example.calendarservice.user.UserClient;
@@ -14,17 +18,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final MemberRepository memberRepository;
+    private final CalendarInviteRepository inviteRepository;
+
     private final CalendarMapper calendarMapper;
     private final MemberMapper memberMapper;
-    private final MemberRepository memberRepository;
+
     private final UserClient userClient;
 
 
@@ -118,6 +128,7 @@ public class CalendarService {
 
         // Save updated calendar
         calendarRepository.save(calendar);
-
     }
+
+
 }

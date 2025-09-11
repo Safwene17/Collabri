@@ -1,3 +1,6 @@
+server:
+  port: 8040
+
 spring:
   application:
     name: notification
@@ -7,16 +10,47 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: safwenenacheb17@gmail.com
-    password: iooi jafd arsi cwfy
+    password: mzvthmscvchmocir
     properties:
       mail:
         smtp:
-        auth: true
-        starttls:
-          enable: true
-        connection-timeout: 5000
-        timeout: 3000
-        write-timeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+          connection-timeout: 5000
+          timeout: 3000
+          write-timeout: 5000
+  datasource:
+    url: jdbc:postgresql://localhost:5432/collabri_notifications
+    username: postgres
+    password: safwene17
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: inviteGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: CalendarInviteEvent:org.example.notificationservice.kafka.calendar.CalendarInviteEvent
 
-server:
-  port: 8080
+
+app:
+  frontend:
+    invite-base: http://localhost:4200/invite   # used to build accept/decline links
+  email:
+    send-retry-count: 3
+

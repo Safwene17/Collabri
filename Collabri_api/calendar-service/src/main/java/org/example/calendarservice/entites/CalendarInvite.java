@@ -22,9 +22,13 @@ public class CalendarInvite {
     @Column(name = "calendar_id", columnDefinition = "uuid", nullable = false)
     private UUID calendarId;
 
-    private String email;
+    private String destinationEmail;
+
     private UUID invitedByUserId;
-    private String token;
+
+    @Column(length = 128)
+    private String tokenHash;
+
     private Instant expiresAt;
 
     @Enumerated(EnumType.STRING)

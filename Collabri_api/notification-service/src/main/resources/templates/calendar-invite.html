@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title th:text="'Invitation: ' + ${calendarName}">You're invited</title>
+    <style>
+        /* same styles as you used, kept concise */
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+            background: #f6f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 680px;
+            margin: 24px auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 28px;
+            box-shadow: 0 6px 30px rgba(20, 20, 60, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 20px;
+            color: #0f172a;
+        }
+
+        p {
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-accept {
+            background: #0ea5a2;
+            color: #fff;
+        }
+
+        .btn-decline {
+            background: #ef4444;
+            color: #fff;
+            margin-left: 10px;
+        }
+
+        .footer {
+            margin-top: 22px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .muted {
+            color: #94a3b8;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .divider {
+            height: 1px;
+            background: #eef2ff;
+            margin: 18px 0;
+            border-radius: 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1 th:text="'Invitation to collaborate on: ' + ${calendarName}">Invitation to collaborate</h1>
+    <p class="meta">Invited by <strong th:text="${inviterEmail}">inviter@example.com</strong></p>
+
+    <p>You were invited to join the calendar <strong th:text="${calendarName}">Project Calendar</strong>. Join to view
+        and collaborate on events and tasks.</p>
+
+    <div style="margin:20px 0;">
+        <a th:href="${acceptLink}" class="btn btn-accept"
+           th:attr="aria-label=${'Accept invitation to ' + calendarName}">Accept Invitation</a>
+        <a th:href="${declineLink}" class="btn btn-decline"
+           th:attr="aria-label=${'Decline invitation to ' + calendarName}">Decline</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="small">This invitation expires at <strong
+            th:text="${#dates.format(expiresAt, 'yyyy-MM-dd HH:mm z')}">DATE</strong> (UTC). If you did not expect this
+        email you can ignore it.</p>
+
+    <div class="footer">
+        <p class="muted">If the buttons do not work, copy & paste one of the links below into your browser:</p>
+        <p class="muted"><a th:href="${acceptLink}" th:text="${acceptLink}">accept link</a></p>
+        <p class="muted"><a th:href="${declineLink}" th:text="${declineLink}">decline link</a></p>
+        <p class="muted">Collabri • &copy; <span th:text="${T(java.time.Year).now()}">2025</span></p>
+    </div>
+</div>
+</body>
+</html>

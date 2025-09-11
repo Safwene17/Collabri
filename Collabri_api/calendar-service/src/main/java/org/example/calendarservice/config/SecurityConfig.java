@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/calendars/search").permitAll()
                         //HELP ME IMPLEMENT THE NECESSARY TO USE THIS ANY ROLE FOR THE ENDPOINT
-                        .requestMatchers("/api/v1/calendars/invite/**").hasAnyRole("MANAGER", "OWNER")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

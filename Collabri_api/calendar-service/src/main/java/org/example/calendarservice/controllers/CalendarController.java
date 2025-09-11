@@ -16,38 +16,33 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CalendarController {
 
-    private final CalendarService service;
+    private final CalendarService calendarService;
 
     @PostMapping
     public ResponseEntity<Void> createCategory(@RequestBody CalendarRequest request, Authentication authentication) {
-        return ResponseEntity.ok(service.createCalendar(request, authentication));
+        return ResponseEntity.ok(calendarService.createCalendar(request, authentication));
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<CalendarResponse> getCalendarById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(service.getCalendarById(id));
+        return ResponseEntity.ok(calendarService.getCalendarById(id));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCalendarById(@PathVariable("id") UUID id, Authentication authentication) {
-        service.deleteCalendarById(id, authentication);
+        calendarService.deleteCalendarById(id, authentication);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Void> updateCalendar(@RequestBody CalendarRequest request, @PathVariable("id") UUID id, Authentication authentication) {
-        service.updateCalendar(request, id, authentication);
+        calendarService.updateCalendar(request, id, authentication);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<CalendarResponse>> searchPublic(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(service.searchPublicCalendars(name));
+        return ResponseEntity.ok(calendarService.searchPublicCalendars(name));
     }
 
-    @PostMapping("/invite/{id}")
-    public ResponseEntity<Void> inviteByEmail(@PathVariable("id") UUID calendarId, @RequestParam String email, Authentication authentication) {
-        service.inviteMemberByEmail(calendarId, email, authentication);
-        return ResponseEntity.ok().build();
-    }
 }
