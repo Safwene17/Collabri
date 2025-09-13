@@ -81,8 +81,8 @@ const Footer = ({
   legalLinks = defaultLegalLinks,
 }: Footer7Props) => {
   return (
-    <section className="py-32">
-      <div className="container">
+    <section className="py-20">
+      <div className="container max-w-7xl mx-auto px-6">
         <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-left">
           <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
             {/* Logo */}
@@ -110,16 +110,14 @@ const Footer = ({
               ))}
             </ul>
           </div>
+
           <div className="grid w-full gap-6 md:grid-cols-3 lg:gap-20">
             {sections.map((section, sectionIdx) => (
               <div key={sectionIdx}>
                 <h3 className="mb-4 font-bold">{section.title}</h3>
                 <ul className="text-muted-foreground space-y-3 text-sm">
                   {section.links.map((link, linkIdx) => (
-                    <li
-                      key={linkIdx}
-                      className="hover:text-primary font-medium"
-                    >
+                    <li key={linkIdx} className="hover:text-primary font-medium">
                       <a href={link.href}>{link.name}</a>
                     </li>
                   ))}
@@ -128,7 +126,8 @@ const Footer = ({
             ))}
           </div>
         </div>
-        <div className="text-muted-foreground mt-8 flex flex-col justify-between gap-4 border-t py-8 text-xs font-medium md:flex-row md:items-center md:text-left">
+
+        <div className="text-muted-foreground mt-8 flex flex-col justify-between gap-4 border-t py-4 text-xs font-medium md:flex-row md:items-center md:text-left">
           <p className="order-2 lg:order-1">{copyright}</p>
           <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
             {legalLinks.map((link, idx) => (
@@ -140,6 +139,7 @@ const Footer = ({
         </div>
       </div>
     </section>
+
   );
 };
 

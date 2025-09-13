@@ -26,6 +26,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   const features = [
@@ -39,21 +40,16 @@ export function Navbar() {
 
   return (
     <section className="py-4">
-      <div className="container">
+  <div className="container max-w-7xl mx-auto px-6">
         {/* Add z-50 so navbar and its dropdowns sit above page content */}
         <nav className="relative z-50 flex items-center justify-between">
           {/* left: logo */}
-          <a href="/" className="flex items-center gap-2">
-            <img
-              src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
-              className="max-h-8"
-              alt="Shadcn UI Navbar"
-            />
-            <span className="text-lg font-semibold tracking-tighter">Collabri</span>
-          </a>
+          <Link to="/" className="flex items-center gap-2">
+        <span className="text-2xl font-semibold tracking-tighter">Collabri</span>
+          </Link>
 
           {/* center: nav menu (absolute centered on lg+) */}
-          <NavigationMenu className="hidden lg:block absolute left-1/2 -translate-x-1/2">
+      <NavigationMenu className="hidden lg:block absolute left-1/2 -translate-x-1/2">
             <NavigationMenuList className="mx-auto">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Features</NavigationMenuTrigger>
@@ -96,7 +92,7 @@ export function Navbar() {
           </NavigationMenu>
 
           {/* right: controls */}
-          <div className="hidden items-center gap-4 lg:flex">
+      <div className="hidden items-center gap-4 lg:flex">
             <ModeToggle />
             <Button variant="outline">Sign in</Button>
             <Button>Start now</Button>
@@ -112,14 +108,10 @@ export function Navbar() {
             <SheetContent side="top" className="max-h-screen overflow-auto">
               <SheetHeader>
                 <SheetTitle>
-                  <a href="https://www.shadcnblocks.com" className="flex items-center gap-2">
-                    <img
-                      src="https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg"
-                      className="max-h-8"
-                      alt="Shadcn UI Navbar"
-                    />
-                    <span className="text-lg font-semibold tracking-tighter">Shadcnblocks.com</span>
-                  </a>
+                  <Link to="/" className="flex items-center gap-2">
+
+                    <span className="text-2xl font-semibold tracking-tighter">Collabri</span>
+                  </Link>
                 </SheetTitle>
               </SheetHeader>
 
