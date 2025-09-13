@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "@/app/backoffice/dashboard/dashboard";
+import Dashboard from "@/pages/backoffice/dashboard/dashboard";
 
 export default function BackofficeApp() {
   return (
