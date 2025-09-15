@@ -40,16 +40,16 @@ export function Navbar() {
 
   return (
     <section className="py-4">
-  <div className="container max-w-7xl mx-auto px-6">
+      <div className="container max-w-7xl mx-auto px-6">
         {/* Add z-50 so navbar and its dropdowns sit above page content */}
         <nav className="relative z-50 flex items-center justify-between">
           {/* left: logo */}
           <Link to="/" className="flex items-center gap-2">
-        <span className="text-2xl font-semibold tracking-tighter">Collabri</span>
+            <span className="text-2xl font-semibold tracking-tighter">Collabri</span>
           </Link>
 
           {/* center: nav menu (absolute centered on lg+) */}
-      <NavigationMenu className="hidden lg:block absolute left-1/2 -translate-x-1/2">
+          <NavigationMenu className="hidden lg:block absolute left-1/2 -translate-x-1/2">
             <NavigationMenuList className="mx-auto">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Features</NavigationMenuTrigger>
@@ -92,10 +92,10 @@ export function Navbar() {
           </NavigationMenu>
 
           {/* right: controls */}
-      <div className="hidden items-center gap-4 lg:flex">
+          <div className="hidden items-center gap-4 lg:flex">
             <ModeToggle />
-            <Button variant="outline">Sign in</Button>
-            <Button>Start now</Button>
+            <Link to="/login"><Button variant="outline">Sign in</Button></Link>
+            <Link to="/signup"><Button>Start now</Button></Link>
           </div>
 
           {/* mobile: sheet menu */}
@@ -146,8 +146,8 @@ export function Navbar() {
 
                 <div className="mt-6 flex flex-col gap-4">
                   <ModeToggle />
-                  <Button variant="outline">Sign in</Button>
-                  <Button>Start now</Button>
+                  <Link to="/login"><Button variant="outline">Sign in</Button></Link>
+                  <Link to="/signup"><Button>Start now</Button></Link>
                 </div>
               </div>
             </SheetContent>

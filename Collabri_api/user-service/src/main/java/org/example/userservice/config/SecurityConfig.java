@@ -2,6 +2,8 @@ package org.example.userservice.config;
 
 
 import org.example.userservice.filters.JwtAuthFilter;
+import org.example.userservice.services.CustomUserDetailsService;
+import org.example.userservice.services.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -65,6 +68,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
+        return new JwtAuthFilter(jwtService, customUserDetailsService);
     }
 
 }

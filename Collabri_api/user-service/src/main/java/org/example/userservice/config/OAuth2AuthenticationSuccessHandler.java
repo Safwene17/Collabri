@@ -35,7 +35,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private String frontendSuccessUrl;
 
     // token cookie properties (tweak for prod)
-    @Value("${security.cookies.secure:true}")
+    @Value("${security.cookies.secure:false}")
     private boolean cookieSecure;
 
     @Value("${security.cookies.http-only:true}")
@@ -65,8 +65,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             }
 
 
-
-
             // find or create user; for creation we populate available fields (do not invent meaningful defaults)
             Optional<User> optionalUser = userRepository.findByEmail(email);
             User user;
@@ -82,7 +80,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .build();
                 userRepository.save(user);
             }
-
 
 
             // build a lightweight UserDetails for token generation

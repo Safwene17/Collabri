@@ -1,3 +1,5 @@
+// src/pages/frontoffice/auth/login.tsx
+
 import logincover from "@/assets/login-cover.png";
 import { LoginForm } from "@/components/frontoffice/auth/login-form";
 import { Footer } from "@/components/frontoffice/layout/footer";
