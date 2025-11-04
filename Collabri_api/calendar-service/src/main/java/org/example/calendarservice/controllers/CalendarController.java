@@ -19,7 +19,7 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@RequestBody CalendarRequest request, Authentication authentication) {
+    public ResponseEntity<Void> createCalendar(@RequestBody CalendarRequest request, Authentication authentication) {
         return ResponseEntity.ok(calendarService.createCalendar(request, authentication));
     }
 

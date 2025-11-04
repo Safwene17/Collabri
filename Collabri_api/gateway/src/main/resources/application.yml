@@ -8,22 +8,22 @@ spring:
       server:
         webmvc:
           routes:
-            - id: user-sevrice
+            - id: user
               uri: lb://user
               predicates:
                 - Path=/api/v1/users/**
 
-            - id: calendar-service
+            - id: calendar
               uri: lb://calendar
               predicates:
                 - Path=/api/v1/calendars/**
 
-            - id: calendar-service
+            - id: calendar-invite
               uri: lb://calendar
               predicates:
                 - Path=/api/v1/invites/**
 
-            - id: calendar-members-service
+            - id: calendar-member
               uri: lb://calendar
               predicates:
                 - Path=/api/v1/members/**

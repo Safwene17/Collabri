@@ -26,7 +26,7 @@ import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE
 @Slf4j
 public class EmailService {
 
-    @Value("${app.frontend.invite-base:http://localhost:4200/invite}")
+    @Value("${app.frontend.invite-base}")
     private String frontendInviteBase;
 
     @Value("${spring.mail.from:${spring.mail.username:no-reply@example.com}}")
