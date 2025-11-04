@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/collabri_calendars
     username: postgres
-    password: safwene17
+    password: aminetestpgadmin
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
