@@ -34,7 +34,11 @@ public class User implements UserDetails {
 
     @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
+
+    @Column(nullable = false)
+    private boolean enabled = false;
 
 
     @Override
@@ -69,6 +73,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return this.enabled;
     }
 }

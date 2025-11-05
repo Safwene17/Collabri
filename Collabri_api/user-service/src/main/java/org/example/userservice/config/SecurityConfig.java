@@ -23,8 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-
-
+    
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -35,6 +34,8 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/v1/users/resend-verification",
+                                "/api/v1/users/verify-email",
                                 "/api/v1/users/get/**",
                                 "/api/v1/users/register",
                                 "/api/v1/users/forgot-password",

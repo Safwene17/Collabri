@@ -77,6 +77,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .lastname(familyName)
                         .role(Role.USER)
                         .password("") // OAuth user has no local password by default
+                        .enabled(true)
                         .build();
                 userRepository.save(user);
             }
