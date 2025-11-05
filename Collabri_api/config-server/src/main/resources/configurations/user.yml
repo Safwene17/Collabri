@@ -42,13 +42,14 @@ spring:
 
 app:
   reset-token-ttl-minutes: 15
+  verify-token-ttl-hours: 24
   frontend:
-    reset-url: http://localhost:3000/reset-password
-
+    reset-url: http://localhost:5173/reset-password
+    verify-url: http://localhost:5173/verify-email
 
 frontend:
   success:
-    url: http://localhost:4200
+    url: http://localhost:5173
 
 server:
   port: 8060

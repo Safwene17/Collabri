@@ -1,6 +1,7 @@
 package org.example.userservice.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.LoginRequest;
 import org.example.userservice.dto.LoginResponse;
 import org.example.userservice.dto.RegisterRequest;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final AuthenticationManager authenticationManager;
@@ -29,7 +31,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
+    private final EmailVerificationService emailVerificationService;
 
     public Void register(RegisterRequest request) {
         String email = request.email();
@@ -42,6 +44,12 @@ public class UserService {
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
+
+        try {
+            emailVerificationService.createAndSendVerificationToken(user.getEmail());
+        } catch (Exception ex) {
+            log.warn("Failed to send verification email for {}", user.getEmail(), ex);
+        }
         return null;
     }
 

@@ -5,10 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.*;
-import org.example.userservice.services.CustomUserDetailsService;
-import org.example.userservice.services.JwtService;
-import org.example.userservice.services.PasswordResetService;
-import org.example.userservice.services.UserService;
+import org.example.userservice.services.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -24,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final EmailVerificationService emailVerificationService;
     private final UserService service;
     private final PasswordResetService passwordResetService;
 //    @Value("${security.cookies.same-site:Lax}")
@@ -31,6 +29,7 @@ public class UserController {
 //    private final JwtService jwtService;
 //    private final UserService userService;
 //    private final CustomUserDetailsService customUserDetailsService;
+
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
@@ -156,5 +155,18 @@ public class UserController {
 //        boolean ok = passwordResetService.validateToken(token);
 //        return ResponseEntity.ok(ok);
 //    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token) {
+        // token is raw token from email
+        emailVerificationService.confirmToken(token);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<Void> resendVerification(@RequestBody ResendVerificationRequest request) {
+        emailVerificationService.resendVerification(request);
+        return ResponseEntity.ok().build();
+    }
 
 }
