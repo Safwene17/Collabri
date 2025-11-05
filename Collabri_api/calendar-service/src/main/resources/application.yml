@@ -4,9 +4,11 @@ spring:
   config:
     import: optional:configserver:localhost:8888
   datasource:
-    url: jdbc:postgresql://localhost:5432/collabri_calendars
-    username: postgres
-    password: aminetestpgadmin
+
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -27,4 +29,4 @@ server:
   port: 8070
 
 jwt:
-  secret: 177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32
+  secret: ${JWT_SECRET}

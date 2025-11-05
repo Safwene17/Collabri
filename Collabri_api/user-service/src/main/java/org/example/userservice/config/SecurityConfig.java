@@ -7,6 +7,8 @@ import org.example.userservice.services.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -35,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/users/get/**",
                                 "/api/v1/users/register",
+                                "/api/v1/users/forgot-password",
+                                "/api/v1/users/reset-password",
                                 "/api/v1/users/login",
                                 "/oauth2/**",                // allow oauth endpoints
                                 "/login/**",
@@ -74,5 +78,4 @@ public class SecurityConfig {
     public JwtAuthFilter jwtAuthFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
         return new JwtAuthFilter(jwtService, customUserDetailsService);
     }
-
 }
