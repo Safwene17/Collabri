@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/collabri_users
-    username: postgres
-    password: safwene17
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
@@ -14,14 +14,36 @@ spring:
       client:
         registration:
           github:
-            client-id: Iv23li1GCByW3aUFl4dL
-            client-secret: 9abf1a6f6533730648c32f409471972072e07585
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope: user:email,read:user
           google:
-            client-id: 600958755979-11ppe07cnkr51j20lgra73tnsap0ml3p.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: openid,profile,email
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+            connection-timeout: 5000
+            timeout: 3000
+            write-timeout: 5000
 
+
+app:
+  reset-token-ttl-minutes: 15
+  frontend:
+    reset-url: http://localhost:3000/reset-password
 
 
 frontend:

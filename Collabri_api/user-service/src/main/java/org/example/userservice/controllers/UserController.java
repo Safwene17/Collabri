@@ -4,12 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.dto.LoginRequest;
-import org.example.userservice.dto.LoginResponse;
-import org.example.userservice.dto.RegisterRequest;
-import org.example.userservice.dto.UserResponse;
+import org.example.userservice.dto.*;
 import org.example.userservice.services.CustomUserDetailsService;
 import org.example.userservice.services.JwtService;
+import org.example.userservice.services.PasswordResetService;
 import org.example.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,117 +24,87 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Value("${security.cookies.same-site:Lax}")
-    private String sameSite;
-
     private final UserService service;
-    private final JwtService jwtService;
-    private final UserService userService;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordResetService passwordResetService;
+//    @Value("${security.cookies.same-site:Lax}")
+//    private String sameSite;
+//    private final JwtService jwtService;
+//    private final UserService userService;
+//    private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(Authentication authentication) {
-        if (authentication == null) {
-            return ResponseEntity.status(401).build();
-        }
-        String email = authentication.getName();
-        return ResponseEntity.ok(userService.findByEmail(email));
-    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        LoginResponse tokens = userService.authenticate(request); // returns access+refresh strings
-
-        // set cookies
-        ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", tokens.access_token())
-                .httpOnly(true)
-                .secure(false) // adjust from property if needed
-                .path("/")
-                .maxAge(jwtService.getAccessTokenExpirationSeconds())
-                .sameSite(sameSite)
-                .build();
-
-        ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", tokens.refresh_token())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(jwtService.getRefreshTokenExpirationSeconds())
-                .sameSite(sameSite)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
-
-        // For convenience you can return minimal user info or 204
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+        return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
-        // read refresh token from cookie
-        String refreshToken = null;
-        if (request.getCookies() != null) {
-            for (var c : request.getCookies()) {
-                if ("REFRESH_TOKEN".equals(c.getName())) {
-                    refreshToken = c.getValue();
-                    break;
-                }
-            }
-        }
 
-        if (refreshToken == null) {
-            return ResponseEntity.status(401).build();
-        }
+//    @PostMapping("/refresh")
+//    public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
+//        // read refresh token from cookie
+//        String refreshToken = null;
+//        if (request.getCookies() != null) {
+//            for (var c : request.getCookies()) {
+//                if ("REFRESH_TOKEN".equals(c.getName())) {
+//                    refreshToken = c.getValue();
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if (refreshToken == null) {
+//            return ResponseEntity.status(401).build();
+//        }
+//
+//        try {
+//            String username = jwtService.extractUsername(refreshToken);
+//            var userDetails = customUserDetailsService.loadUserByUsername(username); // we will add a method to UserService
+//            if (!jwtService.isTokenValid(refreshToken, userDetails)) {
+//                return ResponseEntity.status(401).build();
+//            }
+//
+//            String newAccess = jwtService.generateAccessToken(userDetails);
+//
+//            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", newAccess)
+//                    .httpOnly(true)
+//                    .secure(false)
+//                    .path("/")
+//                    .maxAge(jwtService.getAccessTokenExpirationSeconds())
+//                    .sameSite(sameSite)
+//                    .build();
+//
+//            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
+//            return ResponseEntity.ok().build();
+//        } catch (Exception ex) {
+//            return ResponseEntity.status(401).build();
+//        }
+//    }
 
-        try {
-            String username = jwtService.extractUsername(refreshToken);
-            var userDetails = customUserDetailsService.loadUserByUsername(username); // we will add a method to UserService
-            if (!jwtService.isTokenValid(refreshToken, userDetails)) {
-                return ResponseEntity.status(401).build();
-            }
-
-            String newAccess = jwtService.generateAccessToken(userDetails);
-
-            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", newAccess)
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/")
-                    .maxAge(jwtService.getAccessTokenExpirationSeconds())
-                    .sameSite(sameSite)
-                    .build();
-
-            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-            return ResponseEntity.ok().build();
-        } catch (Exception ex) {
-            return ResponseEntity.status(401).build();
-        }
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        ResponseCookie clearAccess = ResponseCookie.from("ACCESS_TOKEN", "")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(0)
-                .sameSite(sameSite)
-                .build();
-        ResponseCookie clearRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(0)
-                .sameSite(sameSite)
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, clearAccess.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, clearRefresh.toString());
-        return ResponseEntity.noContent().build();
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<?> logout(HttpServletResponse response) {
+//        ResponseCookie clearAccess = ResponseCookie.from("ACCESS_TOKEN", "")
+//                .httpOnly(true)
+//                .secure(true)
+//                .path("/")
+//                .maxAge(0)
+//                .sameSite(sameSite)
+//                .build();
+//        ResponseCookie clearRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
+//                .httpOnly(true)
+//                .secure(true)
+//                .path("/")
+//                .maxAge(0)
+//                .sameSite(sameSite)
+//                .build();
+//        response.addHeader(HttpHeaders.SET_COOKIE, clearAccess.toString());
+//        response.addHeader(HttpHeaders.SET_COOKIE, clearRefresh.toString());
+//        return ResponseEntity.noContent().build();
+//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") UUID id) {
@@ -164,4 +132,29 @@ public class UserController {
         service.update(id, request);
         return ResponseEntity.accepted().build();
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        // to avoid revealing whether email exists, you might always return 200
+        try {
+            passwordResetService.createAndSendResetToken(request.email());
+        } catch (IllegalArgumentException ex) {
+            // swallow exception to avoid email enumeration; still return 200
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    //optionnal for frontend to validate token before showing reset form
+//    @GetMapping("/validate-reset-token")
+//    public ResponseEntity<Boolean> validateResetToken(@RequestParam("token") String token) {
+//        boolean ok = passwordResetService.validateToken(token);
+//        return ResponseEntity.ok(ok);
+//    }
+
 }

@@ -30,8 +30,13 @@ public class UserService {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
+
     public Void register(RegisterRequest request) {
-        if (repository.existsByEmail(request.email())) {
+        String email = request.email();
+        if (email == null || email.isBlank() || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+        if (repository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already in use");
         }
         User user = mapper.toUser(request);
@@ -39,6 +44,7 @@ public class UserService {
         repository.save(user);
         return null;
     }
+
 
     public LoginResponse authenticate(LoginRequest request) {
         try {
