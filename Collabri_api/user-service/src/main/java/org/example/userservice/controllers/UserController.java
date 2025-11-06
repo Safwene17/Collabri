@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,16 +25,34 @@ public class UserController {
     private final EmailVerificationService emailVerificationService;
     private final UserService service;
     private final PasswordResetService passwordResetService;
-//    @Value("${security.cookies.same-site:Lax}")
-//    private String sameSite;
+
+    @Value("${app.frontend.verify-success-url}")
+    private String frontendVerifySuccessUrl;
+
+    @Value("${app.frontend.verify-expired-url}")
+    private String frontendVerifyExpiredUrl;
+
+    @Value("${app.frontend.verify-already-url}")
+    private String frontendVerifyAlreadyUrl;
+
+    @Value("${app.frontend.verify-failed-url}")
+    private String frontendVerifyFailedUrl;
+
 //    private final JwtService jwtService;
 //    private final UserService userService;
 //    private final CustomUserDetailsService customUserDetailsService;
 
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterRequest request) {
-        return ResponseEntity.ok(service.register(request));
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid RegisterRequest request) {
+        service.register(request);
+        return ResponseEntity.ok(
+                ApiResponse.<String>builder()
+                        .success(true)
+                        .message("Verification email sent")
+                        .data(null)
+                        .build()
+        );
     }
 
 
@@ -42,68 +61,6 @@ public class UserController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-
-//    @PostMapping("/refresh")
-//    public ResponseEntity<?> refresh(HttpServletRequest request, HttpServletResponse response) {
-//        // read refresh token from cookie
-//        String refreshToken = null;
-//        if (request.getCookies() != null) {
-//            for (var c : request.getCookies()) {
-//                if ("REFRESH_TOKEN".equals(c.getName())) {
-//                    refreshToken = c.getValue();
-//                    break;
-//                }
-//            }
-//        }
-//
-//        if (refreshToken == null) {
-//            return ResponseEntity.status(401).build();
-//        }
-//
-//        try {
-//            String username = jwtService.extractUsername(refreshToken);
-//            var userDetails = customUserDetailsService.loadUserByUsername(username); // we will add a method to UserService
-//            if (!jwtService.isTokenValid(refreshToken, userDetails)) {
-//                return ResponseEntity.status(401).build();
-//            }
-//
-//            String newAccess = jwtService.generateAccessToken(userDetails);
-//
-//            ResponseCookie accessCookie = ResponseCookie.from("ACCESS_TOKEN", newAccess)
-//                    .httpOnly(true)
-//                    .secure(false)
-//                    .path("/")
-//                    .maxAge(jwtService.getAccessTokenExpirationSeconds())
-//                    .sameSite(sameSite)
-//                    .build();
-//
-//            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-//            return ResponseEntity.ok().build();
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(401).build();
-//        }
-//    }
-
-//    @PostMapping("/logout")
-//    public ResponseEntity<?> logout(HttpServletResponse response) {
-//        ResponseCookie clearAccess = ResponseCookie.from("ACCESS_TOKEN", "")
-//                .httpOnly(true)
-//                .secure(true)
-//                .path("/")
-//                .maxAge(0)
-//                .sameSite(sameSite)
-//                .build();
-//        ResponseCookie clearRefresh = ResponseCookie.from("REFRESH_TOKEN", "")
-//                .httpOnly(true)
-//                .secure(true)
-//                .path("/")
-//                .maxAge(0)
-//                .sameSite(sameSite)
-//                .build();
-//        response.addHeader(HttpHeaders.SET_COOKIE, clearAccess.toString());
-//        response.addHeader(HttpHeaders.SET_COOKIE, clearRefresh.toString());
-//        return ResponseEntity.noContent().build();
-//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") UUID id) {
@@ -150,18 +107,31 @@ public class UserController {
     }
 
     //optionnal for frontend to validate token before showing reset form
-//    @GetMapping("/validate-reset-token")
-//    public ResponseEntity<Boolean> validateResetToken(@RequestParam("token") String token) {
-//        boolean ok = passwordResetService.validateToken(token);
-//        return ResponseEntity.ok(ok);
-//    }
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<Boolean> validateResetToken(@RequestParam("token") String token) {
+        boolean ok = passwordResetService.validateToken(token);
+        return ResponseEntity.ok(ok);
+    }
 
     @GetMapping("/verify-email")
-    public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token) {
-        // token is raw token from email
-        emailVerificationService.confirmToken(token);
-        return ResponseEntity.noContent().build();
+    public void verifyEmail(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
+        try {
+            emailVerificationService.confirmToken(token);
+            // success redirect (frontend page shows success message)
+            response.sendRedirect(frontendVerifySuccessUrl);
+        } catch (IllegalArgumentException ex) {
+            // rely on message text from confirmToken to choose redirect
+            String msg = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
+            if (msg.contains("expired")) {
+                response.sendRedirect(frontendVerifyExpiredUrl);
+            } else if (msg.contains("already")) {
+                response.sendRedirect(frontendVerifyAlreadyUrl);
+            } else {
+                response.sendRedirect(frontendVerifyFailedUrl);
+            }
+        }
     }
+
 
     @PostMapping("/resend-verification")
     public ResponseEntity<Void> resendVerification(@RequestBody ResendVerificationRequest request) {

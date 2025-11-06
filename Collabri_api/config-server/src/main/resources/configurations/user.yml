@@ -8,7 +8,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   security:
     oauth2:
       client:
@@ -41,11 +41,19 @@ spring:
 
 
 app:
-  reset-token-ttl-minutes: 15
-  verify-token-ttl-hours: 24
+  backend:
+    verify-url: http://localhost:8222/api/v1/users/verify-email
   frontend:
     reset-url: http://localhost:5173/reset-password
-    verify-url: http://localhost:5173/verify-email
+    verify-success-url: http://localhost:5173/verify-success
+    verify-expired-url: http://localhost:5173/verify-expired
+    verify-already-url: http://localhost:5173/verify-already
+    verify-failed-url: http://localhost:5173/verify-failed
+  reset-token-ttl-minutes: 15
+  verify-token-ttl-hours: 24
+
+
+
 
 frontend:
   success:
