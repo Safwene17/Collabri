@@ -3,8 +3,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
-import { useRegle } from '@regle/core';
-import { required, email, minLength, maxLength } from '@regle/rules';
 
     defineOptions({
         name: "Register"
@@ -21,52 +19,10 @@ import { required, email, minLength, maxLength } from '@regle/rules';
     const userEmail = ref("");
     const password = ref("");
 
-    // Validation setup
-    const { r$ } = useRegle(
-        {
-            firstname,
-            lastname,
-            userEmail,
-            password
-        },
-        {
-            firstname: {
-                required,
-                minLength: minLength(3),
-                maxLength: maxLength(255)
-            },
-            lastname: {
-                required,
-                minLength: minLength(3),
-                maxLength: maxLength(255)
-            },
-            userEmail: {
-                required,
-                email
-            },
-            password: {
-                required,
-                minLength: minLength(12),
-                maxLength: maxLength(255)
-            }
-        }
-    );
 
     // Function to send a Request to Register a User
     async function registerUser() {
         if (isSubmitting.value) return;
-
-        // Trigger full validation and check
-        const isValid = await r$.$validate();
-        if (!isValid) {
-            toast.add({
-                severity: "warn",
-                summary: "Validation Error",
-                detail: "Please fix the errors in the form before submitting.",
-                life: 3000
-            });
-            return;
-        }
 
         isSubmitting.value = true;
 
