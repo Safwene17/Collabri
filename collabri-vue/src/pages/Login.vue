@@ -22,7 +22,7 @@ import { LoginSchema, validateLoginInputs } from '../utils/validation';
         if (isSubmitting.value) return;
 
         const isValid = await validateLoginInputs({ 
-            Player: LoginSchema, 
+            Schema: LoginSchema, 
             userEmail: userEmail.value, 
             userPassword: userPassword.value, 
             toast: toast 
@@ -61,9 +61,9 @@ import { LoginSchema, validateLoginInputs } from '../utils/validation';
 <!-- Component Template -->
 <template>
     <div class="bg-[#0a0a0a] w-full h-screen">
-        <div class="grid grid-cols-2 w-full h-screen">
+        <div class="grid lg:grid-cols-2 p-4 md:p-0 w-full h-screen">
             <!-- Image Container -->
-            <div class="w-full h-full">
+            <div class="lg:block hidden w-full h-full">
                 <img 
                     src="/assets/login-cover.png" 
                     alt="Login Cover"
@@ -114,6 +114,7 @@ import { LoginSchema, validateLoginInputs } from '../utils/validation';
                         label="Sign in" 
                         :disabled="isSubmitting"
                         @click="loginUser"
+                        :loading="isSubmitting"
                     />
 
                     <!-- Forgot Password Link -->
