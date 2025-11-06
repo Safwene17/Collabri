@@ -2,12 +2,13 @@ package org.example.userservice.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.userservice.dto.LoginRequest;
-import org.example.userservice.dto.LoginResponse;
-import org.example.userservice.dto.RegisterRequest;
-import org.example.userservice.dto.UserResponse;
+import org.example.userservice.dto.*;
 import org.example.userservice.entities.User;
+import org.example.userservice.exceptions.EmailAlreadyUsedException;
+import org.example.userservice.exceptions.InvalidEmailFormatException;
+import org.example.userservice.exceptions.InvalidPasswordFormatException;
 import org.example.userservice.repositories.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,14 +34,21 @@ public class UserService {
     private final UserDetailsService userDetailsService;
     private final EmailVerificationService emailVerificationService;
 
-    public Void register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         String email = request.email();
+        String password = request.password();
+
         if (email == null || email.isBlank() || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw new IllegalArgumentException("Invalid email");
+            throw new InvalidEmailFormatException();
         }
         if (repository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new EmailAlreadyUsedException();
         }
+
+        if (password == null || password.isBlank() || !password.matches("(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}")) {
+            throw new InvalidPasswordFormatException();
+        }
+
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
@@ -50,7 +58,6 @@ public class UserService {
         } catch (Exception ex) {
             log.warn("Failed to send verification email for {}", user.getEmail(), ex);
         }
-        return null;
     }
 
 

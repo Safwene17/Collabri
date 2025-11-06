@@ -35,8 +35,8 @@ public class EmailVerificationService {
     @Value("${app.verify-token-ttl-hours}")
     private long tokenTtlHours;
 
-    @Value("${app.frontend.verify-url}")
-    private String frontendVerifyUrl;
+    @Value("${app.backend.verify-url}")
+    private String backendVerifyUrl;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
@@ -57,7 +57,7 @@ public class EmailVerificationService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         // If user is already enabled, nothing to do
-        if (user.isEnabled()) return;
+        if (user.isVerified()) return;
 
         // remove previous tokens for this user
         tokenRepository.deleteAllByUser(user);
@@ -76,9 +76,9 @@ public class EmailVerificationService {
     }
 
     private void sendVerificationEmailHtml(String toEmail, String rawToken, String firstName) {
-        String verifyLink = frontendVerifyUrl + "?token=" + rawToken;
+        // link now points to backend endpoint that will verify + redirect
+        String verifyLink = backendVerifyUrl + "?token=" + rawToken;
         try {
-            // Read template from classpath, works both in IDE and packaged JAR
             var resource = new ClassPathResource("templates/verify_email.html");
             String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
                     .replace("{{name}}", firstName != null ? firstName : "")
@@ -97,6 +97,7 @@ public class EmailVerificationService {
         }
     }
 
+
     @Transactional
     public void confirmToken(String rawToken) {
         String tokenHash = hashToken(rawToken);
@@ -105,9 +106,9 @@ public class EmailVerificationService {
 
         if (token.isUsed()) throw new IllegalArgumentException("Token already used");
         if (token.getExpiresAt().isBefore(Instant.now())) throw new IllegalArgumentException("Token expired");
-
+        if (token.getUser().isVerified()) throw new IllegalArgumentException("User already verified");
         User user = token.getUser();
-        user.setEnabled(true);
+        user.setVerified(true);
         userRepository.save(user);
 
         token.setUsed(true);

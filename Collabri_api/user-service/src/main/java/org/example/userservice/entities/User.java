@@ -38,7 +38,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private boolean enabled = false;
+    private boolean verified = false;
 
 
     @Override
@@ -73,6 +73,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return UserDetails.super.isEnabled();
     }
 }

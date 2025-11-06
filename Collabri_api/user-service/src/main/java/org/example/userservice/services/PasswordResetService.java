@@ -110,12 +110,12 @@ public class PasswordResetService {
      * Optional utility method for frontend validation.
      */
 
-//    public boolean validateToken(String token) {
-//        Optional<PasswordResetToken> opt = tokenRepository.findByToken(token);
-//        if (opt.isEmpty()) return false;
-//        PasswordResetToken prt = opt.get();
-//        if (prt.isUsed()) return false;
-//        if (prt.getExpiresAt().isBefore(Instant.now())) return false;
-//        return true;
-//    }
+    public boolean validateToken(String token) {
+        Optional<PasswordResetToken> opt = tokenRepository.findByToken(token);
+        if (opt.isEmpty()) return false;
+        PasswordResetToken prt = opt.get();
+        if (prt.isUsed()) return false;
+        if (prt.getExpiresAt().isBefore(Instant.now())) return false;
+        return true;
+    }
 }
