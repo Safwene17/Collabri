@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
-import { useRegle } from '@regle/core';
-import { required, email, minLength, maxLength } from '@regle/rules';
+import { loginRequest } from '../services/auth';
+import { LoginSchema, validateLoginInputs } from '../utils/validation';
 
     defineOptions({
         name: "Login"
@@ -18,67 +17,33 @@ import { required, email, minLength, maxLength } from '@regle/rules';
     const userEmail = ref("");
     const userPassword = ref("");
 
-    // Validation setup
-    const { r$ } = useRegle(
-        {
-            userEmail,
-            userPassword
-        },
-        {
-            userEmail: {
-                required,
-                email
-            },
-            userPassword: {
-                required,
-                minLength: minLength(12),
-                maxLength: maxLength(255)
-            }
-        }
-    );
-
+    // Function to Handle Login Requests
     async function loginUser() {
         if (isSubmitting.value) return;
 
-        // Trigger full validation and check
-        const isValid = await r$.$validate();
-        if (!isValid) {
-            toast.add({
-                severity: "warn",
-                summary: "Validation Error",
-                detail: "Please fix the errors in the form before submitting.",
-                life: 3000
-            });
+        const isValid = await validateLoginInputs({ 
+            Player: LoginSchema, 
+            userEmail: userEmail.value, 
+            userPassword: userPassword.value, 
+            toast: toast 
+        });
+
+        if(!isValid) {
             return;
         }
 
         isSubmitting.value = true;
 
         try {
-            const loginResponse = await axios.post("http://localhost:8222/api/v1/users/login", {
-                    email: userEmail.value,
-                    password: userPassword.value,
-                },
-                {
-                headers: {
-                    "Content-Type": "application/json",
-                }
+            await loginRequest({
+                email: userEmail.value,
+                password: userPassword.value,
+                url: "http://localhost:8222/api/v1/users/login",
+                toast: toast
             });
-
-            // Success Response
-            if(loginResponse.status === 200) {
-                console.log(loginResponse.data);
-
-                toast.add({
-                    severity: "success",
-                    summary: "Success",
-                    detail: "Logged in successfully", // Updated message for login context
-                    life: 3000
-                });
-            }
-
+            
         } catch(error) {
-            console.error("Error in Login User: ", error);
+            console.error("Unexpected Error in Login User: ", error);
 
             toast.add({
                 severity: "error",
@@ -107,7 +72,7 @@ import { required, email, minLength, maxLength } from '@regle/rules';
             </div>
 
             <!-- Login Form Container -->
-            <form class="flex items-center justify-center w-full h-full">
+            <div class="flex items-center justify-center w-full h-full">
                 <!-- Login Form -->
                 <div class="flex flex-col gap-5">
                     <!-- Heading -->
@@ -132,9 +97,9 @@ import { required, email, minLength, maxLength } from '@regle/rules';
 
                     <!-- Password Input -->
                     <div class="flex flex-col gap-2">
-                        <label for="email" class="font-semibold text-sm">Password :</label>
+                        <label for="password" class="font-semibold text-sm">Password :</label>
                         <InputText 
-                            name="email" 
+                            name="password" 
                             type="password" 
                             class="text-black"
                             placeholder="Your Password"
@@ -147,6 +112,7 @@ import { required, email, minLength, maxLength } from '@regle/rules';
                         type="button" 
                         severity="contrast" 
                         label="Sign in" 
+                        :disabled="isSubmitting"
                         @click="loginUser"
                     />
 
@@ -156,7 +122,7 @@ import { required, email, minLength, maxLength } from '@regle/rules';
                     </a>
 
                     <!-- Separator -->
-                    <div class="relative h-[1px] w-full bg-[#373737] mt-4">
+                    <div class="relative h-px w-full bg-[#373737] mt-4">
                         <span class="absolute top-1/2 translate-y-[-60%] left-1/2 translate-x-[-50%] bg-[#0a0a0a] text-white text-sm font-semibold p-1">
                             OR
                         </span>
@@ -172,7 +138,7 @@ import { required, email, minLength, maxLength } from '@regle/rules';
                         <RouterLink to="/register" class="underline font-semibold">Join now !</RouterLink>
                     </a>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
