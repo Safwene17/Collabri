@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { LoginProps } from "../types/types";
+import type { LoginProps, RegisterProps } from "../types/types";
 
 // Login Function
 export async function loginRequest({ email, password, url, toast }: LoginProps) {
@@ -17,7 +17,7 @@ export async function loginRequest({ email, password, url, toast }: LoginProps) 
         // Success Response
         if(loginResponse.status === 200) {
             console.log(loginResponse.data);
-            
+
             toast.add({
                 severity: "success",
                 summary: "Success",
@@ -28,6 +28,44 @@ export async function loginRequest({ email, password, url, toast }: LoginProps) 
 
     } catch(error) {
         console.error("Error in Login User: ", error);
+
+        toast.add({
+            severity: "error",
+            summary: "Error",
+            detail: "Une erreur s'est produite. Réessayer plus tard",
+            life: 3000
+        });
+    }
+};
+
+
+// Register Function
+export async function registerRequest({ firstname, lastname, email, password, url, toast }: RegisterProps) {
+    try {
+        const registerResponse = await axios.post(url, {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                password: password,
+            },
+            {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        // Success Response
+        if(registerResponse.status === 200) {
+            toast.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Account created successfully",
+                life: 3000
+            });
+        }
+        
+    } catch(error: any) {
+        console.error("Error in Register User: ", error);
 
         toast.add({
             severity: "error",

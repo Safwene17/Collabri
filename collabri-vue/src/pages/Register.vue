@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
+import { RegisterSchema, validateRegisterInputs } from '../utils/validation';
+import { registerRequest } from '../services/auth';
 
     defineOptions({
         name: "Register"
@@ -19,37 +20,34 @@ import Toast from 'primevue/toast';
     const userEmail = ref("");
     const password = ref("");
 
-
     // Function to send a Request to Register a User
     async function registerUser() {
         if (isSubmitting.value) return;
 
+        const isValid = await validateRegisterInputs({
+            Schema: RegisterSchema,
+            firstname: firstname.value,
+            lastname: lastname.value,
+            email: userEmail.value,
+            password: password.value,
+            toast: toast
+        });
+
+        if(!isValid) {
+            return;
+        }
+
         isSubmitting.value = true;
 
         try {
-            const registerResponse = await axios.post("http://localhost:8222/api/v1/users/register", {
-                    firstname: firstname.value,
-                    lastname: lastname.value,
-                    email: userEmail.value,
-                    password: password.value,
-                },
-                {
-                headers: {
-                    "Content-Type": "application/json",
-                }
+            await registerRequest({
+                firstname: firstname.value,
+                lastname: lastname.value,
+                email: userEmail.value,
+                password: password.value,
+                url: "http://localhost:8222/api/v1/users/register",
+                toast: toast
             });
-
-            // Success Response
-            if(registerResponse.status === 200) {
-                console.log(registerResponse.data);
-
-                toast.add({
-                    severity: "success",
-                    summary: "Success",
-                    detail: "Compte créé avec succès", // Fixed accent
-                    life: 3000
-                });
-            }
 
         } catch(error) {
             console.error("Error in Register User: ", error);
@@ -69,9 +67,9 @@ import Toast from 'primevue/toast';
 
 <template>
     <div class="bg-[#0a0a0a] w-full h-screen">
-        <div class="grid grid-cols-2 w-full h-screen">
+        <div class="grid lg:grid-cols-2 p-4 md:p-0 w-full h-screen">
             <!-- Image Container -->
-            <div class="w-full h-full">
+            <div class="lg:block hidden w-full h-full">
                 <img 
                     src="/assets/login-cover.png" 
                     alt="Login Cover"
@@ -152,6 +150,7 @@ import Toast from 'primevue/toast';
                         severity="contrast" 
                         label="Sign up" 
                         @click="registerUser"
+                        :loading="isSubmitting"
                     />
 
                     <!-- Sign in Link -->

@@ -8,8 +8,28 @@ export interface LoginProps {
 
 // Login Validation Props
 export interface LoginValidationProps {
-    Player: any,
+    Schema: any,
     userEmail: string,
     userPassword: string,
+    toast: any
+};
+
+// Register Validation Props
+export interface RegisterValidationProps {
+    Schema: any,
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string,
+    toast: any
+};
+
+// Register Function Props
+export interface RegisterProps {
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string,
+    url: string,
     toast: any
 };
