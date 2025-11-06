@@ -1,7 +1,96 @@
 <script lang="ts" setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
+import { useRegle } from '@regle/core';
+import { required, email, minLength, maxLength } from '@regle/rules';
+
     defineOptions({
         name: "Login"
     });
+
+    // Setup
+    const toast = useToast();
+
+    // Data
+    const isSubmitting = ref(false);
+    const userEmail = ref("");
+    const userPassword = ref("");
+
+    // Validation setup
+    const { r$ } = useRegle(
+        {
+            userEmail,
+            userPassword
+        },
+        {
+            userEmail: {
+                required,
+                email
+            },
+            userPassword: {
+                required,
+                minLength: minLength(12),
+                maxLength: maxLength(255)
+            }
+        }
+    );
+
+    async function loginUser() {
+        if (isSubmitting.value) return;
+
+        // Trigger full validation and check
+        const isValid = await r$.$validate();
+        if (!isValid) {
+            toast.add({
+                severity: "warn",
+                summary: "Validation Error",
+                detail: "Please fix the errors in the form before submitting.",
+                life: 3000
+            });
+            return;
+        }
+
+        isSubmitting.value = true;
+
+        try {
+            const loginResponse = await axios.post("http://localhost:8222/api/v1/users/login", {
+                    email: userEmail.value,
+                    password: userPassword.value,
+                },
+                {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            // Success Response
+            if(loginResponse.status === 200) {
+                console.log(loginResponse.data);
+
+                toast.add({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Logged in successfully", // Updated message for login context
+                    life: 3000
+                });
+            }
+
+        } catch(error) {
+            console.error("Error in Login User: ", error);
+
+            toast.add({
+                severity: "error",
+                summary: "Error",
+                detail: "Une erreur s'est produite. Réessayer plus tard",
+                life: 3000
+            });
+
+        } finally {
+            isSubmitting.value = false;
+        }
+    };
 </script>
 
 <!-- Component Template -->
@@ -18,7 +107,7 @@
             </div>
 
             <!-- Login Form Container -->
-            <div class="flex items-center justify-center w-full h-full">
+            <form class="flex items-center justify-center w-full h-full">
                 <!-- Login Form -->
                 <div class="flex flex-col gap-5">
                     <!-- Heading -->
@@ -31,28 +120,35 @@
 
                     <!-- Email Input -->
                     <div class="flex flex-col gap-2">
-                        <label for="email" class="font-semibold">Email :</label>
+                        <label for="email" class="font-semibold text-sm">Email :</label>
                         <InputText 
                             name="email" 
                             type="email" 
                             placeholder="user@example.com" 
                             class="text-black"
+                            v-model="userEmail"
                         />
                     </div>
 
                     <!-- Password Input -->
                     <div class="flex flex-col gap-2">
-                        <label for="email" class="font-semibold">Password :</label>
+                        <label for="email" class="font-semibold text-sm">Password :</label>
                         <InputText 
                             name="email" 
                             type="password" 
                             class="text-black"
                             placeholder="Your Password"
+                            v-model="userPassword"
                         />
                     </div>
 
                     <!-- Sign In Button -->
-                    <Button type="submit" severity="contrast" label="Sign in" />
+                    <Button 
+                        type="button" 
+                        severity="contrast" 
+                        label="Sign in" 
+                        @click="loginUser"
+                    />
 
                     <!-- Forgot Password Link -->
                     <a href="#" class="text-xs underline font-semibold">
@@ -76,7 +172,9 @@
                         <RouterLink to="/register" class="underline font-semibold">Join now !</RouterLink>
                     </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <Toast />
 </template>

@@ -14,6 +14,4 @@ import Register from './pages/Register.vue';
 
 <template>
   <RouterView />
-
-  <Toast />
 </template>

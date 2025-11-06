@@ -7,6 +7,7 @@ import Aura from '@primeuix/themes/aura';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App);
 
@@ -18,6 +19,7 @@ app.use(PrimeVue, {
 
 // Implementing Router
 app.use(router);
+app.use(ToastService);
 
 // PrimeVue Components
 app.component("InputText", InputText);
