@@ -1,7 +1,114 @@
 <script lang="ts" setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
+import Toast from 'primevue/toast';
+import { useRegle } from '@regle/core';
+import { required, email, minLength, maxLength } from '@regle/rules';
+
     defineOptions({
         name: "Register"
     });
+
+    // Setup
+    const toast = useToast();
+
+    // Data
+    const isSubmitting = ref(false);
+
+    const firstname = ref("");
+    const lastname = ref("");
+    const userEmail = ref("");
+    const password = ref("");
+
+    // Validation setup
+    const { r$ } = useRegle(
+        {
+            firstname,
+            lastname,
+            userEmail,
+            password
+        },
+        {
+            firstname: {
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(255)
+            },
+            lastname: {
+                required,
+                minLength: minLength(3),
+                maxLength: maxLength(255)
+            },
+            userEmail: {
+                required,
+                email
+            },
+            password: {
+                required,
+                minLength: minLength(12),
+                maxLength: maxLength(255)
+            }
+        }
+    );
+
+    // Function to send a Request to Register a User
+    async function registerUser() {
+        if (isSubmitting.value) return;
+
+        // Trigger full validation and check
+        const isValid = await r$.$validate();
+        if (!isValid) {
+            toast.add({
+                severity: "warn",
+                summary: "Validation Error",
+                detail: "Please fix the errors in the form before submitting.",
+                life: 3000
+            });
+            return;
+        }
+
+        isSubmitting.value = true;
+
+        try {
+            const registerResponse = await axios.post("http://localhost:8222/api/v1/users/register", {
+                    firstname: firstname.value,
+                    lastname: lastname.value,
+                    email: userEmail.value,
+                    password: password.value,
+                },
+                {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            // Success Response
+            if(registerResponse.status === 200) {
+                console.log(registerResponse.data);
+
+                toast.add({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Compte créé avec succès", // Fixed accent
+                    life: 3000
+                });
+            }
+
+        } catch(error) {
+            console.error("Error in Register User: ", error);
+
+            toast.add({
+                severity: "error",
+                summary: "Error",
+                detail: "Une erreur s'est produite. Réessayer plus tard",
+                life: 3000
+            });
+
+        } finally {
+            isSubmitting.value = false;
+        }
+    };
 </script>
 
 <template>
@@ -17,7 +124,7 @@
             </div>
 
             <!-- Login Form Container -->
-            <div class="flex items-center justify-center w-full h-full">
+            <form class="flex items-center justify-center w-full h-full">
                 <!-- Login Form -->
                 <div class="flex flex-col gap-5">
                     <!-- Heading -->
@@ -38,6 +145,8 @@
                                 type="text" 
                                 placeholder="John" 
                                 class="text-black w-full"
+                                v-model="firstname"
+                                required="true"
                             />
                         </div>
 
@@ -49,6 +158,8 @@
                                 type="text" 
                                 placeholder="John" 
                                 class="text-black w-full"
+                                v-model="lastname"
+                                required="true"
                             />
                         </div>
                     </div>
@@ -61,6 +172,8 @@
                             type="email" 
                             placeholder="user@example.com" 
                             class="text-black"
+                            v-model="userEmail"
+                            required="true"
                         />
                     </div>
 
@@ -72,11 +185,18 @@
                             type="password" 
                             class="text-black"
                             placeholder="Your Password"
+                            v-model="password"
+                            required="true"
                         />
                     </div>
 
                     <!-- Sign up Button -->
-                    <Button type="submit" severity="contrast" label="Sign up" />
+                    <Button 
+                        type="button"
+                        severity="contrast" 
+                        label="Sign up" 
+                        @click="registerUser"
+                    />
 
                     <!-- Sign in Link -->
                     <a href="#" class="text-sm text-center font-light">
@@ -84,7 +204,9 @@
                         <RouterLink to="/login" class="underline font-semibold">Sign in !</RouterLink>
                     </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+
+    <Toast />
 </template>
