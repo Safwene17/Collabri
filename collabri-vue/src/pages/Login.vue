@@ -3,10 +3,13 @@ import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { loginRequest } from '../services/auth';
-import { LoginSchema, validateLoginInputs } from '../utils/validation';
+import { LoginSchema, validateInputs } from '../utils/validation';
 
     defineOptions({
-        name: "Login"
+        name: "Login",
+        components: {
+            Toast,
+        }
     });
 
     // Setup
@@ -21,12 +24,14 @@ import { LoginSchema, validateLoginInputs } from '../utils/validation';
     async function loginUser() {
         if (isSubmitting.value) return;
 
-        const isValid = await validateLoginInputs({ 
-            Schema: LoginSchema, 
-            userEmail: userEmail.value, 
-            userPassword: userPassword.value, 
-            toast: toast 
-        });
+        const isValid = await validateInputs(
+            LoginSchema, 
+            {
+                email: userEmail.value, 
+                password: userPassword.value, 
+            },
+            toast 
+        );
 
         if(!isValid) {
             return;
@@ -118,9 +123,9 @@ import { LoginSchema, validateLoginInputs } from '../utils/validation';
                     />
 
                     <!-- Forgot Password Link -->
-                    <a href="#" class="text-xs underline font-semibold">
+                    <RouterLink to="/forgot-password" class="text-xs underline font-semibold">
                         Forgot Password ?
-                    </a>
+                    </RouterLink>
 
                     <!-- Separator -->
                     <div class="relative h-px w-full bg-[#373737] mt-4">

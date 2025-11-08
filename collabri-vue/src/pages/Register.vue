@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
-import { RegisterSchema, validateRegisterInputs } from '../utils/validation';
+import { RegisterSchema, validateInputs } from '../utils/validation';
 import { registerRequest } from '../services/auth';
 
     defineOptions({
@@ -24,14 +24,16 @@ import { registerRequest } from '../services/auth';
     async function registerUser() {
         if (isSubmitting.value) return;
 
-        const isValid = await validateRegisterInputs({
-            Schema: RegisterSchema,
-            firstname: firstname.value,
-            lastname: lastname.value,
-            email: userEmail.value,
-            password: password.value,
-            toast: toast
-        });
+        const isValid = await validateInputs(
+            RegisterSchema,
+            { 
+                firstname: firstname.value, 
+                lastname: lastname.value, 
+                email: userEmail.value, 
+                password: password.value
+            },
+            toast
+        );
 
         if(!isValid) {
             return;
