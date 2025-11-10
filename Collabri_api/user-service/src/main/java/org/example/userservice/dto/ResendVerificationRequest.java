@@ -1,4 +1,10 @@
 package org.example.userservice.dto;
 
-public record ResendVerificationRequest(String email) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record ResendVerificationRequest(
+        @Email(message = "Invalid email ")
+        @NotBlank
+        String email) {
 }

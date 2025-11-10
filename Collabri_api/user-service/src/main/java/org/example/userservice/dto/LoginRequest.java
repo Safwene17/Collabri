@@ -1,11 +1,14 @@
 package org.example.userservice.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
-        @NotNull(message = "Email cannot be null")
+        @Email(message = "Invalid email ")
+        @NotBlank(message = "Email cannot be null")
         String email,
-        @NotNull(message = "password cannot be null")
+
+        @NotBlank(message = "Password is required")
         String password
 ) {
 }

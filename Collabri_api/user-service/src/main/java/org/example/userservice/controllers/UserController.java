@@ -1,20 +1,21 @@
 package org.example.userservice.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.*;
+import org.example.userservice.entities.RefreshToken;
+import org.example.userservice.entities.User;
+import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.services.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,8 +24,14 @@ import java.util.UUID;
 public class UserController {
 
     private final EmailVerificationService emailVerificationService;
-    private final UserService service;
+    private final UserService userService;
     private final PasswordResetService passwordResetService;
+    private final RefreshTokenService refreshTokenService;
+    private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
+    private final org.example.userservice.repositories.UserRepository userRepository;
+    private final TokenService tokenService;
+
 
     @Value("${app.frontend.verify-success-url}")
     private String frontendVerifySuccessUrl;
@@ -38,89 +45,98 @@ public class UserController {
     @Value("${app.frontend.verify-failed-url}")
     private String frontendVerifyFailedUrl;
 
-//    private final JwtService jwtService;
-//    private final UserService userService;
-//    private final CustomUserDetailsService customUserDetailsService;
-
-
+    // ✅ Register
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid RegisterRequest request) {
-        service.register(request);
-        return ResponseEntity.ok(
-                ApiResponse.<String>builder()
-                        .success(true)
-                        .message("Verification email sent")
-                        .data(null)
-                        .build()
+        userService.register(request);
+        return ResponseEntity.status(201).body(
+                ApiResponse.ok("Verification email sent", null)
         );
     }
 
-
+    // ✅ Login (wrapped)
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity<ApiResponse<Void>> login(@RequestBody @Valid LoginRequest request,
+                                                   HttpServletResponse response) {
+        LoginResponse loginResponse = userService.authenticate(request);
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+
+        tokenService.issueTokens(user, userDetails, response, false, true);
+
+        return ResponseEntity.ok(ApiResponse.ok("Login successful", null));
     }
 
 
+    // ✅ Delete User
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") UUID id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable("id") UUID id) {
+        userService.delete(id);
+        return ResponseEntity.ok(ApiResponse.ok("User deleted successfully", null));
     }
 
+    // ✅ Get User by ID
     @GetMapping("/get/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") UUID id) {
+        UserResponse user = userService.findById(id);
+        return ResponseEntity.ok(ApiResponse.ok("User fetched successfully", user));
     }
 
+    // ✅ Get User by Email
     @GetMapping("/by-email")
-    public ResponseEntity<UserResponse> getUserByEmail(@RequestParam("email") String email) {
-        return ResponseEntity.ok(service.findByEmail(email));
+    public ResponseEntity<ApiResponse<UserResponse>> getUserByEmail(@RequestParam("email") String email) {
+        UserResponse user = userService.findByEmail(email);
+        return ResponseEntity.ok(ApiResponse.ok("User fetched successfully", user));
     }
 
+    // 🆕 Pagination (Default page = 0, size = 5)
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        PageResponse<UserResponse> users = userService.findAllPaginated(page, size);
+        return ResponseEntity.ok(ApiResponse.ok("Users fetched successfully", users));
     }
 
+    // ✅ Update user
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable UUID id, @RequestBody @Valid RegisterRequest request) {
-        service.update(id, request);
-        return ResponseEntity.accepted().build();
+    public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable UUID id,
+                                                        @RequestBody @Valid RegisterRequest request) {
+        userService.update(id, request);
+        return ResponseEntity.accepted().body(ApiResponse.ok("User updated successfully", null));
     }
 
+    // ✅ Forgot Password
     @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        // to avoid revealing whether email exists, you might always return 200
-        try {
-            passwordResetService.createAndSendResetToken(request.email());
-        } catch (IllegalArgumentException ex) {
-            // swallow exception to avoid email enumeration; still return 200
-        }
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody @Valid ForgotPasswordRequest request) {
+        passwordResetService.createAndSendResetToken(request.email());
+        return ResponseEntity.ok(ApiResponse.ok("A password reset link has been sent", null));
     }
 
+    // ✅ Reset Password
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         passwordResetService.resetPassword(request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok("Password reset successfully", null));
     }
 
-    //optionnal for frontend to validate token before showing reset form
+    // ✅ Validate Reset Token
     @GetMapping("/validate-reset-token")
-    public ResponseEntity<Boolean> validateResetToken(@RequestParam("token") String token) {
+    public ResponseEntity<ApiResponse<Boolean>> validateResetToken(@RequestParam("token") String token) {
         boolean ok = passwordResetService.validateToken(token);
-        return ResponseEntity.ok(ok);
+        return ResponseEntity.ok(ApiResponse.ok(ok ? "Token valid" : "Token invalid", ok));
     }
 
-    @GetMapping("/verify-email")
-    public void verifyEmail(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
+    // (Response stays redirect — no JSON)
+    @PostMapping("/verify-email")
+    public void verifyEmail(@RequestBody String token, HttpServletResponse response) throws IOException {
         try {
             emailVerificationService.confirmToken(token);
-            // success redirect (frontend page shows success message)
             response.sendRedirect(frontendVerifySuccessUrl);
         } catch (IllegalArgumentException ex) {
-            // rely on message text from confirmToken to choose redirect
             String msg = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
             if (msg.contains("expired")) {
                 response.sendRedirect(frontendVerifyExpiredUrl);
@@ -132,11 +148,41 @@ public class UserController {
         }
     }
 
-
+    // ✅ Resend verification email
     @PostMapping("/resend-verification")
-    public ResponseEntity<Void> resendVerification(@RequestBody ResendVerificationRequest request) {
+    public ResponseEntity<ApiResponse<Void>> resendVerification(@RequestBody @Valid ResendVerificationRequest request) {
         emailVerificationService.resendVerification(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.ok("Verification email resent", null));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<ApiResponse<Void>> refreshToken(@CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
+                                                          HttpServletResponse response) {
+        if (refreshTokenCookie == null || refreshTokenCookie.isBlank()) {
+            throw new CustomException("Refresh token missing", HttpStatus.UNAUTHORIZED);
+        }
+
+        RefreshToken oldToken = refreshTokenService.findByToken(refreshTokenCookie);
+        refreshTokenService.verifyExpiration(oldToken);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(oldToken.getUser().getEmail());
+        tokenService.rotateRefreshToken(oldToken, userDetails, response, false, true);
+
+        return ResponseEntity.ok(ApiResponse.ok("Tokens refreshed", null));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(@CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
+                                                    HttpServletResponse response) {
+        if (refreshTokenCookie != null && !refreshTokenCookie.isBlank()) {
+            try {
+                RefreshToken token = refreshTokenService.findByToken(refreshTokenCookie);
+                tokenService.revokeTokens(token.getUser(), response, false);
+            } catch (Exception ignored) {
+            }
+        }
+        return ResponseEntity.ok(ApiResponse.ok("Logged out successfully", null));
     }
 
 }
+

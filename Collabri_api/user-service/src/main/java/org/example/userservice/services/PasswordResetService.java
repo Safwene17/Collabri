@@ -1,13 +1,15 @@
 package org.example.userservice.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.dto.ForgotPasswordRequest;
 import org.example.userservice.dto.ResetPasswordRequest;
 import org.example.userservice.entities.PasswordResetToken;
 import org.example.userservice.entities.User;
+//import org.example.userservice.exceptions.InvalidEmailException;
+import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.PasswordResetTokenRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,8 +28,6 @@ public class PasswordResetService {
 
     private final PasswordResetTokenRepository tokenRepository;
     private final UserRepository userRepository;
-
-
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder;
 
@@ -42,7 +43,7 @@ public class PasswordResetService {
     @Transactional
     public void createAndSendResetToken(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
         // delete any previous tokens for this user (optional)
         tokenRepository.deleteAllByUser(user);
@@ -60,25 +61,45 @@ public class PasswordResetService {
     }
 
     private void sendResetEmail(String toEmail, String token, String firstName) {
-        String resetLink = frontendResetUrl + "?token=" + token;
+        userRepository.findByEmail(toEmail)
+                .orElseThrow(() -> new CustomException("Email not found", HttpStatus.NOT_FOUND));
 
-        String subject = "Reset your password";
-        String text = "Hi " + (firstName != null ? firstName : "") + ",\n\n"
-                + "We received a request to reset your password. Click the link below to set a new password. "
-                + "This link will expire in " + tokenTtlMinutes + " minutes.\n\n"
-                + resetLink + "\n\n"
-                + "If you did not request a password reset, please ignore this email.\n\n"
-                + "Thanks,\nYour App Team";
+        String resetLink = frontendResetUrl + "?token=" + token;
+        String subject = "Password Reset Instructions";
+
+        String text = """
+                Hi %s,
+                
+                We received a request to reset the password for your account.
+                
+                Click the link below to create a new password:
+                %s
+                
+                ⚠️ For security reasons, this link will expire in %d minutes.
+                
+                If you did not request a password reset, please ignore this message or contact support if you have concerns.
+                
+                Best regards,
+                %s
+                """.formatted(
+                firstName != null && !firstName.isBlank() ? firstName : "there",
+                resetLink,
+                tokenTtlMinutes,
+                "Collabri Team"
+        );
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(text);
+
         if (mailFrom != null && !mailFrom.isBlank()) {
             message.setFrom(mailFrom);
         }
+
         mailSender.send(message);
     }
+
 
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
@@ -109,7 +130,6 @@ public class PasswordResetService {
     /**
      * Optional utility method for frontend validation.
      */
-
     public boolean validateToken(String token) {
         Optional<PasswordResetToken> opt = tokenRepository.findByToken(token);
         if (opt.isEmpty()) return false;

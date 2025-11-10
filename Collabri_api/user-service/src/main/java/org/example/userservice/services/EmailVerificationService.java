@@ -2,6 +2,7 @@ package org.example.userservice.services;
 
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.ResendVerificationRequest;
 import org.example.userservice.entities.EmailVerificationToken;
 import org.example.userservice.entities.User;
@@ -24,6 +25,7 @@ import java.util.HexFormat;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
@@ -119,10 +121,11 @@ public class EmailVerificationService {
     /**
      * Optional: used by controller to resend a verification email (silently swallow user-not-found)
      */
-    public void resendVerification(org.example.userservice.dto.ResendVerificationRequest request) {
+    public void resendVerification(ResendVerificationRequest request) {
         try {
             createAndSendVerificationToken(request.email());
         } catch (IllegalArgumentException ignored) {
+            log.info("Resend verification requested for non-existing email: " + request.email());
         }
     }
 
