@@ -134,7 +134,7 @@ public class UserController {
     @PostMapping("/verify-email")
     public ResponseEntity<ApiResponse<Void>> verifyEmail(@RequestBody TokenRequest request) {
         // do not swallow exceptions here — let GlobalExceptionHandler handle them
-        emailVerificationService.confirmToken(request.Token());
+        emailVerificationService.confirmToken(request.token());
         return ResponseEntity.ok(ApiResponse.ok("Email verified successfully", null));
     }
 
