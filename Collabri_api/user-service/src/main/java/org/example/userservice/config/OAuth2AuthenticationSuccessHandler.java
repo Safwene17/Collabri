@@ -67,7 +67,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .firstname(finalGivenName)
                         .lastname(finalFamilyName)
                         .role(Role.USER)
-                        .password("") // no password for OAuth users
+                        .password(null) // no password for OAuth users
                         .verified(true)
                         .build();
                 return userRepository.save(newUser);

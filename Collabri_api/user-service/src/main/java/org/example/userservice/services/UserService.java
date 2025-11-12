@@ -36,7 +36,6 @@ public class UserService {
     private final UserDetailsService userDetailsService;
     private final EmailVerificationService emailVerificationService;
     private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     // Register user
     public void register(RegisterRequest request) {
@@ -71,8 +70,6 @@ public class UserService {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
-        refreshTokenRepository.save(refreshToken);
 
         return new LoginResponse(accessToken);
     }

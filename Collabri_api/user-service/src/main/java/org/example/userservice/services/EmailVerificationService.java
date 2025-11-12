@@ -39,8 +39,6 @@ public class EmailVerificationService {
     @Value("${app.verify-token-ttl-hours}")
     private long tokenTtlHours;
 
-    @Value("${app.backend.verify-url}")
-    private String backendVerifyUrl;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
@@ -130,8 +128,7 @@ public class EmailVerificationService {
         token.setUsed(true);
         tokenRepository.save(token);
 
-        // remove old tokens for hygiene
-        tokenRepository.deleteAllByUser(user);
+
     }
 
 
