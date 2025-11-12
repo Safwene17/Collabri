@@ -79,7 +79,8 @@ public class EmailVerificationService {
 
     private void sendVerificationEmailHtml(String toEmail, String rawToken, String firstName) {
         // link now points to backend endpoint that will verify + redirect
-        String verifyLink = backendVerifyUrl + "?token=" + rawToken;
+        // String verifyLink = backendVerifyUrl + "?token=" + rawToken;
+        String verifyLink = "http://localhost:5173/verify-email" + "?token=" + rawToken;
         try {
             var resource = new ClassPathResource("templates/verify_email.html");
             String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
