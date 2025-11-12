@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.ResendVerificationRequest;
 import org.example.userservice.entities.EmailVerificationToken;
 import org.example.userservice.entities.User;
+import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.EmailVerificationTokenRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -103,21 +105,40 @@ public class EmailVerificationService {
 
     @Transactional
     public void confirmToken(String rawToken) {
+        log.info("Confirming verification token");
+
         String tokenHash = hashToken(rawToken);
         EmailVerificationToken token = tokenRepository.findByTokenHash(tokenHash)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+                .orElseThrow(() -> new CustomException("Invalid token", HttpStatus.BAD_REQUEST));
 
-        if (token.isUsed()) throw new IllegalArgumentException("Token already used");
-        if (token.getExpiresAt().isBefore(Instant.now())) throw new IllegalArgumentException("Token expired");
-        if (token.getUser().isVerified()) throw new IllegalArgumentException("User already verified");
+        if (token.isUsed()) {
+            log.warn("Verification token already used for user {}", token.getUser().getEmail());
+            throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
+        }
+
+        if (token.getExpiresAt().isBefore(Instant.now())) {
+            log.warn("Verification token expired for user {}", token.getUser().getEmail());
+            throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
+        }
+
+        if (token.getUser().isVerified()) {
+            log.info("User {} already verified", token.getUser().getEmail());
+            throw new CustomException("User already verified", HttpStatus.OK);
+        }
+
         User user = token.getUser();
         user.setVerified(true);
         userRepository.save(user);
+        log.info("User {} marked as verified", user.getEmail());
 
         token.setUsed(true);
         tokenRepository.save(token);
+
+        // remove old tokens for hygiene
         tokenRepository.deleteAllByUser(user);
+        log.debug("Deleted verification tokens for user {}", user.getEmail());
     }
+
 
     /**
      * Optional: used by controller to resend a verification email (silently swallow user-not-found)

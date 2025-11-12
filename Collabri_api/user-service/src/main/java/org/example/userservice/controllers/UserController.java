@@ -130,23 +130,14 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.ok(ok ? "Token valid" : "Token invalid", ok));
     }
 
-    // (Response stays redirect — no JSON)
+
     @PostMapping("/verify-email")
-    public void verifyEmail(@RequestBody String token, HttpServletResponse response) throws IOException {
-        try {
-            emailVerificationService.confirmToken(token);
-            response.sendRedirect(frontendVerifySuccessUrl);
-        } catch (IllegalArgumentException ex) {
-            String msg = ex.getMessage() != null ? ex.getMessage().toLowerCase() : "";
-            if (msg.contains("expired")) {
-                response.sendRedirect(frontendVerifyExpiredUrl);
-            } else if (msg.contains("already")) {
-                response.sendRedirect(frontendVerifyAlreadyUrl);
-            } else {
-                response.sendRedirect(frontendVerifyFailedUrl);
-            }
-        }
+    public ResponseEntity<ApiResponse<Void>> verifyEmail(@RequestBody TokenRequest request) {
+        // do not swallow exceptions here — let GlobalExceptionHandler handle them
+        emailVerificationService.confirmToken(request.Token());
+        return ResponseEntity.ok(ApiResponse.ok("Email verified successfully", null));
     }
+
 
     // ✅ Resend verification email
     @PostMapping("/resend-verification")
