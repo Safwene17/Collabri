@@ -112,31 +112,26 @@ public class EmailVerificationService {
                 .orElseThrow(() -> new CustomException("Invalid token", HttpStatus.BAD_REQUEST));
 
         if (token.isUsed()) {
-            log.warn("Verification token already used for user {}", token.getUser().getEmail());
             throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
         }
 
         if (token.getExpiresAt().isBefore(Instant.now())) {
-            log.warn("Verification token expired for user {}", token.getUser().getEmail());
             throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
         }
 
         if (token.getUser().isVerified()) {
-            log.info("User {} already verified", token.getUser().getEmail());
             throw new CustomException("User already verified", HttpStatus.OK);
         }
 
         User user = token.getUser();
         user.setVerified(true);
         userRepository.save(user);
-        log.info("User {} marked as verified", user.getEmail());
 
         token.setUsed(true);
         tokenRepository.save(token);
 
         // remove old tokens for hygiene
         tokenRepository.deleteAllByUser(user);
-        log.debug("Deleted verification tokens for user {}", user.getEmail());
     }
 
 
