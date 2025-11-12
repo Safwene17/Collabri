@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { AuthService } from '../services/auth.service';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { RegisterSchema, validateInputs } from '../utils/validation';
-import { registerRequest } from '../services/auth';
+import { handleRTAndValidationErrors } from '../utils/utils';
+
 
     defineOptions({
         name: "Register"
@@ -14,11 +16,20 @@ import { registerRequest } from '../services/auth';
 
     // Data
     const isSubmitting = ref(false);
+    const emailSuccessMessage = ref(false);
 
     const firstname = ref("");
     const lastname = ref("");
     const userEmail = ref("");
     const password = ref("");
+
+    // Function to Reset all Fields Values
+    function resetFields() {
+        firstname.value = "";
+        lastname.value = "";
+        userEmail.value = "";
+        password.value = "";
+    };
 
     // Function to send a Request to Register a User
     async function registerUser() {
@@ -35,32 +46,32 @@ import { registerRequest } from '../services/auth';
             toast
         );
 
-        if(!isValid) {
-            return;
-        }
+        if(!isValid) return;
 
         isSubmitting.value = true;
+        emailSuccessMessage.value = false;
 
         try {
-            await registerRequest({
-                firstname: firstname.value,
-                lastname: lastname.value,
-                email: userEmail.value,
-                password: password.value,
-                url: "http://localhost:8222/api/v1/users/register",
-                toast: toast
-            });
+            const authService = new AuthService(userEmail.value, password.value, firstname.value, lastname.value);
 
-        } catch(error) {
-            console.error("Error in Register User: ", error);
+            const registerResponse = await authService.register("http://localhost:8222/api/v1/users/register");
 
-            toast.add({
-                severity: "error",
-                summary: "Error",
-                detail: "Une erreur s'est produite. Réessayer plus tard",
-                life: 3000
-            });
+            if(registerResponse.status === 201 || registerResponse.status === 200) {
+                toast.add({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Account created successfully !",
+                    life: 3000
+                });
 
+                resetFields();
+                emailSuccessMessage.value = true;
+            }
+        } catch(error: any) {
+            console.error("Error in Register: ", error);
+
+            handleRTAndValidationErrors(error, toast);
+            
         } finally {
             isSubmitting.value = false;
         }
@@ -89,6 +100,15 @@ import { registerRequest } from '../services/auth';
                         <p class="text-sm text-gray-400 mt-2">
                             Enter your informations and become a member now !
                         </p>
+                    </div>
+
+                    <!-- Register Success Message -->
+                    <div 
+                        v-if="emailSuccessMessage"
+                        class="flex items-center gap-2 p-4 rounded-lg bg-green-600 mt-2"
+                    >
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span class="text-sm">A verification link was sent to your email successfully.</span>
                     </div>
 
                     <!-- Firstname & Lastname Container -->

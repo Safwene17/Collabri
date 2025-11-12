@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { RouterLink, useRoute } from 'vue-router';
-import { computed, onMounted, ref } from 'vue';
+import {  onMounted, ref } from 'vue';
 import axios from 'axios';
 
     defineOptions({
