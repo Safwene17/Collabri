@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { LoginProps, RegisterProps } from "../types/types";
+import { handleRTAndValidationErrors } from "../utils/utils";
 
 // Login Function
 export async function loginRequest({ email, password, url, toast }: LoginProps) {
@@ -11,7 +12,8 @@ export async function loginRequest({ email, password, url, toast }: LoginProps) 
             {
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            withCredentials: true
         });
 
         // Success Response
@@ -51,27 +53,17 @@ export async function registerRequest({ firstname, lastname, email, password, ur
             {
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
         });
 
         // Success Response
-        if(registerResponse.status === 200) {
-            toast.add({
-                severity: "success",
-                summary: "Success",
-                detail: "Account created successfully",
-                life: 3000
-            });
+        if(registerResponse.status === 201) {
+            return 201;
         }
         
     } catch(error: any) {
         console.error("Error in Register User: ", error);
 
-        toast.add({
-            severity: "error",
-            summary: "Error",
-            detail: "Une erreur s'est produite. Réessayer plus tard",
-            life: 3000
-        });
+        handleRTAndValidationErrors(error, toast);
     }
 };
