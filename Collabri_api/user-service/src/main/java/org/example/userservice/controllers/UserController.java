@@ -8,14 +8,11 @@ import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.services.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -32,19 +29,6 @@ public class UserController {
     private final org.example.userservice.repositories.UserRepository userRepository;
     private final TokenService tokenService;
 
-
-    @Value("${app.frontend.verify-success-url}")
-    private String frontendVerifySuccessUrl;
-
-    @Value("${app.frontend.verify-expired-url}")
-    private String frontendVerifyExpiredUrl;
-
-    @Value("${app.frontend.verify-already-url}")
-    private String frontendVerifyAlreadyUrl;
-
-    @Value("${app.frontend.verify-failed-url}")
-    private String frontendVerifyFailedUrl;
-
     // ✅ Register
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid RegisterRequest request) {
@@ -56,17 +40,24 @@ public class UserController {
 
     // ✅ Login (wrapped)
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Void>> login(@RequestBody @Valid LoginRequest request,
-                                                   HttpServletResponse response) {
-        LoginResponse loginResponse = userService.authenticate(request);
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+            @RequestBody @Valid LoginRequest request,
+            HttpServletResponse response
+    ) {
+        // Authenticate user
+        userService.authenticate(request);
 
+        // Fetch user and details
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
-        tokenService.issueTokens(user, userDetails, response, false, true);
+        // Issue tokens
+        String accessToken = tokenService.issueTokens(user, userDetails, response, false);
 
-        return ResponseEntity.ok(ApiResponse.ok("Login successful", null));
+        // Return access token as string in response
+        return ResponseEntity.ok(ApiResponse.ok("Login successful", new LoginResponse(accessToken)));
     }
 
 
@@ -147,8 +138,10 @@ public class UserController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<ApiResponse<Void>> refreshToken(@CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
-                                                          HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(
+            @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
+            HttpServletResponse response
+    ) {
         if (refreshTokenCookie == null || refreshTokenCookie.isBlank()) {
             throw new CustomException("Refresh token missing", HttpStatus.UNAUTHORIZED);
         }
@@ -157,23 +150,27 @@ public class UserController {
         refreshTokenService.verifyExpiration(oldToken);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(oldToken.getUser().getEmail());
-        tokenService.rotateRefreshToken(oldToken, userDetails, response, false, true);
+        String newAccessToken = tokenService.rotateRefreshToken(oldToken, userDetails, response, false);
 
-        return ResponseEntity.ok(ApiResponse.ok("Tokens refreshed", null));
+        return ResponseEntity.ok(ApiResponse.ok("Access token refreshed", new LoginResponse(newAccessToken)));
     }
 
+
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
-                                                    HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Void>> logout(
+            @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
+            HttpServletResponse response
+    ) {
         if (refreshTokenCookie != null && !refreshTokenCookie.isBlank()) {
             try {
                 RefreshToken token = refreshTokenService.findByToken(refreshTokenCookie);
-                tokenService.revokeTokens(token.getUser(), response, false);
+                tokenService.clearRefreshToken(token.getUser(), response, false);
             } catch (Exception ignored) {
             }
         }
         return ResponseEntity.ok(ApiResponse.ok("Logged out successfully", null));
     }
+
 
 }
 

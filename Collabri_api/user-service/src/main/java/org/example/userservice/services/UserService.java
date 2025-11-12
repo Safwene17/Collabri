@@ -7,6 +7,7 @@ import org.example.userservice.dto.*;
 import org.example.userservice.entities.User;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.exceptions.CustomException;
+import org.example.userservice.repositories.RefreshTokenRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,7 @@ public class UserService {
     private final UserDetailsService userDetailsService;
     private final EmailVerificationService emailVerificationService;
     private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     // Register user
     public void register(RegisterRequest request) {
@@ -70,8 +72,9 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        refreshTokenRepository.save(refreshToken);
 
-        return new LoginResponse(accessToken, refreshToken.getToken());
+        return new LoginResponse(accessToken);
     }
 
     @Transactional
