@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { RouterLink, useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import axios from 'axios';
 
     defineOptions({
         name: "EmailVerified"
@@ -8,8 +9,48 @@ import { computed } from 'vue';
 
     const route = useRoute();
 
+    // Data
+    const isVerifying = ref(false);
+
+    // On Mounted
+    onMounted(verifyEmail);
+
     // Email Verification Token
-    const token = computed(() => route.query.token as string || "");
+    // const token = computed(() => );
+
+    // Function to Get Token & Use it to verify the email (if Token is valid)
+    async function verifyEmail() {
+        if(isVerifying.value) return;
+
+        isVerifying.value = true;
+
+        try {
+            const token = route.query.token as string || "";
+
+            if(!token) {
+                console.log("zabb");
+            }
+
+            const verifyResponse = await axios.post("http://localhost:8222/api/v1/users/verify-email", {
+                token: token
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if(verifyResponse.status === 200) {
+                console.log("EYYYYYYYYYYYYYYY");
+            } else{
+                console.log("AHHHHHHHHHHHHHHH");
+            }
+        } catch(error) {
+            console.error("Error in Verify Email: ", error);
+
+        } finally {
+            isVerifying.value = false;
+        }
+    };
 </script>
 
 

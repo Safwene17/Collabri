@@ -21,11 +21,13 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
     const emailFailed = ref(false);
     
     const resetEmail = ref("");
+    const errorMessage = ref("");
 
     // Function to Send a Reset Password Email
     async function sendResetEmail() {
         emailFailed.value = false;
         emailSuccess.value = false;
+        errorMessage.value = "";
 
         if(isSending.value) return;
 
@@ -63,6 +65,11 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
             console.error("Error in Send Reset Email: ", error);
 
             emailFailed.value = true;
+            if(error.status === 404) {
+                errorMessage.value = error.response.data?.message || "User not found in our system";
+            } else {
+                errorMessage.value = "An error occurred when send you an email. Try again later"
+            }
 
         } finally {
             isSending.value = false;
@@ -103,7 +110,7 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
                     class="flex items-center gap-2 p-4 rounded-lg bg-red-600 mt-2"
                 >
                     <i class="fa-solid fa-circle-exclamation"></i>
-                    <span class="text-sm">An error occurred when sending an email. Try again later</span>
+                    <span class="text-sm">{{ errorMessage }}</span>
                 </div>
 
                 <div class="flex flex-col gap-2 mt-2">
