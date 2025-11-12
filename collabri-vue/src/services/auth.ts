@@ -12,7 +12,8 @@ export async function loginRequest({ email, password, url, toast }: LoginProps) 
             {
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            withCredentials: true
         });
 
         // Success Response
@@ -52,7 +53,7 @@ export async function registerRequest({ firstname, lastname, email, password, ur
             {
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
         });
 
         // Success Response

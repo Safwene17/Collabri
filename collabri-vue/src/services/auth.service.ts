@@ -3,10 +3,10 @@ import axios from "axios";
 export class AuthService {
     firstname: string | undefined;
     lastname: string | undefined;
-    email: string;
-    password: string;
+    email: string | undefined;
+    password: string | undefined;
 
-    constructor(email: string, password: string, firstname?: string, lastname?: string) {
+    constructor(email?: string, password?: string, firstname?: string, lastname?: string) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -28,4 +28,18 @@ export class AuthService {
 
         return registerResponse;
     };
+
+
+    // Verify Email Request
+    async verifyEmail(url: string, token: string) {
+        const verifyResponse = await axios.post(url, {
+            token: token
+        }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        return verifyResponse;
+    }
 };

@@ -39,6 +39,7 @@ public class SecurityConfig {
                                 "/api/v1/users/forgot-password",
                                 "/api/v1/users/reset-password",
                                 "/api/v1/users/login",
+                                "/api/v1/users/refresh-token",
                                 "/oauth2/**",                // allow oauth endpoints
                                 "/login/**",
                                 "/error"
@@ -58,7 +59,7 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, accessDeniedException) ->
                                 response.setStatus(HttpStatus.FORBIDDEN.value()))
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
     }

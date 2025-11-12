@@ -78,6 +78,7 @@ import { handleRTAndValidationErrors } from '../utils/utils';
     };
 </script>
 
+
 <template>
     <div class="bg-[#0a0a0a] w-full h-screen">
         <div class="grid lg:grid-cols-2 p-4 md:p-0 w-full h-screen">

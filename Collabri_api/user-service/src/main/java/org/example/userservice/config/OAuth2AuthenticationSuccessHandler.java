@@ -8,6 +8,8 @@ import org.example.userservice.entities.User;
 import org.example.userservice.enums.Role;
 import org.example.userservice.repositories.UserRepository;
 import org.example.userservice.services.CustomUserDetailsService;
+import org.example.userservice.services.JwtService;
+import org.example.userservice.services.RefreshTokenService;
 import org.example.userservice.services.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -26,6 +29,8 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final CustomUserDetailsService userDetailsService;
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @Value("${frontend.success.url}")
     private String frontendSuccessUrl;
@@ -39,7 +44,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
         try {
@@ -54,7 +58,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 familyName = parts[1];
             }
 
-            // Find or create user
+            // ✅ Create or load the user
             String finalGivenName = givenName;
             String finalFamilyName = familyName;
             User user = userRepository.findByEmail(email).orElseGet(() -> {
@@ -63,19 +67,27 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                         .firstname(finalGivenName)
                         .lastname(finalFamilyName)
                         .role(Role.USER)
-                        .password("") // OAuth user has no password
+                        .password(null) // no password for OAuth users
                         .verified(true)
                         .build();
                 return userRepository.save(newUser);
             });
 
-            // Load UserDetails
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
-            // Issue tokens via centralized TokenService
-            tokenService.issueTokens(user, userDetails, response, cookieSecure, cookieHttpOnly);
+            // ✅ Generate access token (string)
+            String accessToken = jwtService.generateAccessToken(userDetails);
 
-            response.sendRedirect(frontendSuccessUrl);
+            // ✅ Generate and persist refresh token (as cookie)
+            tokenService.issueTokens(user, userDetails, response, cookieSecure);
+
+            // ✅ Redirect to frontend with access token in query param
+            String redirectUrl = UriComponentsBuilder.fromUriString(frontendSuccessUrl)
+                    .queryParam("access_token", accessToken)
+                    .build().toUriString();
+
+            response.sendRedirect(redirectUrl);
+
         } catch (Exception ex) {
             log.error("OAuth2 login error", ex);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "OAuth processing failed");
