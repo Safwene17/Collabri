@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { RouterLink, useRoute } from 'vue-router';
 import {  onMounted, ref } from 'vue';
-import axios from 'axios';
 import { AuthService } from '../services/auth.service';
 
     defineOptions({
