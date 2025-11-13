@@ -4,6 +4,7 @@ import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { loginRequest } from '../services/auth';
 import { LoginSchema, validateInputs } from '../utils/validation';
+import router from '../router/main.route';
 
     defineOptions({
         name: "Login",
@@ -40,13 +41,16 @@ import { LoginSchema, validateInputs } from '../utils/validation';
         isSubmitting.value = true;
 
         try {
-            await loginRequest({
+            const loginResponse = await loginRequest({
                 email: userEmail.value,
                 password: userPassword.value,
                 url: "http://localhost:8222/api/v1/users/login",
                 toast: toast
             });
             
+            if(loginResponse === 200) {
+                router.push("/home");
+            }
         } catch(error) {
             console.error("Unexpected Error in Login User: ", error);
 

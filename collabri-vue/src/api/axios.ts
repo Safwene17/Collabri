@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useAuthStore } from "../stores/auth";
 
-const api = axios.create({
+const axiosInstance = axios.create({
     baseURL: "http://localhost:8222/api/v1",
     withCredentials: true,
 });
 
 
-api.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use((config) => {
     const authStore = useAuthStore();
     const token = authStore.accessToken;
 
@@ -19,7 +19,8 @@ api.interceptors.request.use((config) => {
 });
 
 
-api.interceptors.response.use((response) => response,
+axiosInstance.interceptors.response.use(
+    (response) => response,
     async (error) => {
         const authStore = useAuthStore();
         const originalRequest = error.config;
@@ -40,10 +41,10 @@ api.interceptors.response.use((response) => response,
 
                 // Retry the original request with new token
                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-                return api(originalRequest);
+                return axiosInstance(originalRequest);
 
             } catch (refreshError) {
-                authStore.logout();
+                authStore.clearAccessToken();
                 throw refreshError;
             }
         }
@@ -53,4 +54,4 @@ api.interceptors.response.use((response) => response,
 );
 
 
-export default api;
+export default axiosInstance;

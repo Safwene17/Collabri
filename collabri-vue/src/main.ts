@@ -1,9 +1,10 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import './style.css';
 import 'primeicons/primeicons.css';
 import App from './App.vue';
-import router from './router/main';
+import router from './router/main.route';
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
 import InputText from 'primevue/inputtext';
@@ -13,6 +14,8 @@ import ProgressSpinner from 'primevue/progressspinner';
 import ToastService from 'primevue/toastservice';
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
 const app = createApp(App);
 
 // Pinia for State Management
