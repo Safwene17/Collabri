@@ -5,7 +5,6 @@ import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.RefreshTokenRepository;
-import org.example.userservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ public class RefreshTokenService {
     @Value("${jwt.refresh-token-expiration-ms}")
     private long refreshTokenExpirationMs;
 
-    // Create refresh token
     public RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
@@ -33,7 +31,6 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    // Verify token
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().isBefore(Instant.now()) || token.isRevoked()) {
             refreshTokenRepository.delete(token);

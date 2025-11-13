@@ -1,9 +1,5 @@
 package org.example.userservice.config;
 
-
-import org.example.userservice.filters.JwtAuthFilter;
-import org.example.userservice.services.CustomUserDetailsService;
-import org.example.userservice.services.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,43 +19,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            JwtAuthFilter jwtAuthFilter,
-            OAuth2AuthenticationSuccessHandler successHandler
+            HttpSecurity http
     ) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1/users/resend-verification",
-                                "/api/v1/users/verify-email",
+                                "/api/v1/auth/resend-verification",
+                                "/api/v1/auth/verify-email",
+                                "/api/v1/auth/register",
+                                "/api/v1/auth/forgot-password",
+                                "/api/v1/auth/reset-password",
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/refresh-token",
                                 "/api/v1/users/get/**",
-                                "/api/v1/users/register",
-                                "/api/v1/users/forgot-password",
-                                "/api/v1/users/reset-password",
-                                "/api/v1/users/login",
-                                "/api/v1/users/refresh-token",
-                                "/oauth2/**",                // allow oauth endpoints
-                                "/login/**",
                                 "/error"
                         ).permitAll()
                         .requestMatchers("/api/v1/users/delete/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/users/update/**").hasAnyRole("ADMIN", "USER")
-
                         .anyRequest().authenticated()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(successHandler))
-                // Simple approach: just return HTTP status codes
-                .exceptionHandling(exceptions -> exceptions
-                        // For API endpoints, return 401 status instead of redirecting
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                        // For access denied, return 403 status
-                        .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.setStatus(HttpStatus.FORBIDDEN.value()))
-                )
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-        ;
+                );
         return http.build();
     }
 
@@ -74,8 +52,4 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    @Bean
-    public JwtAuthFilter jwtAuthFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
-        return new JwtAuthFilter(jwtService, customUserDetailsService);
-    }
 }

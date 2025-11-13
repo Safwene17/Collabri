@@ -5,18 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.*;
 import org.example.userservice.entities.User;
-import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.exceptions.CustomException;
-import org.example.userservice.repositories.RefreshTokenRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,51 +22,16 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
 
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
     private final EmailVerificationService emailVerificationService;
-    private final RefreshTokenService refreshTokenService;
 
-    // Register user
-    public void register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+    /**
+     * Register user (create record and send verification email).
+     * All validation should be done by controller/DTO constraints; keep extra checks here.
+     */
 
-        User user = userMapper.toUser(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-
-        try {
-            emailVerificationService.createAndSendVerificationToken(user.getEmail());
-        } catch (Exception ex) {
-            throw new CustomException("Failed to send verification email", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Authenticate & generate tokens
-    public LoginResponse authenticate(LoginRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
-            );
-        } catch (Exception e) {
-            throw new CustomException("Invalid credentials", HttpStatus.UNAUTHORIZED);
-        }
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
-        String accessToken = jwtService.generateAccessToken(userDetails);
-
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
-
-
-        return new LoginResponse(accessToken);
-    }
 
     @Transactional
     public void delete(UUID id) {
