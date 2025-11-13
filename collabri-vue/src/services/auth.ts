@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { LoginProps, RegisterProps } from "../types/types";
 import { handleRTAndValidationErrors } from "../utils/utils";
+import { useAuthStore } from "../stores/auth";
 
 // Login Function
 export async function loginRequest({ email, password, url, toast }: LoginProps) {
@@ -19,6 +20,9 @@ export async function loginRequest({ email, password, url, toast }: LoginProps) 
         // Success Response
         if(loginResponse.status === 200) {
             console.log(loginResponse.data);
+
+            const authStore = useAuthStore();
+            authStore.setAccessToken(loginResponse.data.access_token);
 
             toast.add({
                 severity: "success",

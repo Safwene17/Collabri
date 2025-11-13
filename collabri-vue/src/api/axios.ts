@@ -6,7 +6,7 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// ✅ Automatically attach access token to every request
+
 api.interceptors.request.use((config) => {
     const authStore = useAuthStore();
     const token = authStore.accessToken;
@@ -18,32 +18,34 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// ✅ Automatically refresh token on 401 errors
+
 api.interceptors.response.use((response) => response,
     async (error) => {
         const authStore = useAuthStore();
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
+            originalRequest._retry = true;
 
-        try {
-            const { data } = await axios.post(
-            "http://localhost:8222/api/v1/users/refresh",
-            {},
-            { withCredentials: true }
-            );
+            try {
+                const { data } = await axios.post(
+                    "http://localhost:8222/api/v1/users/refresh",
+                    {},
+                    { 
+                        withCredentials: true 
+                    }
+                );
 
-            authStore.setAccessToken(data.accessToken);
+                authStore.setAccessToken(data.accessToken);
 
-            // Retry the original request with new token
-            originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-            return api(originalRequest);
+                // Retry the original request with new token
+                originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+                return api(originalRequest);
 
-        } catch (refreshError) {
-            authStore.logout();
-            throw refreshError;
-        }
+            } catch (refreshError) {
+                authStore.logout();
+                throw refreshError;
+            }
         }
 
         throw error;
