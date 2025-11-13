@@ -33,16 +33,14 @@ public class JwtService {
 
     @PostConstruct
     public void init() {
-        // ensure secret is long enough. In prod use a proper key / JWKS.
         signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // generate access token
     public String generateAccessToken(UserDetails userDetails) {
         var now = System.currentTimeMillis();
         var roles = userDetails.getAuthorities()
                 .stream()
-                .map(GrantedAuthority::getAuthority) // e.g. "ROLE_USER"
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         User user = (User) userDetails;
 
@@ -51,33 +49,17 @@ public class JwtService {
                 .claim("roles", roles)
                 .claim("userId", user.getId())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + getAccessTokenExpirationSeconds()))
+                .setExpiration(new Date(now + accessTokenExpirationMs))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // generate refresh token (no roles/claims required)
-    public String generateRefreshToken(UserDetails userDetails) {
-        var now = System.currentTimeMillis();
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + refreshTokenExpirationMs))
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public int getAccessTokenExpirationSeconds() {
-        long seconds = accessTokenExpirationMs / 1000L;
-        return (int) Math.min(seconds, Integer.MAX_VALUE);
-    }
 
     public int getRefreshTokenExpirationSeconds() {
         long seconds = refreshTokenExpirationMs / 1000L;
         return (int) Math.min(seconds, Integer.MAX_VALUE);
     }
 
-    // extract username
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
