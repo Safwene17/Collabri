@@ -3,9 +3,8 @@ import { useAuthStore } from "../stores/auth";
 
 const axiosInstance = axios.create({
     baseURL: "http://localhost:8222/api/v1",
-    withCredentials: true,
+    withCredentials: true, // This sends cookies automatically
 });
-
 
 axiosInstance.interceptors.request.use((config) => {
     const authStore = useAuthStore();
@@ -18,40 +17,34 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
-
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
         const authStore = useAuthStore();
         const originalRequest = error.config;
 
+        // Only handle 401 errors and avoid infinite retry loops
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {
-                const { data } = await axios.post(
-                    "http://localhost:8222/api/v1/users/refresh",
-                    {},
-                    { 
-                        withCredentials: true 
-                    }
-                );
-
-                authStore.setAccessToken(data.accessToken);
-
+                const response = await axiosInstance.post("/users/refresh", {});
+                
+                authStore.setAccessToken(response.data.accessToken);
+                
                 // Retry the original request with new token
-                originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+                originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
                 return axiosInstance(originalRequest);
 
             } catch (refreshError) {
                 authStore.clearAccessToken();
-                throw refreshError;
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
             }
         }
 
-        throw error;
+        return Promise.reject(error);
     }
 );
-
 
 export default axiosInstance;

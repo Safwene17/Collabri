@@ -1,31 +1,48 @@
 import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 
-export const useAuthStore = defineStore("auth", {
-    state: () => ({
-        accessToken: null as string | null,
-        isAuthenticated: false,
-        loading: false
-    }),
+export const useAuthStore = defineStore("auth", () => {
+    // State
+    const accessToken = ref<string | null>(null);
+    const loading = ref(false);
 
-    actions: {
-        setAccessToken(token: string) {
-            if(token || token.trim() !== "") {
-                this.accessToken = token;
-                this.isAuthenticated = true;
-                this.loading = false;
-            } else {
-                this.accessToken = null;
-                this.isAuthenticated = false;
-                this.loading = false;
-            }
-        },
+    // Getters
+    const isAuthenticated = computed(() => !!accessToken.value);
 
-        clearAccessToken() {
-            this.accessToken = null;
-            this.isAuthenticated = false;
-            this.loading = false;
-        },
-    },
+    // Actions
+    const setAccessToken = (token: string) => {
+        if (token && token.trim() !== "") {
+            accessToken.value = token;
+            loading.value = false;
+        } else {
+            clearAccessToken();
+        }
+    };
 
-    persist: true,
+    const clearAccessToken = () => {
+        accessToken.value = null;
+        loading.value = false;
+    };
+
+    const setLoading = (isLoading: boolean) => {
+        loading.value = isLoading;
+    };
+
+    return {
+        // State
+        accessToken,
+        loading,
+        
+        // Getters
+        isAuthenticated,
+        
+        // Actions
+        setAccessToken,
+        clearAccessToken,
+        setLoading,
+    };
+}, {
+    persist: {
+        key: "auth-storage",
+    }
 });

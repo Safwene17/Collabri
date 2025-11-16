@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { AuthService } from '../services/auth.service';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { RegisterSchema, validateInputs } from '../utils/validation';
 import { handleRTAndValidationErrors } from '../utils/utils';
-import { useAuthStore } from '../stores/auth';
 
 
     defineOptions({
@@ -15,10 +14,6 @@ import { useAuthStore } from '../stores/auth';
     // Setup
     const toast = useToast();
 
-    onMounted(() => {
-        const auth = useAuthStore();
-        console.log(auth.accessToken);
-    })
     // Data
     const isSubmitting = ref(false);
     const emailSuccessMessage = ref(false);
