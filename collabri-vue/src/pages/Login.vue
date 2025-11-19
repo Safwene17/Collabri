@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
-import { loginRequest } from '../services/auth';
 import { LoginSchema, validateInputs } from '../utils/validation';
 import router from '../router/main.route';
+import { AuthService } from '../services/auth.service';
+import { useAuthStore } from '../stores/auth';
+import { handleRTAndValidationErrors } from '../utils/utils';
 
     defineOptions({
         name: "Login",
@@ -34,32 +36,27 @@ import router from '../router/main.route';
             toast 
         );
 
-        if(!isValid) {
-            return;
-        }
+        if(!isValid) return;
 
         isSubmitting.value = true;
 
         try {
-            const loginResponse = await loginRequest({
-                email: userEmail.value,
-                password: userPassword.value,
-                url: "http://localhost:8222/api/v1/users/login",
-                toast: toast
-            });
+            // Authentication Service Instance
+            const authService = new AuthService(userEmail.value, userPassword.value);
+            // Auth Store Instance
+            const authStore = useAuthStore();
+
+            const loginResponse = await authService.login("http://localhost:8222/api/v1/auth/login");
             
-            if(loginResponse === 200) {
+            if(loginResponse.status === 200) {
+                authStore.setAccessToken(loginResponse.data.data.access_token);
+
                 router.push("/home");
             }
-        } catch(error) {
+        } catch(error: any) {
             console.error("Unexpected Error in Login User: ", error);
 
-            toast.add({
-                severity: "error",
-                summary: "Error",
-                detail: "Une erreur s'est produite. Réessayer plus tard",
-                life: 3000
-            });
+            handleRTAndValidationErrors(error, toast);
 
         } finally {
             isSubmitting.value = false;

@@ -60,7 +60,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
         } catch (Exception ex) {
-            throw new CustomException("Invalid credentials", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("Invalid credentials", HttpStatus.BAD_REQUEST);
         }
 
         // fetch user entity
@@ -93,8 +93,10 @@ public class AuthService {
         if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
             try {
                 RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
+                refreshTokenService.revokeToken(token);
                 tokenService.clearRefreshToken(token.getUser(), response);
             } catch (Exception ignored) {
+                // Why it is Ignored ? No handling ?
             }
         } else {
             // still clear cookie even if token missing

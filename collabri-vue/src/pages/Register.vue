@@ -54,13 +54,13 @@ import { handleRTAndValidationErrors } from '../utils/utils';
         try {
             const authService = new AuthService(userEmail.value, password.value, firstname.value, lastname.value);
 
-            const registerResponse = await authService.register("http://localhost:8222/api/v1/users/register");
+            const registerResponse = await authService.register("http://localhost:8222/api/v1/auth/register");
 
             if(registerResponse.status === 201 || registerResponse.status === 200) {
                 toast.add({
                     severity: "success",
                     summary: "Success",
-                    detail: "Account created successfully !",
+                    detail: "Account created successfully",
                     life: 3000
                 });
 
