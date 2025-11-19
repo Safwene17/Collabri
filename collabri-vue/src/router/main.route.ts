@@ -26,7 +26,23 @@ const routes = [
     {
         path: '/verify-email', 
         name: 'verify-email',
-        component: () => import("../pages/EmailVerified.vue")
+        component: () => import("../pages/EmailVerified.vue"),
+        beforeEnter: (to: any) => {
+            if (!to.query.token) {
+                return { name: "login" };
+            }
+        }
+    },
+    {
+        path: '/reset-password',
+        name: 'reset-password',
+        component: () => import("../pages/ResetPassword.vue"),
+        meta: { requiresGuest: true },
+        beforeEnter: (to: any) => {
+            if (!to.query.token) {
+                return { name: "login" };
+            }
+        }
     },
     {
         path: '/home',
