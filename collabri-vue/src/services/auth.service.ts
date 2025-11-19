@@ -32,6 +32,21 @@ export class AuthService {
     };
 
 
+    // Login Request
+    async login(url: string) {
+        const loginResponse = await axios.post(url, {
+            email: this.email,
+            password: this.password
+        }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        return loginResponse;
+    };
+
+
     // Logout Request
     async logout(url: string) {
         try {

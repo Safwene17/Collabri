@@ -60,7 +60,7 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
         } catch (Exception ex) {
-            throw new CustomException("Invalid credentials", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("Invalid credentials", HttpStatus.BAD_REQUEST);
         }
 
         // fetch user entity
