@@ -44,7 +44,7 @@ import router from '../router/main.route';
             const loginResponse = await loginRequest({
                 email: userEmail.value,
                 password: userPassword.value,
-                url: "http://localhost:8222/api/v1/users/login",
+                url: "http://localhost:8222/api/v1/auth/login",
                 toast: toast
             });
             

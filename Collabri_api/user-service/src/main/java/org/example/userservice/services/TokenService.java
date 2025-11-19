@@ -54,6 +54,7 @@ public class TokenService {
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
+                .sameSite("Strict")
                 .maxAge(0)
                 .build();
 

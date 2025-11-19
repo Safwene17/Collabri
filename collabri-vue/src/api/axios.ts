@@ -3,7 +3,7 @@ import { useAuthStore } from "../stores/auth";
 
 const axiosInstance = axios.create({
     baseURL: "http://localhost:8222/api/v1",
-    withCredentials: true, // This sends cookies automatically
+    withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useAuthStore } from "../stores/auth";
+import axiosInstance from "../api/axios";
 
 export class AuthService {
     firstname: string | undefined;
@@ -30,6 +32,27 @@ export class AuthService {
     };
 
 
+    // Logout Request
+    async logout(url: string) {
+        try {
+            const authStore = useAuthStore();
+
+            const logoutResponse = await axiosInstance.post(url, {}, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if(logoutResponse.status === 200) {
+                authStore.clearAccessToken();
+                window.location.href = "/login";
+            }
+        } catch (error: any) {
+            console.error("Error in Logout:", error);
+        }
+    };
+
+
     // Verify Email Request
     async verifyEmail(url: string, token: string) {
         const verifyResponse = await axios.post(url, {
@@ -41,5 +64,5 @@ export class AuthService {
         });
 
         return verifyResponse;
-    }
+    };
 };
