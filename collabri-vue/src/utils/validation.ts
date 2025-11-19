@@ -39,6 +39,19 @@ export const forgotPasswordSchema = z.object({
             .email({ error: "Invalid Email" }),
 });
 
+// Reset Password Schema
+export const resetPasswordSchema = z.object({
+    newPassword: z.string("Password must be a string")
+            .trim()
+            .nonempty("Password cannot be empty")
+            .min(8, "Password must contain at least 8 characters")
+            .max(300, "Password cannot contain more than 300 characters")
+            .regex(
+                /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).*$/, 
+                "Password must contain at least one number and one special character"
+            )
+});
+
 
 // Generic validation function
 export async function validateInputs<T extends z.ZodTypeAny>(

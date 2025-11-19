@@ -45,7 +45,7 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
 
         try {
             const resetResponse = await axios.post(
-                "http://localhost:8222/api/v1/users/forgot-password", 
+                "http://localhost:8222/api/v1/auth/forgot-password", 
                 {
                     email: resetEmail.value
                 },

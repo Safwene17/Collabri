@@ -31,7 +31,6 @@ export class AuthService {
         return registerResponse;
     };
 
-
     // Login Request
     async login(url: string) {
         const loginResponse = await axios.post(url, {
@@ -45,7 +44,6 @@ export class AuthService {
 
         return loginResponse;
     };
-
 
     // Logout Request
     async logout(url: string) {
@@ -67,7 +65,6 @@ export class AuthService {
         }
     };
 
-
     // Verify Email Request
     async verifyEmail(url: string, token: string) {
         const verifyResponse = await axios.post(url, {
@@ -79,5 +76,19 @@ export class AuthService {
         });
 
         return verifyResponse;
+    };
+
+    // Reset Password Request
+    async resetPassword(url: string, resetToken: string, newUserPassword: string) {
+        const resetPasswordResponse = await axios.post(url, {
+            newPassword: newUserPassword,
+            token: resetToken
+        }, {
+            headers: {
+                "Content-Type": "application/json"
+            }   
+        });
+
+        return resetPasswordResponse;
     };
 };

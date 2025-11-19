@@ -36,12 +36,13 @@ import { AuthService } from '../services/auth.service';
 
             // Request
             const verifyResponse = await authService.verifyEmail(
-                "http://localhost:8222/api/v1/users/verify-email", 
+                "http://localhost:8222/api/v1/auth/verify-email", 
                 token
             );
 
             if(verifyResponse.status === 200 || verifyResponse.status === 201) {
                 verificationSuccess.value = true;
+                setTimeout(() => window.location.href = "/login", 2000);
             }
         } catch(error) {
             console.error("Error in Verify Email: ", error);
