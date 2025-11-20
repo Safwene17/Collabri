@@ -8,7 +8,6 @@ import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.services.AuthService;
 import org.example.userservice.services.EmailVerificationService;
 import org.example.userservice.services.PasswordResetService;
-import org.example.userservice.services.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ public class AuthController {
     private final AuthService authService;
     private final EmailVerificationService emailVerificationService;
     private final PasswordResetService passwordResetService;
-    private final RefreshTokenService refreshTokenService;
 
     // Register (user creation + email verification sent)
     @PostMapping("/register")
@@ -79,9 +77,15 @@ public class AuthController {
     }
 
     // Validate reset token (frontend helper)
-    @GetMapping("/validate-reset-token")
-    public ResponseEntity<ApiResponse<Boolean>> validateResetToken(@RequestParam("token") String token) {
-        boolean ok = passwordResetService.validateToken(token);
+    @PostMapping("/validate-password-reset-token")
+    public ResponseEntity<ApiResponse<Boolean>> validateResetToken(@RequestBody TokenRequest request) {
+        boolean ok = passwordResetService.validateToken(request.token());
+        return ResponseEntity.ok(ApiResponse.ok(ok ? "Token valid" : "Token invalid", ok));
+    }
+
+    @PostMapping("/validate-email-verification-token")
+    public ResponseEntity<ApiResponse<Boolean>> validateEmailVerificationToken(@RequestBody TokenRequest request) {
+        boolean ok = emailVerificationService.validateToken(request.token());
         return ResponseEntity.ok(ApiResponse.ok(ok ? "Token valid" : "Token invalid", ok));
     }
 

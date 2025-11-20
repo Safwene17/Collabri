@@ -1,5 +1,6 @@
 package org.example.userservice.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
@@ -31,12 +32,11 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token) {
+    public void verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().isBefore(Instant.now()) || token.isRevoked()) {
             refreshTokenRepository.delete(token);
             throw new CustomException("Refresh token expired or revoked", HttpStatus.UNAUTHORIZED);
         }
-        return token;
     }
 
     public void revokeToken(RefreshToken token) {
@@ -46,6 +46,12 @@ public class RefreshTokenService {
 
     public void revokeAllTokensForUser(User user) {
         refreshTokenRepository.deleteAllByUser(user);
+    }
+
+    @Transactional
+    public void revokeOtherTokens(RefreshToken current) {
+        if (current == null || current.getUser() == null) return;
+        refreshTokenRepository.revokeAllExcept(current.getUser(), current.getToken());
     }
 
     public RefreshToken findByToken(String token) {

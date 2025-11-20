@@ -107,14 +107,14 @@ public class PasswordResetService {
         String newPassword = request.newPassword();
 
         PasswordResetToken prt = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+                .orElseThrow(() -> new CustomException("Invalid token", HttpStatus.BAD_REQUEST));
 
         if (prt.isUsed()) {
-            throw new IllegalArgumentException("Token already used");
+            throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
         }
 
         if (prt.getExpiresAt().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Token expired");
+            throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
         }
 
         User user = prt.getUser();
@@ -132,10 +132,11 @@ public class PasswordResetService {
      */
     public boolean validateToken(String token) {
         Optional<PasswordResetToken> opt = tokenRepository.findByToken(token);
-        if (opt.isEmpty()) return false;
+        if (opt.isEmpty()) throw new CustomException("Token not found", HttpStatus.FORBIDDEN);
         PasswordResetToken prt = opt.get();
-        if (prt.isUsed()) return false;
-        if (prt.getExpiresAt().isBefore(Instant.now())) return false;
+        if (prt.isUsed()) throw new CustomException("Token already used", HttpStatus.FORBIDDEN);
+        if (prt.getExpiresAt().isBefore(Instant.now()))
+            throw new CustomException("Token expired", HttpStatus.FORBIDDEN);
         return true;
     }
 }
