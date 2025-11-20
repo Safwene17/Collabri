@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { useToast } from 'primevue/usetoast';
 import Toast from 'primevue/toast';
 import { RegisterSchema, validateInputs } from '../utils/validation';
-import { handleRTAndValidationErrors } from '../utils/utils';
+import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
 
 
     defineOptions({
@@ -57,13 +57,6 @@ import { handleRTAndValidationErrors } from '../utils/utils';
             const registerResponse = await authService.register("http://localhost:8222/api/v1/auth/register");
 
             if(registerResponse.status === 201 || registerResponse.status === 200) {
-                toast.add({
-                    severity: "success",
-                    summary: "Success",
-                    detail: "Account created successfully",
-                    life: 3000
-                });
-
                 resetFields();
                 emailSuccessMessage.value = true;
             }
@@ -157,14 +150,23 @@ import { handleRTAndValidationErrors } from '../utils/utils';
                     <!-- Password Input -->
                     <div class="flex flex-col gap-2">
                         <label for="password" class="font-semibold text-sm">Password :</label>
-                        <InputText 
-                            name="password" 
-                            type="password" 
-                            class="text-black"
-                            placeholder="Your Password"
-                            v-model="password"
-                            required="true"
-                        />
+                        <div class="relative">
+                            <InputText 
+                                name="password" 
+                                type="password" 
+                                id="password-input"
+                                class="text-black w-full"
+                                placeholder="Your Password"
+                                v-model="password"
+                                required="true"
+                            />
+                            <!-- Hide & Show Password Icon -->
+                            <i 
+                                id="toggle-icon"
+                                class="pi pi-eye absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer"
+                                @click="togglePassword('password-input', 'toggle-icon')"
+                            ></i>
+                        </div>
                     </div>
 
                     <!-- Sign up Button -->
@@ -174,12 +176,18 @@ import { handleRTAndValidationErrors } from '../utils/utils';
                         label="Sign up" 
                         @click="registerUser"
                         :loading="isSubmitting"
+                        class="text-sm!"
                     />
 
                     <!-- Sign in Link -->
                     <a href="#" class="text-sm text-center font-light">
                         Already a member ? 
-                        <RouterLink to="/login" class="underline font-semibold">Sign in !</RouterLink>
+                        <RouterLink 
+                            to="/login" 
+                            class="underline font-semibold"
+                        >
+                            Sign in !
+                        </RouterLink>
                     </a>
                 </div>
             </form>
@@ -188,3 +196,10 @@ import { handleRTAndValidationErrors } from '../utils/utils';
 
     <Toast />
 </template>
+
+
+<style scoped>
+.p-inputtext {
+    font-size: 14px !important;
+}
+</style>

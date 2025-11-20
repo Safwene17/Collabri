@@ -136,7 +136,7 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
                     type="button" 
                     severity="contrast" 
                     label="Reset Password"
-                    class="mt-2 text-sm"
+                    class="mt-2 text-sm!"
                     :disabled="isSending"
                     :loading="isSending"
                     @click="sendResetEmail"
@@ -145,7 +145,7 @@ import { forgotPasswordSchema, validateInputs } from '../utils/validation';
                 <!-- Login Navigation Button -->
                 <RouterLink 
                     to="/login"
-                    class="text-center font-light text-white underline mt-2"
+                    class="text-center text-sm font-light text-white underline mt-2"
                 >
                     <i class="fa-solid fa-arrow-left mr-1"></i>
                     Back to Login
