@@ -1,3 +1,4 @@
+// Function to handle Error & Validation responses and display toasts based on error code
 export function handleRTAndValidationErrors(error: any, toast: any) { // RT refers to "Rate Limiting"
     if (error.response && error.response.status === 429) {
         toast.add({
@@ -58,5 +59,27 @@ export function handleRTAndValidationErrors(error: any, toast: any) { // RT refe
             detail: error.response?.data?.message || "An error occurred. Please try again later",
             life: 4000
         });
+    }
+};
+
+
+// Function to Hide/Show Password
+export function togglePassword(passwordInputId: string, toggleIconId: string) {
+    const passwordInput = document.getElementById(passwordInputId) as HTMLInputElement | null;
+    const toggleIcon = document.getElementById(toggleIconId) as HTMLElement | null;
+
+    if (!passwordInput || !toggleIcon) {
+        return;
+    }
+
+    if (passwordInput.type === "text") {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("pi-eye-slash");
+        toggleIcon.classList.add("pi-eye");
+
+    } else if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("pi-eye");
+        toggleIcon.classList.add("pi-eye-slash");
     }
 };

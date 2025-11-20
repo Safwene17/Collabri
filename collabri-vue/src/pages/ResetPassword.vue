@@ -137,7 +137,7 @@ import router from '../router/main.route';
                     type="button" 
                     severity="contrast" 
                     label="Confirm"
-                    class="mt-2 text-sm"
+                    class="mt-2 text-sm!"
                     :disabled="isSubmitting"
                     :loading="isSubmitting"
                     @click="resetPassword"

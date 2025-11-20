@@ -6,7 +6,7 @@ import { LoginSchema, validateInputs } from '../utils/validation';
 import router from '../router/main.route';
 import { AuthService } from '../services/auth.service';
 import { useAuthStore } from '../stores/auth';
-import { handleRTAndValidationErrors } from '../utils/utils';
+import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
 
     defineOptions({
         name: "Login",
@@ -96,7 +96,7 @@ import { handleRTAndValidationErrors } from '../utils/utils';
                             name="email" 
                             type="email" 
                             placeholder="user@example.com" 
-                            class="text-black"
+                            class="text-black text-sm!"
                             v-model="userEmail"
                         />
                     </div>
@@ -104,13 +104,22 @@ import { handleRTAndValidationErrors } from '../utils/utils';
                     <!-- Password Input -->
                     <div class="flex flex-col gap-2">
                         <label for="password" class="font-semibold text-sm">Password :</label>
-                        <InputText 
-                            name="password" 
-                            type="password" 
-                            class="text-black"
-                            placeholder="Your Password"
-                            v-model="userPassword"
-                        />
+                        <div class="relative">
+                            <InputText 
+                                name="password" 
+                                type="password" 
+                                id="password-input"
+                                class="text-black w-full text-sm!"
+                                placeholder="Your Password"
+                                v-model="userPassword"
+                            />
+                            <!-- Hide & Show Password Icon -->
+                            <i 
+                                id="toggle-icon"
+                                class="pi pi-eye absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer"
+                                @click="togglePassword('password-input', 'toggle-icon')"
+                            ></i>
+                        </div>
                     </div>
 
                     <!-- Sign In Button -->
@@ -121,28 +130,51 @@ import { handleRTAndValidationErrors } from '../utils/utils';
                         :disabled="isSubmitting"
                         @click="loginUser"
                         :loading="isSubmitting"
+                        class="text-sm!"
                     />
 
                     <!-- Forgot Password Link -->
-                    <RouterLink to="/forgot-password" class="text-xs underline font-semibold">
+                    <RouterLink 
+                        to="/forgot-password" 
+                        class="flex justify-end text-xs underline font-semibold"
+                    >
                         Forgot Password ?
                     </RouterLink>
 
                     <!-- Separator -->
-                    <div class="relative h-px w-full bg-[#373737] mt-4">
-                        <span class="absolute top-1/2 translate-y-[-60%] left-1/2 translate-x-[-50%] bg-[#0a0a0a] text-white text-sm font-semibold p-1">
+                    <div class="relative h-px w-full bg-[#373737] mt-2">
+                        <span 
+                            class="absolute top-1/2 translate-y-[-60%] left-1/2 translate-x-[-50%] bg-[#0a0a0a] text-white text-sm font-semibold p-1"
+                        >
                             OR
                         </span>
                     </div>
 
                     <!-- Social Buttons -->
-                    <Button type="submit" severity="secondary" label="Continue with Google" icon="fa-brands fa-google" />
-                    <Button type="submit" severity="secondary" label="Continue with GitHub" icon="fa-brands fa-github" />
+                    <Button 
+                        type="submit" 
+                        severity="secondary" 
+                        label="Continue with Google" 
+                        icon="fa-brands fa-google" 
+                        class="text-xs!"
+                    />
+                    <Button 
+                        type="submit" 
+                        severity="secondary" 
+                        label="Continue with GitHub" 
+                        icon="fa-brands fa-github" 
+                        class="text-xs!"
+                    />
 
                     <!-- Sign Up Link -->
                     <a href="#" class="text-sm text-center font-light">
                         Don't have an account ? 
-                        <RouterLink to="/register" class="underline font-semibold">Join now !</RouterLink>
+                        <RouterLink 
+                            to="/register" 
+                            class="underline font-semibold"
+                        >
+                            Join now !
+                        </RouterLink>
                     </a>
                 </div>
             </div>
