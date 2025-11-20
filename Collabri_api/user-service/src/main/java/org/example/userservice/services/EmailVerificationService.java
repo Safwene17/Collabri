@@ -150,10 +150,11 @@ public class EmailVerificationService {
         try {
             String tokenHash = hashToken(rawToken);
             Optional<EmailVerificationToken> opt = tokenRepository.findByTokenHash(tokenHash);
-            if (opt.isEmpty()) return false;
+            if (opt.isEmpty()) throw new CustomException("Invalid token", HttpStatus.BAD_REQUEST);
             var t = opt.get();
-            if (t.isUsed()) return false;
-            if (t.getExpiresAt().isBefore(Instant.now())) return false;
+            if (t.isUsed()) throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
+            if (t.getExpiresAt().isBefore(Instant.now()))
+                throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
             return true;
         } catch (Exception e) {
             return false;

@@ -80,7 +80,7 @@ public class AuthService {
     public LoginResponse refresh(String refreshTokenValue, HttpServletResponse response) {
         RefreshToken oldToken = refreshTokenService.findByToken(refreshTokenValue);
         refreshTokenService.verifyExpiration(oldToken);
-
+        refreshTokenService.revokeOtherTokens(oldToken);
         UserDetails userDetails = userDetailsService.loadUserByUsername(oldToken.getUser().getEmail());
         String newAccess = tokenService.rotateRefreshToken(oldToken, userDetails, response);
         return new LoginResponse(newAccess);
@@ -96,7 +96,7 @@ public class AuthService {
                 refreshTokenService.revokeToken(token);
                 tokenService.clearRefreshToken(token.getUser(), response);
             } catch (Exception ignored) {
-                // Why it is Ignored ? No handling ?
+                log.warn("Failed to revoke refresh token {}", refreshTokenValue, ignored);
             }
         } else {
             // still clear cookie even if token missing
