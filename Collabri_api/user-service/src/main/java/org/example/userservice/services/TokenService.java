@@ -28,6 +28,7 @@ public class TokenService {
                 .secure(false)
                 .path("/")
                 .sameSite("Strict")
+                .domain("localhost")
                 .maxAge(jwtService.getRefreshTokenExpirationSeconds())
                 .build();
 

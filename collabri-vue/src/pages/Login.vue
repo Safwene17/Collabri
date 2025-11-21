@@ -151,13 +151,16 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
                     </div>
 
                     <!-- Social Buttons -->
-                    <Button 
-                        type="submit" 
-                        severity="secondary" 
-                        label="Continue with Google" 
-                        icon="fa-brands fa-google" 
-                        class="text-xs!"
-                    />
+                     
+                    <a href="http://localhost:8222/oauth2/authorization/google">
+                        <Button 
+                            type="button" 
+                            severity="secondary" 
+                            label="Continue with Google" 
+                            icon="fa-brands fa-google" 
+                            class="text-xs!"
+                        />
+                    </a>
                     <Button 
                         type="submit" 
                         severity="secondary" 
