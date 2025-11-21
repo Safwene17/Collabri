@@ -16,8 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
 import java.time.Duration;
+import java.util.HexFormat;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,20 +43,31 @@ public class PasswordResetService {
     @Value("${spring.mail.username}")
     private String mailFrom;
 
+    private String hashToken(String rawToken) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(rawToken.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hashBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to hash token", e);
+        }
+    }
+
     @Transactional
     public void createAndSendResetToken(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
+        // delete any previous tokens for this user (optional)
+        tokenRepository.deleteAllByUser(user);
         String token = UUID.randomUUID().toString();
         Instant expiresAt = Instant.now().plus(Duration.ofMinutes(tokenTtlMinutes));
 
         PasswordResetToken prt = new PasswordResetToken();
         prt.setUser(user);
-        prt.setToken(token);
+        prt.setTokenHash(hashToken(token));
         prt.setExpiresAt(expiresAt);
         tokenRepository.save(prt);
-
         sendResetEmail(user.getEmail(), token, user.getFirstname());
     }
 
@@ -100,10 +114,10 @@ public class PasswordResetService {
 
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        String token = request.token();
+        String tokenHash = hashToken(request.token());
         String newPassword = request.newPassword();
 
-        PasswordResetToken prt = tokenRepository.findByToken(token)
+        PasswordResetToken prt = tokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(() -> new CustomException("Invalid token", HttpStatus.BAD_REQUEST));
 
         if (prt.isUsed()) {
@@ -121,18 +135,20 @@ public class PasswordResetService {
         // mark token used and optionally delete all tokens for user
         prt.setUsed(true);
         tokenRepository.save(prt);
+        tokenRepository.deleteAllByUser(user); // cleanup
     }
 
     /**
      * Optional utility method for frontend validation.
      */
     public boolean validateToken(String token) {
-        Optional<PasswordResetToken> opt = tokenRepository.findByToken(token);
-        if (opt.isEmpty()) throw new CustomException("Token not found", HttpStatus.FORBIDDEN);
+        String hashToken = hashToken(token);
+        Optional<PasswordResetToken> opt = tokenRepository.findByTokenHash(hashToken);
+        if (opt.isEmpty()) throw new CustomException("Invalid token", HttpStatus.BAD_REQUEST);
         PasswordResetToken prt = opt.get();
-        if (prt.isUsed()) throw new CustomException("Token already used", HttpStatus.FORBIDDEN);
+        if (prt.isUsed()) throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
         if (prt.getExpiresAt().isBefore(Instant.now()))
-            throw new CustomException("Token expired", HttpStatus.FORBIDDEN);
+            throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
         return true;
     }
 }

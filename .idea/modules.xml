@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Collabri.iml" filepath="$PROJECT_DIR$/.idea/Collabri.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Collabri_api/user-service/user-service.iml" filepath="$PROJECT_DIR$/Collabri_api/user-service/user-service.iml" />
     </modules>
   </component>
 </project>
