@@ -1,6 +1,7 @@
 package org.example.userservice.services;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
@@ -19,7 +20,7 @@ public class TokenService {
      * Issue access token (returned as string) + refresh token cookie.
      */
     public String issueTokens(User user, UserDetails userDetails, HttpServletResponse response) {
-        String accessToken = jwtService.generateAccessToken(userDetails);
+        String accessToken = jwtService.generateAccessToken(userDetails, user.isVerified());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken.getToken())
@@ -37,6 +38,7 @@ public class TokenService {
     /**
      * Rotate refresh token and issue a new access token.
      */
+    @Transactional
     public String rotateRefreshToken(RefreshToken oldToken, UserDetails userDetails, HttpServletResponse response) {
         refreshTokenService.revokeToken(oldToken);
         return issueTokens(oldToken.getUser(), userDetails, response);

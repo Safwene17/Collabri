@@ -45,9 +45,6 @@ public class PasswordResetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
-        // delete any previous tokens for this user (optional)
-        tokenRepository.deleteAllByUser(user);
-
         String token = UUID.randomUUID().toString();
         Instant expiresAt = Instant.now().plus(Duration.ofMinutes(tokenTtlMinutes));
 
@@ -124,7 +121,6 @@ public class PasswordResetService {
         // mark token used and optionally delete all tokens for user
         prt.setUsed(true);
         tokenRepository.save(prt);
-        tokenRepository.deleteAllByUser(user); // cleanup
     }
 
     /**

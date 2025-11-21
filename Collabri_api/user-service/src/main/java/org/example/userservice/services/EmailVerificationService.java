@@ -56,13 +56,11 @@ public class EmailVerificationService {
     @Transactional
     public void createAndSendVerificationToken(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
         // If user is already enabled, nothing to do
-        if (user.isVerified()) return;
+        if (user.isVerified()) throw new CustomException("User already verified", HttpStatus.BAD_REQUEST);
 
-        // remove previous tokens for this user
-        tokenRepository.deleteAllByUser(user);
 
         String rawToken = UUID.randomUUID().toString();
         String tokenHash = hashToken(rawToken);

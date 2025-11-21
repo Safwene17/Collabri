@@ -36,7 +36,7 @@ public class JwtService {
         signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateAccessToken(UserDetails userDetails) {
+    public String generateAccessToken(UserDetails userDetails, boolean verified) {
         var now = System.currentTimeMillis();
         var roles = userDetails.getAuthorities()
                 .stream()
@@ -48,6 +48,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .claim("roles", roles)
                 .claim("userId", user.getId())
+                .claim("verified", verified)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + accessTokenExpirationMs))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
