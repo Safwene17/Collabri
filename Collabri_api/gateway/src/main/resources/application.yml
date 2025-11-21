@@ -11,27 +11,14 @@ spring:
             - id: user
               uri: lb://user
               predicates:
-                - Path=/api/v1/users/**
+                - Path=/api/v1/users/**, /api/v1/auth/**, /login/oauth2/**, /oauth2/**
 
-            - id: auth
-              uri: lb://user
-              predicates:
-                - Path=/api/v1/auth/**
 
             - id: calendar
               uri: lb://calendar
               predicates:
-                - Path=/api/v1/calendars/**
+                - Path=/api/v1/calendars/**, /api/v1/invites/**, /api/v1/members/**
 
-            - id: calendar-invite
-              uri: lb://calendar
-              predicates:
-                - Path=/api/v1/invites/**
-
-            - id: calendar-member
-              uri: lb://calendar
-              predicates:
-                - Path=/api/v1/members/**
 
 
 server:
