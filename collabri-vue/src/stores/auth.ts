@@ -19,6 +19,7 @@ export const useAuthStore = defineStore("auth", () => {
         }
     };
 
+    
     const clearAccessToken = () => {
         accessToken.value = null;
         loading.value = false;
