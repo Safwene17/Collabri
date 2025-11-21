@@ -134,12 +134,14 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
                     />
 
                     <!-- Forgot Password Link -->
-                    <RouterLink 
-                        to="/forgot-password" 
-                        class="flex justify-end text-xs underline font-semibold"
-                    >
-                        Forgot Password ?
-                    </RouterLink>
+                    <div class="flex justify-end w-full">
+                        <RouterLink 
+                            to="/forgot-password" 
+                            class="text-xs underline font-semibold"
+                        >
+                            Forgot Password ?
+                        </RouterLink>
+                    </div>
 
                     <!-- Separator -->
                     <div class="relative h-px w-full bg-[#373737] mt-2">
@@ -150,17 +152,15 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
                         </span>
                     </div>
 
-                    <!-- Social Buttons -->
-                     
-                    <a href="http://localhost:8222/oauth2/authorization/google">
-                        <Button 
-                            type="button" 
-                            severity="secondary" 
-                            label="Continue with Google" 
-                            icon="fa-brands fa-google" 
-                            class="text-xs!"
-                        />
-                    </a>
+                    <!-- Social Buttons -->                 
+                    <Button 
+                        type="button" 
+                        severity="secondary" 
+                        label="Continue with Google" 
+                        icon="fa-brands fa-google" 
+                        class="text-xs!"
+                    />
+
                     <Button 
                         type="submit" 
                         severity="secondary" 

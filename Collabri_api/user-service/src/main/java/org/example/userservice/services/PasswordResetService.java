@@ -59,7 +59,7 @@ public class PasswordResetService {
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
         // delete any previous tokens for this user (optional)
-        tokenRepository.deleteAllByUser(user);
+        // tokenRepository.deleteAllByUser(user);
         String token = UUID.randomUUID().toString();
         Instant expiresAt = Instant.now().plus(Duration.ofMinutes(tokenTtlMinutes));
 

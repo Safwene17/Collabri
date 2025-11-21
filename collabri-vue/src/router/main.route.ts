@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth';
 import axios from 'axios';
+import { validateTokens } from '../utils/tokens';
 
 // All Routes
 const routes = [
@@ -27,20 +28,35 @@ const routes = [
         path: '/verify-email', 
         name: 'verify-email',
         component: () => import("../pages/EmailVerified.vue"),
-        beforeEnter: (to: any) => {
-            if (!to.query.token) {
-                return { name: "login" };
+        beforeEnter: async(to: any) => {
+            const validateToken = await validateTokens(
+                "http://localhost:8222/api/v1/auth/validate-email-verification-token",
+                to.query.token
+            );
+            
+            if(!validateToken) {
+                return { name: "link-expired" };
             }
         }
+    },
+    {
+        path: '/link-expired', 
+        name: 'link-expired',
+        component: () => import("../pages/LinkExpired.vue"),
     },
     {
         path: '/reset-password',
         name: 'reset-password',
         component: () => import("../pages/ResetPassword.vue"),
         meta: { requiresGuest: true },
-        beforeEnter: (to: any) => {
-            if (!to.query.token) {
-                return { name: "login" };
+        beforeEnter: async(to: any) => {
+            const validateToken = await validateTokens(
+                "http://localhost:8222/api/v1/auth/validate-password-reset-token",
+                to.query.token
+            );
+            
+            if(!validateToken) {
+                return { name: "link-expired" };
             }
         }
     },
