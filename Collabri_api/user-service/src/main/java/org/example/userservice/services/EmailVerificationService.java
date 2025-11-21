@@ -61,6 +61,8 @@ public class EmailVerificationService {
         // If user is already enabled, nothing to do
         if (user.isVerified()) throw new CustomException("User already verified", HttpStatus.BAD_REQUEST);
 
+        // remove previous tokens for this user
+        tokenRepository.deleteAllByUser(user);
 
         String rawToken = UUID.randomUUID().toString();
         String tokenHash = hashToken(rawToken);
@@ -101,7 +103,7 @@ public class EmailVerificationService {
 
     @Transactional
     public void confirmToken(String rawToken) {
-        log.info("Confirming verification token");
+        if (rawToken == null || rawToken.isBlank()) throw new CustomException("Invalid token", HttpStatus.BAD_REQUEST);
 
         String tokenHash = hashToken(rawToken);
         EmailVerificationToken token = tokenRepository.findByTokenHash(tokenHash)
@@ -110,29 +112,29 @@ public class EmailVerificationService {
         if (token.isUsed()) {
             throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
         }
-
         if (token.getExpiresAt().isBefore(Instant.now())) {
             throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
         }
 
-        if (token.getUser().isVerified()) {
-            throw new CustomException("User already verified", HttpStatus.OK);
+        User user = token.getUser();
+        if (user.isVerified()) {
+            throw new CustomException("User already verified", HttpStatus.BAD_REQUEST);
         }
 
-        User user = token.getUser();
         user.setVerified(true);
         userRepository.save(user);
 
+        // mark used (optional) and then remove tokens for hygiene
         token.setUsed(true);
         tokenRepository.save(token);
-
-
+        tokenRepository.deleteAllByUser(user); // delete used and old tokens
     }
 
 
     /**
      * Optional: used by controller to resend a verification email (silently swallow user-not-found)
      */
+    @Transactional
     public void resendVerification(ResendVerificationRequest request) {
         try {
             createAndSendVerificationToken(request.email());
@@ -145,17 +147,13 @@ public class EmailVerificationService {
      * Optional helper to check if token is valid (can be used by frontend to validate before showing final step)
      */
     public boolean validateToken(String rawToken) {
-        try {
-            String tokenHash = hashToken(rawToken);
-            Optional<EmailVerificationToken> opt = tokenRepository.findByTokenHash(tokenHash);
-            if (opt.isEmpty()) throw new CustomException("Invalid token", HttpStatus.BAD_REQUEST);
-            var t = opt.get();
-            if (t.isUsed()) throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
-            if (t.getExpiresAt().isBefore(Instant.now()))
-                throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        String tokenHash = hashToken(rawToken);
+        Optional<EmailVerificationToken> opt = tokenRepository.findByTokenHash(tokenHash);
+        if (opt.isEmpty()) throw new CustomException("Invalid token", HttpStatus.BAD_REQUEST);
+        var t = opt.get();
+        if (t.isUsed()) throw new CustomException("Token already used", HttpStatus.BAD_REQUEST);
+        if (t.getExpiresAt().isBefore(Instant.now()))
+            throw new CustomException("Token expired", HttpStatus.BAD_REQUEST);
+        return true;
     }
 }
