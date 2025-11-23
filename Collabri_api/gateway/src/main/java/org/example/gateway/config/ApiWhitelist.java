@@ -12,6 +12,7 @@ public class ApiWhitelist {
 
     public final List<String> ENDPOINTS = List.of(
             "/api/v1/auth/register",
+            "/api/v1/auth/refresh-token",
             "/api/v1/auth/verify-email",
             "/api/v1/auth/resend-verification",
             "/api/v1/auth/login",
@@ -21,8 +22,7 @@ public class ApiWhitelist {
             "/api/v1/auth/validate-password-reset-token",
             "/api/v1/auth/validate-email-verification-token",
             "/oauth2/**",
-            "/login/oauth2/**",
-            "/error"
+            "/login/oauth2/**"
     );
 
     public boolean isWhitelisted(String path) {
