@@ -1,4 +1,4 @@
-package org.example.userservice.security;
+package org.example.userservice.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.entities.User;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
