@@ -50,7 +50,6 @@ public class SecurityConfig {
                         .userInfoEndpoint(u -> u.userService(oauth2UserService))
                         .successHandler(oauth2SuccessHandler)
                 );
-
         return http.build();
     }
 

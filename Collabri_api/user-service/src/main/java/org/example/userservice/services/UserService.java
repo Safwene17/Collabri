@@ -26,12 +26,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * Register user (create record and send verification email).
-     * All validation should be done by controller/DTO constraints; keep extra checks here.
-     */
-
-
     @Transactional
     public void delete(UUID id) {
         userRepository.deleteById(id);
