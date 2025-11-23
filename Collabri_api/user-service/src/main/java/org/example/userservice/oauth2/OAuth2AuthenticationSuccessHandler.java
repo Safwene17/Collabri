@@ -8,12 +8,14 @@ import org.example.userservice.services.TokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
 import jakarta.servlet.http.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+
 
 @Component
 @RequiredArgsConstructor
@@ -39,12 +41,15 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-        // This method must set HttpOnly Secure SameSite=None cookies
-        // (or SameSite=Lax if you don't need credentials on cross-site)
-        tokenService.issueTokens(user, userDetails, response);
+        String accessToken = tokenService.issueTokens(user, userDetails, response);
 
-        // ONE single redirect to the frontend
-        response.sendRedirect(FRONTEND_URL);
+
+        String targetUrl = UriComponentsBuilder.fromUriString(FRONTEND_URL)
+                .fragment("accessToken=" + accessToken)
+                .build()
+                .toUriString();
+
+        // Clear any leftover auth attributes and redirect
+        new DefaultRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }
-

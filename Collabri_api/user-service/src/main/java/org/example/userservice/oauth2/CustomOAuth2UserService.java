@@ -1,4 +1,3 @@
-// user-service/security/CustomOAuth2UserService.java - remove github handling
 package org.example.userservice.oauth2;
 
 import lombok.RequiredArgsConstructor;
