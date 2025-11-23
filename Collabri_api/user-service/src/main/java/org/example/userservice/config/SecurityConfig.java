@@ -1,8 +1,8 @@
 package org.example.userservice.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.security.CustomOAuth2UserService;
-import org.example.userservice.security.OAuth2AuthenticationSuccessHandler;
+import org.example.userservice.oauth2.CustomOAuth2UserService;
+import org.example.userservice.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,11 +34,11 @@ public class SecurityConfig {
                                 "/api/v1/auth/forgot-password",
                                 "/api/v1/auth/reset-password",
                                 "/api/v1/auth/login",
+                                "/api/v1/auth/logout",
                                 "/api/v1/auth/refresh-token",
                                 "/api/v1/auth/validate-password-reset-token",
                                 "/api/v1/auth/validate-email-verification-token",
                                 "/api/v1/users/get/**",
-                                "/error",
                                 "/oauth2/**",
                                 "/login/oauth2/**"
                         ).permitAll()

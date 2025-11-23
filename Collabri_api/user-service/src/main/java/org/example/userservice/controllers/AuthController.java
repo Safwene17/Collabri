@@ -8,6 +8,7 @@ import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.services.AuthService;
 import org.example.userservice.services.EmailVerificationService;
 import org.example.userservice.services.PasswordResetService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AuthController {
 
     // Register (user creation + email verification sent)
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid RegisterRequest request) {
+    public ResponseEntity<ApiResponse<Void>> register(@RequestBody @Valid RegisterRequest request) {
         authService.register(request);
         return ResponseEntity.status(201).body(ApiResponse.ok("Verification email sent", null));
     }
@@ -56,9 +57,10 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(
             @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,  // NEW: Require Authorization header
             HttpServletResponse response
     ) {
-        authService.logout(refreshTokenCookie, response);
+        authService.logout(refreshTokenCookie, authorizationHeader, response);  // Pass header to service for validation
         return ResponseEntity.ok(ApiResponse.ok("Logged out successfully", null));
     }
 

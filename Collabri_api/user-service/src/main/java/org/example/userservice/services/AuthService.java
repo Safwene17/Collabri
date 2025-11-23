@@ -30,6 +30,7 @@ public class AuthService {
     private final EmailVerificationService emailVerificationService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     /**
      * Register — delegate to userService which handles mapping, persistence and send verification email.
@@ -89,7 +90,35 @@ public class AuthService {
     /**
      * Logout: revoke token(s) and clear cookie.
      */
-    public void logout(String refreshTokenValue, HttpServletResponse response) {
+    public void logout(String refreshTokenValue, String authorizationHeader, HttpServletResponse response) {
+        // NEW: Validate access token from header
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new CustomException("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
+        }
+        String accessToken = authorizationHeader.substring(7).trim();
+        if (accessToken.isEmpty()) {
+            throw new CustomException("Missing access token", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Validate token using JwtService
+        try {
+            if (jwtService.isTokenExpired(accessToken)) {
+                throw new CustomException("Access token expired", HttpStatus.UNAUTHORIZED);
+            }
+            // Optional: Extract username from token and match against refresh token's user for extra security
+            String tokenUsername = jwtService.extractUsername(accessToken);
+            if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
+                RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
+                if (!token.getUser().getEmail().equals(tokenUsername)) {
+                    throw new CustomException("Token mismatch", HttpStatus.UNAUTHORIZED);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Invalid access token during logout: {}", e.getMessage());
+            throw new CustomException("Invalid access token", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Proceed with original logout logic
         if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
             try {
                 RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
@@ -103,5 +132,4 @@ public class AuthService {
             tokenService.clearRefreshToken(null, response);
         }
     }
-
 }
