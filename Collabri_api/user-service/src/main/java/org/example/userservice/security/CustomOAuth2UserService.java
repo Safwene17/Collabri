@@ -1,10 +1,15 @@
+// user-service/security/CustomOAuth2UserService.java - remove github handling
 package org.example.userservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.entities.User;
 import org.example.userservice.repositories.UserRepository;
-import org.springframework.security.oauth2.client.userinfo.*;
-import org.springframework.security.oauth2.core.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -26,40 +31,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         Map<String, Object> attributes = oauthUser.getAttributes();
 
-        String email;
-        String givenName;
-        String familyName;
-
-        if ("google".equalsIgnoreCase(registrationId)) {
-            email = (String) attributes.get("email");
-            givenName = (String) attributes.get("given_name");
-            familyName = (String) attributes.get("family_name");
-        } else if ("github".equalsIgnoreCase(registrationId)) {
-            email = (String) attributes.get("email"); // may be null if private
-            Object name = attributes.get("name");
-            if (name != null) {
-                String n = name.toString();
-                if (n.contains(" ")) {
-                    givenName = n.substring(0, n.indexOf(' '));
-                    familyName = n.substring(n.indexOf(' ') + 1);
-                } else {
-                    familyName = null;
-                    givenName = n;
-                }
-            } else {
-                familyName = null;
-                givenName = null;
-            }
-            // NOTE: for private GitHub email you should call /user/emails with access token (add later)
-        } else {
-            familyName = null;
-            givenName = null;
-            email = null;
+        if (!"google".equalsIgnoreCase(registrationId)) {
+            throw new OAuth2AuthenticationException(new OAuth2Error("unsupported_provider"), "Only Google is supported");
         }
 
+        String email = (String) attributes.get("email");
         if (email == null || email.isBlank()) {
             throw new OAuth2AuthenticationException(new OAuth2Error("invalid_userinfo"), "Email not provided by provider");
         }
+
+        String givenName = (String) attributes.get("given_name");
+        String familyName = (String) attributes.get("family_name");
 
         // upsert user
         User user = userRepository.findByEmail(email).orElseGet(() -> {
@@ -85,9 +67,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
         if (changed) userRepository.save(user);
 
-        var authorities = List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
-        // use the provider's user name attribute (email/sub/id)
         String nameAttr = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
