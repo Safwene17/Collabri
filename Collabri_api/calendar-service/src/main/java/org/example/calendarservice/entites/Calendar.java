@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,13 +37,22 @@ public class Calendar {
     private String timeZone;
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Member> members;
+    private List<Member> members = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void addMember(Member member) {
+        members.add(member);
+        member.setCalendar(this);
+    }
+
+    public void removeMember(Member member) {
+        members.remove(member);
+        member.setCalendar(null);
+    }
 
 }

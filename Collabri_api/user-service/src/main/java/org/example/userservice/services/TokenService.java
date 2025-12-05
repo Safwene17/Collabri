@@ -20,15 +20,14 @@ public class TokenService {
      * Issue access token (returned as string) + refresh token cookie.
      */
     public String issueTokens(User user, UserDetails userDetails, HttpServletResponse response) {
-        String accessToken = jwtService.generateAccessToken(userDetails, user.isVerified());
+        String accessToken = jwtService.generateAccessToken(userDetails);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken.getToken())
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                .sameSite("Strict")
-                .domain("localhost")
+                .sameSite("None")
                 .maxAge(jwtService.getRefreshTokenExpirationSeconds())
                 .build();
 

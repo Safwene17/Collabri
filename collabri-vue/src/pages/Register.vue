@@ -11,6 +11,10 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
         name: "Register"
     });
 
+        function loginWithGoogle() {
+        window.location.href = 'http://localhost:8222/oauth2/authorization/google';
+    }
+
     // Setup
     const toast = useToast();
 
@@ -178,6 +182,26 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
                         :loading="isSubmitting"
                         class="text-sm!"
                     />
+
+                     <!-- Separator -->
+                    <div class="relative h-px w-full bg-[#373737] mt-2">
+                        <span 
+                            class="absolute top-1/2 translate-y-[-60%] left-1/2 translate-x-[-50%] bg-[#0a0a0a] text-white text-sm font-semibold p-1"
+                        >
+                            OR
+                        </span>
+                    </div>
+
+                    <!-- Social Buttons -->                 
+                    <Button 
+                        type="button" 
+                        severity="secondary" 
+                        label="Continue with Google" 
+                        icon="fa-brands fa-google" 
+                        class="text-xs!"
+                        @click="loginWithGoogle"
+                    />
+
 
                     <!-- Sign in Link -->
                     <a href="#" class="text-sm text-center font-light">

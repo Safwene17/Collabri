@@ -1,6 +1,8 @@
 package org.example.calendarservice.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.calendarservice.dto.ApiResponse;
 import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.services.CalendarService;
@@ -19,30 +21,33 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public ResponseEntity<Void> createCalendar(@RequestBody CalendarRequest request, Authentication authentication) {
-        return ResponseEntity.ok(calendarService.createCalendar(request, authentication));
+    public ResponseEntity<ApiResponse<String>> createCalendar(@RequestBody @Valid CalendarRequest request, Authentication authentication) {
+        calendarService.createCalendar(request, authentication);
+        return ResponseEntity.status(201).body(ApiResponse.ok("Calendar created successfully", null));
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<CalendarResponse> getCalendarById(@PathVariable("id") UUID id) {
-        return ResponseEntity.ok(calendarService.getCalendarById(id));
+    public ResponseEntity<ApiResponse<CalendarResponse>> getCalendarById(@PathVariable("id") UUID id) {
+        CalendarResponse calendar = calendarService.getCalendarById(id);
+        return ResponseEntity.ok(ApiResponse.ok("Calendar retrieved successfully", calendar));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCalendarById(@PathVariable("id") UUID id, Authentication authentication) {
-        calendarService.deleteCalendarById(id, authentication);
+    public ResponseEntity<Void> deleteCalendarById(@PathVariable("id") UUID id) {
+        calendarService.deleteCalendarById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateCalendar(@RequestBody CalendarRequest request, @PathVariable("id") UUID id, Authentication authentication) {
-        calendarService.updateCalendar(request, id, authentication);
+    public ResponseEntity<Void> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id) {
+        calendarService.updateCalendar(request, id);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<CalendarResponse>> searchPublic(@RequestParam(required = false) String name) {
-        return ResponseEntity.ok(calendarService.searchPublicCalendars(name));
+    public ResponseEntity<ApiResponse<List<CalendarResponse>>> searchPublic(@RequestParam(required = false) String name) {
+        List<CalendarResponse> list = calendarService.searchPublicCalendars(name);
+        return ResponseEntity.ok(ApiResponse.ok(("Public calendars retrieved successfully"), list));
     }
 
 }

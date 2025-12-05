@@ -4,18 +4,15 @@ spring:
   config:
     import: optional:configserver:localhost:8888
   datasource:
-
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     hibernate:
       ddl-auto: update
-
   kafka:
     producer:
       bootstrap-servers: localhost:9092
@@ -23,7 +20,31 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.type.mapping: CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+  retry:
+    instances:
+      userService:
+        maxAttempts: 3
+        waitDuration: 2s
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, circuitbreakers
 
 server:
   port: 8070

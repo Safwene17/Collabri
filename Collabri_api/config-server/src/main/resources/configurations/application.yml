@@ -10,10 +10,33 @@ eureka:
 jwt:
   secret: "177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32"
   access-token-expiration-ms: 900000     # 15 minutes
-  refresh-token-expiration-ms: 1209600000 # 14 days
+  refresh-token-expiration-ms: 604800000 # 7 days
 
-
+#zipkin configuration
 management:
   tracing:
     sampling:
       probability: 1.0
+
+# OpenFeign Circuit Breaker and Retry Configuration
+spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true  # Enables auto-wrapping for all Feign clients
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      user: # Matches @FeignClient(name = "user")
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+  retry:
+    instances:
+      user: # Applies retry to the client
+        maxAttempts: 3
+        waitDuration: 2s

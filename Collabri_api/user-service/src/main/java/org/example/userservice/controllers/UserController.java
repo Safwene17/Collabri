@@ -26,9 +26,9 @@ public class UserController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") UUID id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
         UserResponse user = userService.findById(id);
-        return ResponseEntity.ok(ApiResponse.ok("User fetched successfully", user));
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/by-email")

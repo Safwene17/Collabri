@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.entities.Admin;
 import org.example.userservice.enums.Role;
 import org.example.userservice.repositories.AdminRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataSeeder implements CommandLineRunner {
 
+    @Value("${app.admin.email")
+    private String adminEmail;
+
+    @Value("${app.admin.password")
+    private String adminPassword;
+
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -22,8 +29,8 @@ public class DataSeeder implements CommandLineRunner {
         if (adminRepository.count() == 0) {
             Admin initialAdmin = Admin.builder()
                     .name("Super Admin")
-                    .email("admin@example.com")
-                    .password(passwordEncoder.encode("StrongInitialPassword123!"))  // Change this in prod; prompt to reset on first login
+                    .email(adminEmail)
+                    .password(passwordEncoder.encode(adminPassword))  // Change this in prod; prompt to reset on first login
                     .role(Role.ADMIN)
                     .build();
 

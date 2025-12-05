@@ -28,7 +28,6 @@ public class Member {
 
     @ManyToOne
     @JoinColumn(name = "calendar_id", nullable = false)
-    @JsonBackReference
     private Calendar calendar;
 
     @Enumerated(EnumType.STRING)

@@ -11,6 +11,7 @@ import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,9 +53,7 @@ public class AuthService {
         }
     }
 
-    /**
-     * Login: authenticate credentials, issue tokens (access string + refresh cookie).
-     */
+
     public LoginResponse login(LoginRequest request, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(
@@ -74,9 +73,6 @@ public class AuthService {
         return new LoginResponse(accessToken);
     }
 
-    /**
-     * Refresh: validate DB refresh token -> rotate -> return new access token (cookie set)
-     */
 
     public LoginResponse refresh(String refreshTokenValue, HttpServletResponse response) {
         RefreshToken oldToken = refreshTokenService.findByToken(refreshTokenValue);
@@ -87,9 +83,7 @@ public class AuthService {
         return new LoginResponse(newAccess);
     }
 
-    /**
-     * Logout: revoke token(s) and clear cookie.
-     */
+    @PreAuthorize("isAuthenticated() and @verified.isVerified(authentication)")
     public void logout(String refreshTokenValue, String authorizationHeader, HttpServletResponse response) {
         // NEW: Validate access token from header
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -118,7 +112,6 @@ public class AuthService {
             throw new CustomException("Invalid access token", HttpStatus.UNAUTHORIZED);
         }
 
-        // Proceed with original logout logic
         if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
             try {
                 RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
@@ -126,6 +119,7 @@ public class AuthService {
                 tokenService.clearRefreshToken(token.getUser(), response);
             } catch (Exception ignored) {
                 log.warn("Failed to revoke refresh token {}", refreshTokenValue, ignored);
+
             }
         } else {
             // still clear cookie even if token missing

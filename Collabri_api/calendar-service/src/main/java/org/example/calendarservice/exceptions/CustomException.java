@@ -1,4 +1,4 @@
-package org.example.gateway.exceptions;
+package org.example.calendarservice.exceptions;
 
 import org.springframework.http.HttpStatus;
 

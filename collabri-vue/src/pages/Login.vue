@@ -15,6 +15,11 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
         }
     });
 
+    function loginWithGoogle() {
+        window.location.href = 'http://localhost:8222/oauth2/authorization/google';
+    }
+
+
     // Setup
     const toast = useToast();
 
@@ -159,14 +164,7 @@ import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
                         label="Continue with Google" 
                         icon="fa-brands fa-google" 
                         class="text-xs!"
-                    />
-
-                    <Button 
-                        type="submit" 
-                        severity="secondary" 
-                        label="Continue with GitHub" 
-                        icon="fa-brands fa-github" 
-                        class="text-xs!"
+                        @click="loginWithGoogle"
                     />
 
                     <!-- Sign Up Link -->

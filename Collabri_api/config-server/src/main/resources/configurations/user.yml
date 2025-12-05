@@ -50,6 +50,8 @@ app:
     reset-url: http://localhost:5173/reset-password
   reset-token-ttl-minutes: 15
   verify-token-ttl-hours: 24
+  admin-email: ${ADMIN_EMAIL}
+  admin-password: ${ADMIN_PASSWORD}
 
 
 
