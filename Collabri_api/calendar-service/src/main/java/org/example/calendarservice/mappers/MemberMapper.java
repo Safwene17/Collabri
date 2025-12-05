@@ -1,4 +1,4 @@
-package org.example.calendarservice.services;
+package org.example.calendarservice.mappers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.calendarservice.dto.MemberResponse;

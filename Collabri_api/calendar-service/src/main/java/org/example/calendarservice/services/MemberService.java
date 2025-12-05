@@ -5,6 +5,7 @@ import org.example.calendarservice.dto.MemberResponse;
 import org.example.calendarservice.entites.Calendar;
 import org.example.calendarservice.entites.Member;
 import org.example.calendarservice.enums.Visibility;
+import org.example.calendarservice.mappers.MemberMapper;
 import org.example.calendarservice.repositories.CalendarRepository;
 import org.example.calendarservice.repositories.MemberRepository;
 import org.example.calendarservice.user.UserClient;

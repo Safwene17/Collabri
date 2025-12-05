@@ -10,6 +10,7 @@ import org.example.calendarservice.enums.InviteStatus;
 import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.kafka.CalendarInviteEvent;
 import org.example.calendarservice.kafka.InviteProducer;
+import org.example.calendarservice.mappers.MemberMapper;
 import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.example.calendarservice.repositories.CalendarRepository;
 import org.example.calendarservice.repositories.MemberRepository;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 

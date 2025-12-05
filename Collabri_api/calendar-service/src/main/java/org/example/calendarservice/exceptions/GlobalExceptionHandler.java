@@ -1,12 +1,12 @@
-package org.example.userservice.exceptions;
+package org.example.calendarservice.exceptions;
 
 import jakarta.validation.ConstraintViolationException;
-import org.example.userservice.dto.ApiResponse;
+import org.example.calendarservice.dto.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatusCode; // Updated import (instead of HttpStatus for the parameter)
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -28,6 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // Handle your own custom exception which carries an HttpStatus
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ApiResponse<?>> handleCustomException(CustomException ex) {
         HttpStatus status = ex.getStatus();
@@ -40,6 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(ApiResponse.error(ex.getMessage()));
     }
 
+    // Handle validation errors from @Valid (request body) - Override without @ExceptionHandler
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -52,6 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(ApiResponse.error("Validation failed", new HashMap<>(fieldErrors)));
     }
 
+    // Handle JSON parse / bad request bodies - Override without @ExceptionHandler
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex, HttpHeaders headers,
@@ -61,6 +64,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(ApiResponse.error("Malformed request body"));
     }
 
+    // Constraint violations (e.g. @Validated on method params)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<?>> handleConstraintViolation(ConstraintViolationException ex) {
         String msg = ex.getConstraintViolations().stream()
@@ -71,6 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(ApiResponse.error(msg));
     }
 
+    // Security: authentication failure (401)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException ex) {
         log.info("Authentication failed: {}", ex.getMessage());
@@ -79,6 +84,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).body(ApiResponse.error("Unauthorized"));
     }
 
+    // Security: access denied (403)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<?>> handleAccessDenied(AccessDeniedException ex) {
         log.warn("Access denied: {}", ex.getMessage());
@@ -102,8 +108,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Fallback - don't leak internals; return safe generic error
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleAll(Exception ex) {
+        // log stack trace on server side for diagnostics
         log.error("Unhandled exception: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Internal server error"));
     }
+
 }

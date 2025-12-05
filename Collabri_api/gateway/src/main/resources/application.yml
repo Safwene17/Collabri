@@ -18,9 +18,7 @@ spring:
               uri: lb://calendar
               predicates:
                 - Path=/api/v1/calendars/**, /api/v1/invites/**, /api/v1/members/**
-
-
-
+          
 server:
   port: 8222
 

@@ -34,22 +34,16 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException {
 
         DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
-        String email = (String) oauthUser.getAttribute("email");
+        String email = oauthUser.getAttribute("email");
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found after OAuth"));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-        String accessToken = tokenService.issueTokens(user, userDetails, response);
-
-
-        String targetUrl = UriComponentsBuilder.fromUriString(FRONTEND_URL)
-                .fragment("accessToken=" + accessToken)
-                .build()
-                .toUriString();
+        tokenService.issueTokens(user, userDetails, response);
 
         // Clear any leftover auth attributes and redirect
-        new DefaultRedirectStrategy().sendRedirect(request, response, targetUrl);
+        response.sendRedirect(FRONTEND_URL);
     }
 }

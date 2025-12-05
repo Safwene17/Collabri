@@ -1,4 +1,4 @@
-package org.example.userservice.dto;
+package org.example.calendarservice.dto;
 
 import lombok.Builder;
 

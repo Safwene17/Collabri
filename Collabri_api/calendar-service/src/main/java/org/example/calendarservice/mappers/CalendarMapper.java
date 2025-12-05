@@ -1,9 +1,8 @@
-package org.example.calendarservice.services;
+package org.example.calendarservice.mappers;
 
 import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.entites.Calendar;
-import org.example.calendarservice.entites.Member;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
