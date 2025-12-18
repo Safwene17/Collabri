@@ -26,24 +26,25 @@ public class CalendarController {
         return ResponseEntity.status(201).body(ApiResponse.ok("Calendar created successfully", null));
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CalendarResponse>> getCalendarById(@PathVariable("id") UUID id) {
         CalendarResponse calendar = calendarService.getCalendarById(id);
         return ResponseEntity.ok(ApiResponse.ok("Calendar retrieved successfully", calendar));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCalendarById(@PathVariable("id") UUID id) {
         calendarService.deleteCalendarById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id) {
         calendarService.updateCalendar(request, id);
         return ResponseEntity.accepted().build();
     }
 
+    //turn this into pageable in the future
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<CalendarResponse>>> searchPublic(@RequestParam(required = false) String name) {
         List<CalendarResponse> list = calendarService.searchPublicCalendars(name);

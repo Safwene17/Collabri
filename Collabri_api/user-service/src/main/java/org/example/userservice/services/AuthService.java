@@ -83,7 +83,7 @@ public class AuthService {
         return new LoginResponse(newAccess);
     }
 
-    @PreAuthorize("isAuthenticated() and @verified.isVerified(authentication)")
+    //    @PreAuthorize("isAuthenticated()")
     public void logout(String refreshTokenValue, String authorizationHeader, HttpServletResponse response) {
         // NEW: Validate access token from header
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {

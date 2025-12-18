@@ -1,6 +1,7 @@
 package org.example.calendarservice.repositories;
 
 import com.netflix.appinfo.ApplicationInfoManager;
+import org.example.calendarservice.dto.MemberResponse;
 import org.example.calendarservice.entites.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByCalendarIdAndEmailIgnoreCase(UUID calendarId, String email);
 
-    Optional<List<Member>> findAllByCalendarId(UUID calendarId);
+    List<Member> findAllByCalendarId(UUID calendarId);
+
+    boolean existsByIdAndCalendarId(Long memberId, UUID calendarId);
 }

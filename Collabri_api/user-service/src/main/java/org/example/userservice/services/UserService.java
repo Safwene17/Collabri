@@ -37,16 +37,9 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
     }
 
-    public PageResponse<UserResponse> findAllPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> result = userRepository.findAll(pageable);
-
-        List<UserResponse> users = result.getContent().stream()
-                .map(userMapper::fromUser)
-                .toList();
-
-        return new PageResponse<>(users, result.getNumber(), result.getSize(),
-                result.getTotalElements(), result.getTotalPages());
+    public Page<UserResponse> findAllPaginated(Pageable pageable) {
+        Page<User> page = userRepository.findAll(pageable);
+        return page.map(userMapper::fromUser);
     }
 
     @Transactional

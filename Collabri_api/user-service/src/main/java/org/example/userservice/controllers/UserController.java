@@ -3,10 +3,11 @@ package org.example.userservice.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.ApiResponse;
-import org.example.userservice.dto.PageResponse;
 import org.example.userservice.dto.RegisterRequest;
 import org.example.userservice.dto.UserResponse;
 import org.example.userservice.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,13 @@ public class UserController {
 
     private final UserService userService;
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable("id") UUID id) {
         userService.delete(id);
         return ResponseEntity.ok(ApiResponse.ok("User deleted successfully", null));
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
         UserResponse user = userService.findById(id);
         return ResponseEntity.ok(user);
@@ -37,16 +38,14 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.ok("User fetched successfully", user));
     }
 
+
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    ) {
-        PageResponse<UserResponse> users = userService.findAllPaginated(page, size);
+    public ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(Pageable page) {
+        Page<UserResponse> users = userService.findAllPaginated(page);
         return ResponseEntity.ok(ApiResponse.ok("Users fetched successfully", users));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable UUID id,
                                                         @RequestBody @Valid RegisterRequest request) {
         userService.update(id, request);
