@@ -64,6 +64,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             user.setLastname(familyName);
             changed = true;
         }
+        if ((!user.isVerified())) {
+            user.setVerified(true);
+            changed = true;
+        }
         if (changed) userRepository.save(user);
 
         var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));

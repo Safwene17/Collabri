@@ -1,4 +1,3 @@
-// src/main/java/org/example/gateway/filters/JwtValidationFilter.java
 package org.example.gateway.filters;
 
 import io.jsonwebtoken.ExpiredJwtException;

@@ -9,28 +9,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpServerErrorException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // 1. Validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .findFirst()
                 .orElse("Validation failed");
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.error(message));
+        return ResponseEntity.badRequest().body(ApiResponse.error(message));
     }
 
-    // Optional: handle unexpected errors
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleAll(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("Unexpected error occurred"));
+    // 2. Service down / connection refused → 503
+    @ExceptionHandler(HttpServerErrorException.ServiceUnavailable.class)
+    public ResponseEntity<ApiResponse<?>> handleServiceUnavailable() {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error("Service is currently unavailable. Please try again later."));
     }
 
-    // This is only for cases where exception bubbles up (shouldn't happen with filter)
+    // 3. Any other 5xx from downstream (optional, but nice)
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<ApiResponse<?>> handleServerError(HttpServerErrorException ex) {
+        return ResponseEntity.status(ex.getStatusCode())
+                .body(ApiResponse.error("Service is currently unavailable. Please try again later."));
+    }
+
+    // 4. Expired JWT (from your filter)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ApiResponse<?>> handleExpiredJwt() {
         HttpHeaders headers = new HttpHeaders();
@@ -39,5 +47,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .headers(headers)
                 .body(ApiResponse.error("Token has expired"));
+    }
+
+    // 5. Fallback — never leak stack traces
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<?>> handleAll(Exception ex) {
+        // Log it properly in production
+        // log.error("Unhandled exception", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("Internal server error"));
     }
 }

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admins")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ApiResponse<Void>> createAdmin(AdminRequest adminRequest) {
         adminService.createAdmin(adminRequest);
         return ResponseEntity.status(201).body(ApiResponse.ok("Admin created successfully", null));
