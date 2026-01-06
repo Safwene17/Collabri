@@ -44,7 +44,7 @@ spring:
 
 app:
   frontend:
-    invite-base: http://localhost:4200/invite   # used to build accept/decline links
+    invite-base: http://localhost:5173/invite   # used to build accept/decline links
   email:
     send-retry-count: 3
 
