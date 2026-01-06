@@ -32,5 +32,5 @@ public class CalendarInvite {
     private Instant expiresAt;
 
     @Enumerated(EnumType.STRING)
-    private InviteStatus status; // PENDING, ACCEPTED, EXPIRED, CANCELLED
+    private InviteStatus status; // PENDING, ACCEPTED, EXPIRED, DECLINED
 }
