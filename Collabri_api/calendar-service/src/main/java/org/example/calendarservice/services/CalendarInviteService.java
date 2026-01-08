@@ -128,7 +128,7 @@ public class CalendarInviteService {
             calendarInviteRepository.save(inv);
 
             publishInviteEvent(inv, calendar, userId, destinationEmail, newPlainToken);
-
+            return null;
         }
 
 
