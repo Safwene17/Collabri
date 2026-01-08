@@ -7,6 +7,8 @@ import lombok.*;
 import org.example.calendarservice.enums.Role;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +33,10 @@ public class Member {
     @JoinColumn(name = "calendar_id", nullable = false)
     @JsonIgnore
     private Calendar calendar;
+
+    @OneToMany
+    @JoinColumn(name = "assigned_to")
+    private List<Task> assignedTasks = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.VIEWER;

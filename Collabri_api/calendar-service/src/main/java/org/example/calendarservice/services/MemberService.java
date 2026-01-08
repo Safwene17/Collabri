@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -86,6 +87,22 @@ public class MemberService {
         throw new CustomException("Calendar is not public", HttpStatus.FORBIDDEN);
     }
 
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
+    @Transactional
+    public void removeMemberFromCalendar(Long memberId, UUID calendarId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException("Member not found", HttpStatus.NOT_FOUND));
+
+        if (!memberRepository.existsByIdAndCalendarId(memberId, calendarId)) {
+            throw new CustomException("Member not found in calendar", HttpStatus.NOT_FOUND);
+        }
+
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
+        calendar.removeMember(member);
+
+        log.info("Removed member {} from calendar {}", memberId, calendarId);
+    }
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
     @Transactional
@@ -94,7 +111,6 @@ public class MemberService {
             throw new CustomException("Member not found in calendar", HttpStatus.NOT_FOUND);
         }
         memberRepository.deleteById(memberId);
-        log.info("Removed member {} from calendar {}", memberId, calendarId);
     }
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#calendarId, authentication.name)")
