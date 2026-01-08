@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataSeeder implements CommandLineRunner {
 
-    @Value("${app.admin.email")
+    @Value("${app.admin-email}")
     private String adminEmail;
 
-    @Value("${app.admin.password")
+    @Value("${app.admin-password}")
     private String adminPassword;
 
     private final AdminRepository adminRepository;

@@ -19,9 +19,9 @@ public class TokenService {
     /**
      * Issue access token (returned as string) + refresh token cookie.
      */
-    public String issueTokens(User user, UserDetails userDetails, HttpServletResponse response) {
+    public String issueTokens(UserDetails userDetails, HttpServletResponse response) {
         String accessToken = jwtService.generateAccessToken(userDetails);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken();
 
         ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken.getToken())
                 .httpOnly(true)
@@ -41,7 +41,7 @@ public class TokenService {
     @Transactional
     public String rotateRefreshToken(RefreshToken oldToken, UserDetails userDetails, HttpServletResponse response) {
         refreshTokenService.revokeToken(oldToken);
-        return issueTokens(oldToken.getUser(), userDetails, response);
+        return issueTokens(userDetails, response);
     }
 
     /**
