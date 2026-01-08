@@ -69,7 +69,7 @@ public class AuthService {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 
-        String accessToken = tokenService.issueTokens(user, userDetails, response);
+        String accessToken = tokenService.issueTokens(userDetails, response);
         return new LoginResponse(accessToken);
     }
 

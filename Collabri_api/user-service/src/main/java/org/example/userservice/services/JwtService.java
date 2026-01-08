@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.example.userservice.entities.Admin;
 import org.example.userservice.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,15 +43,24 @@ public class JwtService {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        User user = (User) userDetails;
 
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", roles)
-                .claim("userId", user.getId().toString())
-                .claim("verified", user.isVerified())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + accessTokenExpirationMs))
+                .setExpiration(new Date(now + accessTokenExpirationMs));
+
+        if (userDetails instanceof User user) {
+            builder
+                    .claim("userId", user.getId().toString())
+                    .claim("verified", user.isVerified());
+        } else if (userDetails instanceof Admin admin) {
+            //add adminId claims
+//            builder
+//                    .claim("adminId", admin.getId().toString());
+        }
+
+        return builder
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -76,8 +86,5 @@ public class JwtService {
         return expiration.before(new Date());
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token);
-    }
+
 }
