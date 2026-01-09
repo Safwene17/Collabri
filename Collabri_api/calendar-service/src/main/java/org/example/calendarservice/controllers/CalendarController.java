@@ -33,15 +33,15 @@ public class CalendarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCalendarById(@PathVariable("id") UUID id) {
+    public ResponseEntity<ApiResponse<Void>> deleteCalendarById(@PathVariable("id") UUID id) {
         calendarService.deleteCalendarById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(204).body(ApiResponse.ok("Calendar deleted successfully", null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id) {
+    public ResponseEntity<ApiResponse<Void>> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id) {
         calendarService.updateCalendar(request, id);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted().body((ApiResponse.ok("Calendar updated successfully", null)));
     }
 
     //turn this into pageable in the future

@@ -56,8 +56,8 @@ public class JwtService {
                     .claim("verified", user.isVerified());
         } else if (userDetails instanceof Admin admin) {
             //add adminId claims
-//            builder
-//                    .claim("adminId", admin.getId().toString());
+            builder
+                    .claim("adminId", admin.getId().toString());
         }
 
         return builder

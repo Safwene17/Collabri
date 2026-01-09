@@ -77,7 +77,7 @@ public class CalendarInviteService {
     }
 
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public Void inviteMember(UUID calendarId, String destinationEmailRaw, Authentication authentication) {
 

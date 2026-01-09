@@ -22,7 +22,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -30,7 +30,7 @@ public class TaskService {
     private final CalendarRepository calendarRepository;
     private final MemberRepository memberRepository;
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public void createTask(TaskRequest request, UUID calendarId) {
         Task task = taskMapper.toTask(request);
@@ -43,14 +43,14 @@ public class TaskService {
         log.info("Created task {} for calendar {}", task.getId(), calendarId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'VIEWER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'VIEWER')")
     public List<TaskResponse> getTasksByCalendar(UUID calendarId) {
         return taskRepository.findAllByCalendarId(calendarId).stream()
                 .map(taskMapper::fromTask)
                 .toList();
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public void updateTask(TaskRequest request, UUID taskId, UUID calendarId) {
         Task task = taskRepository.findById(taskId)
@@ -66,7 +66,7 @@ public class TaskService {
         log.info("Updated task {}", taskId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     public void deleteTask(UUID taskId, UUID calendarId) {
         taskRepository.deleteById(taskId);
         log.info("Deleted task {}", taskId);

@@ -8,6 +8,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component("verified")
 public class VerifiedUserChecker {
 
@@ -17,6 +19,11 @@ public class VerifiedUserChecker {
         }
 
         Jwt jwt = jwtToken.getToken();
+        List<String> roles = jwt.getClaimAsStringList("roles");
+        if (roles.contains("ROLE_ADMIN")) {
+            return true; // admins bypass email verification
+        }
+
         Boolean verified = jwt.getClaimAsBoolean("verified");
 
         if (!Boolean.TRUE.equals(verified)) {

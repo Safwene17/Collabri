@@ -63,7 +63,7 @@ public class CalendarService {
                 .toList();
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#id, authentication.name, 'VIEWER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#id, authentication, 'VIEWER')")
     @Transactional(readOnly = true)
     public CalendarResponse getCalendarById(UUID id) {
         return calendarRepository.findById(id)
@@ -71,7 +71,7 @@ public class CalendarService {
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#id, authentication.name)")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#id, authentication)")
     public void deleteCalendarById(UUID id) {
         if (!calendarRepository.existsById(id)) {
             throw new CustomException("Calendar not found", HttpStatus.NOT_FOUND);
@@ -80,7 +80,7 @@ public class CalendarService {
         log.info("Deleted calendar {}", id);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#id, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#id, authentication, 'MANAGER')")
     public void updateCalendar(CalendarRequest request, UUID id) {
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
