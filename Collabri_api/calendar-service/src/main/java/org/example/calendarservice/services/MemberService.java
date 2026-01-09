@@ -63,7 +63,7 @@ public class MemberService {
     }
 
     // Java
-//    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'VIEWER')")
+//    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'VIEWER')")
     public List<MemberResponse> getCalendarMembers(UUID calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
@@ -75,7 +75,7 @@ public class MemberService {
         throw new CustomException("Calendar is not public", HttpStatus.FORBIDDEN);
     }
 
-    //    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    //    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     public MemberResponse getMemberById(Long memberId, UUID calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
@@ -87,7 +87,7 @@ public class MemberService {
         throw new CustomException("Calendar is not public", HttpStatus.FORBIDDEN);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     @Transactional
     public void removeMemberFromCalendar(Long memberId, UUID calendarId) {
         Member member = memberRepository.findById(memberId)
@@ -104,7 +104,7 @@ public class MemberService {
         log.info("Removed member {} from calendar {}", memberId, calendarId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     @Transactional
     public void removeMember(Long memberId, UUID calendarId) {
         if (!memberRepository.existsByIdAndCalendarId(memberId, calendarId)) {
@@ -113,7 +113,7 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#calendarId, authentication.name)")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#calendarId, authentication)")
     @Transactional
     public void setMemberRole(Long memberId, UUID calendarId, Role newRole) {
         Member member = memberRepository.findById(memberId)

@@ -34,7 +34,7 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateTask(@RequestBody @Valid TaskRequest request, @PathVariable UUID id, @RequestParam UUID calendarId) {
         taskService.updateTask(request, id, calendarId);
-        return ResponseEntity.ok(ApiResponse.ok("Task updated successfully", null));
+        return ResponseEntity.accepted().body(ApiResponse.ok("Task updated successfully", null));
     }
 
     @DeleteMapping("/{id}")

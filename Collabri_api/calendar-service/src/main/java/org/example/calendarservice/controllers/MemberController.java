@@ -41,18 +41,18 @@ public class MemberController {
     @DeleteMapping("/{memberId}")
     public ResponseEntity<ApiResponse<Void>> removeMember(@PathVariable Long memberId, @RequestParam UUID calendarId) {
         service.removeMember(memberId, calendarId);
-        return ResponseEntity.ok(ApiResponse.ok("Member removed successfully", null));
+        return ResponseEntity.status(204).body(ApiResponse.ok("Member removed successfully", null));
     }
 
     @DeleteMapping("/deleteFromCalendar/{memberId}")
     public ResponseEntity<ApiResponse<Void>> deleteMemberFromCalendar(@PathVariable Long memberId, @RequestParam UUID calendarId) {
         service.removeMemberFromCalendar(memberId, calendarId);
-        return ResponseEntity.ok(ApiResponse.ok("Member removed from calendar successfully", null));
+        return ResponseEntity.status(204).body(ApiResponse.ok("Member removed from calendar successfully", null));
     }
 
     @PutMapping("/set-role/{memberId}")
     public ResponseEntity<ApiResponse<Void>> updateMemberRole(@PathVariable Long memberId, @RequestParam UUID calendarId, @RequestParam Role role) {
         service.setMemberRole(memberId, calendarId, role);
-        return ResponseEntity.ok(ApiResponse.ok("Member role updated successfully", null));
+        return ResponseEntity.accepted().body(ApiResponse.ok("Member role updated successfully", null));
     }
 }

@@ -22,7 +22,7 @@ public class CalendarInviteController {
     @PostMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> inviteByEmail(@PathVariable("id") UUID calendarId, @RequestParam String destinationEmail, Authentication authentication) {
         inviteService.inviteMember(calendarId, destinationEmail, authentication);
-        return ResponseEntity.ok((ApiResponse.ok("Invitation sent successfully", null)));
+        return ResponseEntity.status(201).body(ApiResponse.ok("Invitation sent successfully", null));
     }
 
     @PostMapping("/accept")

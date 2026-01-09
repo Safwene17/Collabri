@@ -30,9 +30,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(
-            @RequestBody @Valid LoginRequest request,
-            HttpServletResponse response
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest request, HttpServletResponse response
     ) {
         LoginResponse login = adminService.login(request, response);
         return ResponseEntity.ok(ApiResponse.ok("Login successful", login));

@@ -20,14 +20,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final CalendarRepository calendarRepository;
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public void createEvent(EventRequest request, UUID calendarId) {
         Event event = eventMapper.toEvent(request);
@@ -37,14 +37,14 @@ public class EventService {
         log.info("Created event {} for calendar {}", event.getId(), calendarId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'VIEWER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'VIEWER')")
     public List<EventResponse> getEventsByCalendar(UUID calendarId) {
         return eventRepository.findAllByCalendarId(calendarId).stream()
                 .map(eventMapper::fromEvent)
                 .toList();
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'MANAGER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public void updateEvent(EventRequest request, UUID eventId, UUID calendarId) {
         Event event = eventRepository.findById(eventId)
@@ -58,7 +58,7 @@ public class EventService {
         log.info("Updated event {}", eventId);
     }
 
-    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication.name, 'OWNER')")
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     public void deleteEvent(UUID eventId, UUID calendarId) {
         eventRepository.deleteById(eventId);
         log.info("Deleted event {}", eventId);

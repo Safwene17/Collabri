@@ -34,12 +34,12 @@ public class EventController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateEvent(@RequestBody @Valid EventRequest request, @PathVariable UUID id, @RequestParam UUID calendarId) {
         eventService.updateEvent(request, id, calendarId);
-        return ResponseEntity.ok(ApiResponse.ok("Event updated successfully", null));
+        return ResponseEntity.accepted().body(ApiResponse.ok("Event updated successfully", null));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteEvent(@PathVariable UUID id, @RequestParam UUID calendarId) {
         eventService.deleteEvent(id, calendarId);
-        return ResponseEntity.ok(ApiResponse.ok("Event deleted successfully", null));
+        return ResponseEntity.status(204).body(ApiResponse.ok("Event deleted successfully", null));
     }
 }
