@@ -20,7 +20,7 @@ public class VerifiedUserChecker {
 
         Jwt jwt = jwtToken.getToken();
         List<String> roles = jwt.getClaimAsStringList("roles");
-        if (roles.contains("ROLE_ADMIN")) {
+        if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_SUPER_ADMIN")) {
             return true; // admins bypass email verification
         }
 

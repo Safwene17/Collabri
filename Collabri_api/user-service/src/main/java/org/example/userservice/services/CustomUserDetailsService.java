@@ -20,19 +20,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AdminRepository adminRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Try loading as User first
+    public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByEmail(username);
-        if (user.isPresent()) {
-            return user.get();
-        }
-
-        // Then try as Admin
         Optional<Admin> admin = adminRepository.findByEmail(username);
-        if (admin.isPresent()) {
-            return admin.get();
+        if (user.isPresent() && admin.isPresent()) {
+            throw new UsernameNotFoundException("Duplicate email across user types");
         }
-
-        throw new UsernameNotFoundException("User or Admin not found with email: " + username);
+        if (user.isPresent()) return user.get();
+        if (admin.isPresent()) return admin.get();
+        throw new UsernameNotFoundException("User not found");
     }
 }

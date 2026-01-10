@@ -36,7 +36,7 @@ public class CalendarOwnershipChecker {
 
     public boolean hasAccess(UUID calendarId, Authentication auth, String requiredRole) {
         // ADDED: Bypass for admins (full access)
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"))) {
             return true;
         }
 
