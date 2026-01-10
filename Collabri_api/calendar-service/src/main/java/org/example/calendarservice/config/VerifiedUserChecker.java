@@ -18,7 +18,7 @@ public class VerifiedUserChecker {
         }
 
         // ADDED: Bypass verification for admins
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"))) {
             return true;
         }
 

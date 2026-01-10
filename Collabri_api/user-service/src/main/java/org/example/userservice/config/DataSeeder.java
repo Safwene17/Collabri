@@ -31,7 +31,7 @@ public class DataSeeder implements CommandLineRunner {
                     .name("Super Admin")
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))  // Change this in prod; prompt to reset on first login
-                    .role(Role.ADMIN)
+                    .role(Role.SUPER_ADMIN)
                     .build();
 
             adminRepository.save(initialAdmin);

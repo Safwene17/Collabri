@@ -26,6 +26,10 @@ public class RefreshToken {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)  // ADDED: Support for Admin
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
     @Column(nullable = false)
     private Instant expiresAt;
 

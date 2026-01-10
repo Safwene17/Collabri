@@ -1,3 +1,4 @@
+// file: src/main/java/org/example/userservice/services/AuthService.java
 package org.example.userservice.services;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.example.userservice.dto.RegisterRequest;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
+import org.example.userservice.repositories.AdminRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,12 +34,13 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AdminRepository adminRepository;  // CHANGED: Added to check for email uniqueness
 
     /**
      * Register — delegate to userService which handles mapping, persistence and send verification email.
      */
     public void register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
+        if (adminRepository.existsByEmail(request.email()) || userRepository.existsByEmail(request.email())) {
             throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -78,12 +81,15 @@ public class AuthService {
         RefreshToken oldToken = refreshTokenService.findByToken(refreshTokenValue);
         refreshTokenService.verifyExpiration(oldToken);
         refreshTokenService.revokeOtherTokens(oldToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(oldToken.getUser().getEmail());
+        User user = oldToken.getUser();
+        if (user == null) {
+            throw new CustomException("Invalid refresh token for user", HttpStatus.UNAUTHORIZED);  // ADDED: Type check
+        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String newAccess = tokenService.rotateRefreshToken(oldToken, userDetails, response);
         return new LoginResponse(newAccess);
     }
 
-    //    @PreAuthorize("isAuthenticated()")
     public void logout(String refreshTokenValue, String authorizationHeader, HttpServletResponse response) {
         // NEW: Validate access token from header
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -103,7 +109,8 @@ public class AuthService {
             String tokenUsername = jwtService.extractUsername(accessToken);
             if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
                 RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
-                if (!token.getUser().getEmail().equals(tokenUsername)) {
+                User user = token.getUser();
+                if (user == null || !user.getEmail().equals(tokenUsername)) {  // CHANGED: Add type check
                     throw new CustomException("Token mismatch", HttpStatus.UNAUTHORIZED);
                 }
             }

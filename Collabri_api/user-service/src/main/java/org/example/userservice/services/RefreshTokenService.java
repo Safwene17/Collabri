@@ -1,7 +1,9 @@
+// file: src/main/java/org/example/userservice/services/RefreshTokenService.java
 package org.example.userservice.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.userservice.entities.Admin;  // ADDED
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
@@ -23,10 +25,22 @@ public class RefreshTokenService {
     @Value("${jwt.refresh-token-expiration-ms}")
     private long refreshTokenExpirationMs;
 
-    public RefreshToken createRefreshToken() {
+    public RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
                 .token(UUID.randomUUID().toString())
                 .expiresAt(Instant.now().plusMillis(refreshTokenExpirationMs))
+                .user(user)
+                .revoked(false)
+                .build();
+        return refreshTokenRepository.save(refreshToken);
+    }
+
+    // ADDED: Overload for Admin
+    public RefreshToken createRefreshToken(Admin admin) {
+        RefreshToken refreshToken = RefreshToken.builder()
+                .token(UUID.randomUUID().toString())
+                .expiresAt(Instant.now().plusMillis(refreshTokenExpirationMs))
+                .admin(admin)
                 .revoked(false)
                 .build();
         return refreshTokenRepository.save(refreshToken);
@@ -48,10 +62,19 @@ public class RefreshTokenService {
         refreshTokenRepository.deleteAllByUser(user);
     }
 
+    // ADDED: For Admin
+    public void revokeAllTokensForAdmin(Admin admin) {
+        refreshTokenRepository.deleteAllByAdmin(admin);
+    }
+
     @Transactional
     public void revokeOtherTokens(RefreshToken current) {
-        if (current == null || current.getUser() == null) return;
-        refreshTokenRepository.revokeAllExcept(current.getUser(), current.getToken());
+        if (current == null) return;
+        if (current.getUser() != null) {
+            refreshTokenRepository.revokeAllExcept(current.getUser(), current.getToken());
+        } else if (current.getAdmin() != null) {
+            refreshTokenRepository.revokeAllExcept(current.getAdmin(), current.getToken());
+        }
     }
 
     public RefreshToken findByToken(String token) {
