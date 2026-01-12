@@ -11,7 +11,14 @@ public class KafkaTopicsConfig {
     @Bean
     public NewTopic InviteTopic() {
         return TopicBuilder
-                .name("invite-topic")
+                .name("calendar-invite-topic")
+                .build();
+    }
+
+    @Bean
+    public NewTopic EventTopic() {
+        return TopicBuilder
+                .name("calendar-event-topic")
                 .build();
     }
 }

@@ -13,6 +13,7 @@ import org.example.calendarservice.repositories.MemberRepository;
 import org.example.calendarservice.repositories.TaskRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +33,16 @@ public class TaskService {
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
-    public void createTask(TaskRequest request, UUID calendarId) {
+    public void createTask(TaskRequest request, UUID calendarId, Authentication authentication) {
+        String userIdStr = authentication.getName();
+        UUID userId = UUID.fromString(userIdStr);
         Task task = taskMapper.toTask(request);
         Member assignedTo = memberRepository.findById(request.assignedTo())
                 .orElseThrow(() -> new CustomException("Assigned member not found", HttpStatus.NOT_FOUND));
         task.setCalendar(calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND)));
         task.setAssignedTo(assignedTo);
+        task.setCreatedBy(userId);
         taskRepository.save(task);
         log.info("Created task {} for calendar {}", task.getId(), calendarId);
     }

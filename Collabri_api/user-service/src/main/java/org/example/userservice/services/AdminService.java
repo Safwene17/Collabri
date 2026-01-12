@@ -3,17 +3,23 @@ package org.example.userservice.services;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;  // ADDED
+import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.AdminRequest;
-import org.example.userservice.dto.ApiResponse;
+import org.example.userservice.dto.AdminResponse;  // ADDED
 import org.example.userservice.dto.LoginRequest;
 import org.example.userservice.dto.LoginResponse;
 import org.example.userservice.entities.Admin;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.enums.Role;
 import org.example.userservice.exceptions.CustomException;
+import org.example.userservice.jwt.JwtService;
+import org.example.userservice.jwt.RefreshTokenService;
+import org.example.userservice.jwt.TokenService;
+import org.example.userservice.mappers.AdminMapper;
 import org.example.userservice.repositories.AdminRepository;
 import org.example.userservice.repositories.UserRepository;
+import org.springframework.data.domain.Page;  // ADDED
+import org.springframework.data.domain.Pageable;  // ADDED
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +27,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;  // ADDED: For consistency
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j  // ADDED
+@Slf4j
+@Transactional
 public class AdminService {
 
     private final AdminRepository adminRepository;
@@ -33,17 +43,16 @@ public class AdminService {
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService userDetailsService;
     private final TokenService tokenService;
-    private final RefreshTokenService refreshTokenService;  // ADDED
-    private final JwtService jwtService;  // ADDED
-    private final UserRepository userRepository;  // CHANGED: Added to check for email uniqueness
+    private final RefreshTokenService refreshTokenService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     //------------------------------ADMIN CRUD--------------------------------//
-
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void createAdmin(AdminRequest request) {
         if (adminRepository.existsByEmail(request.email()) || userRepository.existsByEmail(request.email())) {
-            throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);// CHANGED: Check both repos            throw new CustomException("Admin with this email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
         }
         Admin admin = mapper.toAdmin(request);
         admin.setRole(Role.ADMIN);
@@ -51,6 +60,43 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
+    public Page<AdminResponse> findAll(Pageable pageable) {
+        return adminRepository.findAll(pageable).map(mapper::fromAdmin);
+    }
+
+    public AdminResponse findById(UUID id) {
+        return adminRepository.findById(id)
+                .map(mapper::fromAdmin)
+                .orElseThrow(() -> new CustomException("Admin not found", HttpStatus.NOT_FOUND));
+    }
+
+    public void update(UUID id, AdminRequest request) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Admin not found", HttpStatus.NOT_FOUND));
+
+        if (request.name() != null && !request.name().isBlank()) {
+            admin.setName(request.name());
+        }
+        if (request.email() != null && !request.email().isBlank()) {
+            if (adminRepository.existsByEmail(request.email()) && !request.email().equals(admin.getEmail())
+                    || userRepository.existsByEmail(request.email())) {
+                throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+            admin.setEmail(request.email());
+        }
+        if (request.password() != null && !request.password().isBlank()) {
+            admin.setPassword(passwordEncoder.encode(request.password()));
+        }
+
+        adminRepository.save(admin);
+    }
+
+    public void delete(UUID id) {
+        Admin admin = adminRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Admin not found", HttpStatus.NOT_FOUND));
+        refreshTokenService.revokeAllTokensForAdmin(admin);  // ADDED: Revoke/delete all associated refresh tokens
+        adminRepository.delete(admin);  // CHANGED: Delete the loaded entity
+    }
 
     //------------------------------ADMIN AUTHENTICATION--------------------------------//
 

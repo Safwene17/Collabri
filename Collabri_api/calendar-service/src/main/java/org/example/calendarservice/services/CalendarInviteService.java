@@ -16,6 +16,7 @@ import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.example.calendarservice.repositories.CalendarRepository;
 import org.example.calendarservice.repositories.MemberRepository;
 import org.example.calendarservice.user.UserClient;
+import org.example.calendarservice.user.UserResponse;
 import org.example.calendarservice.utils.TokenUtil; // your utility
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,7 @@ public class CalendarInviteService {
     }
 
     private void publishInviteEvent(CalendarInvite invite, Calendar calendar, UUID callerUserId, String destinationEmail, String plainToken) {
-        String inviterEmail = userClient.findUserbyId(callerUserId).map(u -> u.email()).orElse(defaultFromAddress);
+        String inviterEmail = userClient.findUserbyId(callerUserId).map(UserResponse::email).orElse(defaultFromAddress);
         // publish plaintext token only to internal topic — notification service will send via email
         inviteProducer.sendCalendarInvitation(new CalendarInviteEvent(
                 invite.getCalendarId(),

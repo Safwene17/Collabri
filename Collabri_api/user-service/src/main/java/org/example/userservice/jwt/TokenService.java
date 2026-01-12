@@ -1,5 +1,5 @@
 // file: src/main/java/org/example/userservice/services/TokenService.java
-package org.example.userservice.services;
+package org.example.userservice.jwt;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;

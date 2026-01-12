@@ -28,6 +28,8 @@ public class Event {
 
     private String description;
 
+    private UUID createdBy;
+
     @ManyToOne
     @JoinColumn(name = "calendar_id", nullable = false)
     @JsonIgnore

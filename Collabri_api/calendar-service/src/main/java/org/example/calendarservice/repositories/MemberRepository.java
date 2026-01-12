@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, UUID> {
     boolean existsByUserIdAndCalendarId(UUID userId, UUID calendarId);
 
     Optional<Member> findByUserIdAndCalendarId(UUID callerUserId, UUID calendarId);
@@ -20,5 +20,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findAllByCalendarId(UUID calendarId);
 
-    boolean existsByIdAndCalendarId(Long memberId, UUID calendarId);
+    boolean existsByIdAndCalendarId(UUID memberId, UUID calendarId);
 }

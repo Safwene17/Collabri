@@ -2,14 +2,11 @@ package org.example.calendarservice.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.calendarservice.entites.CalendarInvite;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-
-import static org.springframework.messaging.support.MessageBuilder.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +19,16 @@ public class InviteProducer {
         log.info("Sending CalendarInvitation for {}", invite);
         Message<CalendarInviteEvent> message = MessageBuilder
                 .withPayload(invite)
-                .setHeader(KafkaHeaders.TOPIC, "invite-topic")
+                .setHeader(KafkaHeaders.TOPIC, "calendar-invite-topic")
+                .build();
+        kafkaTemplate.send(message);
+    }
+
+    public void sendEventCreatedNotification(EventCreatedEvent event) {
+        log.info("Sending EventCreatedNotification for {}", event);
+        Message<EventCreatedEvent> message = MessageBuilder
+                .withPayload(event)
+                .setHeader(KafkaHeaders.TOPIC, "calendar-event-topic")
                 .build();
         kafkaTemplate.send(message);
     }

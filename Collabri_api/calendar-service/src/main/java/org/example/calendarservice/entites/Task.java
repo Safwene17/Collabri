@@ -38,6 +38,8 @@ public class Task {
     @JsonIgnore
     private Member assignedTo;
 
+    private UUID createdBy;
+
     private LocalDateTime dueDate;
 
     @Enumerated(EnumType.STRING)

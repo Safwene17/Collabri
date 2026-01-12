@@ -1,4 +1,4 @@
-package org.example.userservice.services;
+package org.example.userservice.mappers;
 
 import org.example.userservice.dto.RegisterRequest;
 import org.example.userservice.dto.UserResponse;

@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean verified = false;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EmailVerificationToken> emailVerificationTokens;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

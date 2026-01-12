@@ -76,7 +76,7 @@ public class MemberService {
     }
 
     //    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
-    public MemberResponse getMemberById(Long memberId, UUID calendarId) {
+    public MemberResponse getMemberById(UUID memberId, UUID calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId)
                 .orElseThrow(() -> new CustomException("Calendar not found", HttpStatus.NOT_FOUND));
         if (calendar.getVisibility() == Visibility.PUBLIC) {
@@ -89,7 +89,7 @@ public class MemberService {
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     @Transactional
-    public void removeMemberFromCalendar(Long memberId, UUID calendarId) {
+    public void removeMemberFromCalendar(UUID memberId, UUID calendarId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException("Member not found", HttpStatus.NOT_FOUND));
 
@@ -106,7 +106,7 @@ public class MemberService {
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     @Transactional
-    public void removeMember(Long memberId, UUID calendarId) {
+    public void removeMember(UUID memberId, UUID calendarId) {
         if (!memberRepository.existsByIdAndCalendarId(memberId, calendarId)) {
             throw new CustomException("Member not found in calendar", HttpStatus.NOT_FOUND);
         }
@@ -115,7 +115,7 @@ public class MemberService {
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.isOwner(#calendarId, authentication)")
     @Transactional
-    public void setMemberRole(Long memberId, UUID calendarId, Role newRole) {
+    public void setMemberRole(UUID memberId, UUID calendarId, Role newRole) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException("Member not found", HttpStatus.NOT_FOUND));
         if (!member.getCalendar().getId().equals(calendarId)) {

@@ -1,18 +1,15 @@
 package org.example.userservice.oauth2;
 
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.entities.User;
 import org.example.userservice.repositories.UserRepository;
 import org.example.userservice.services.CustomUserDetailsService;
-import org.example.userservice.services.TokenService;
+import org.example.userservice.jwt.TokenService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
