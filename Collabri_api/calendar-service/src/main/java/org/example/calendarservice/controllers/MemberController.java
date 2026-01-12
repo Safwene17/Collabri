@@ -34,24 +34,24 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<ApiResponse<MemberResponse>> getMemberById(@PathVariable Long memberId, @RequestParam UUID calendarId) {
+    public ResponseEntity<ApiResponse<MemberResponse>> getMemberById(@PathVariable UUID memberId, @RequestParam UUID calendarId) {
         return ResponseEntity.ok(ApiResponse.ok("Member retrieved successfully", service.getMemberById(memberId, calendarId)));
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<ApiResponse<Void>> removeMember(@PathVariable Long memberId, @RequestParam UUID calendarId) {
+    public ResponseEntity<ApiResponse<Void>> removeMember(@PathVariable UUID memberId, @RequestParam UUID calendarId) {
         service.removeMember(memberId, calendarId);
         return ResponseEntity.status(204).body(ApiResponse.ok("Member removed successfully", null));
     }
 
     @DeleteMapping("/deleteFromCalendar/{memberId}")
-    public ResponseEntity<ApiResponse<Void>> deleteMemberFromCalendar(@PathVariable Long memberId, @RequestParam UUID calendarId) {
+    public ResponseEntity<ApiResponse<Void>> deleteMemberFromCalendar(@PathVariable UUID memberId, @RequestParam UUID calendarId) {
         service.removeMemberFromCalendar(memberId, calendarId);
         return ResponseEntity.status(204).body(ApiResponse.ok("Member removed from calendar successfully", null));
     }
 
     @PutMapping("/set-role/{memberId}")
-    public ResponseEntity<ApiResponse<Void>> updateMemberRole(@PathVariable Long memberId, @RequestParam UUID calendarId, @RequestParam Role role) {
+    public ResponseEntity<ApiResponse<Void>> updateMemberRole(@PathVariable UUID memberId, @RequestParam UUID calendarId, @RequestParam Role role) {
         service.setMemberRole(memberId, calendarId, role);
         return ResponseEntity.accepted().body(ApiResponse.ok("Member role updated successfully", null));
     }

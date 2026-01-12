@@ -39,7 +39,9 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: '*'
-        spring.json.type.mapping: CalendarInviteEvent:org.example.notificationservice.kafka.calendar.CalendarInviteEvent
+        spring.json.type.mapping:
+          CalendarInviteEvent:org.example.notificationservice.kafka.calendar.CalendarInviteEvent,
+          EventCreatedEvent:org.example.notificationservice.kafka.calendar.EventCreatedEvent
 
 
 app:

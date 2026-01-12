@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.example.calendarservice.enums.TaskStatus;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record TaskRequest(
         @NotBlank(message = "Title cannot be empty")
@@ -13,7 +14,7 @@ public record TaskRequest(
         String description,
 
         @NotNull(message = "Assigned member cannot be null")
-        Long assignedTo,
+        UUID assignedTo,
 
         @NotNull(message = "Due date cannot be null")
         LocalDateTime dueDate,

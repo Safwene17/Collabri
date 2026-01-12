@@ -22,11 +22,11 @@ public class RefreshToken {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // ADDED: Support for Admin
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // ADDED: Support for Admin
     @JoinColumn(name = "admin_id")
     private Admin admin;
 

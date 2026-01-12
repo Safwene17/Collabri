@@ -1,11 +1,14 @@
 package org.example.notificationservice.kafka.entities;
 
 import lombok.*;
+import org.example.notificationservice.kafka.enums.NotificationStatus;
 import org.example.notificationservice.kafka.enums.NotificationType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Document(collection = "collabri-notifications")
 @NoArgsConstructor
@@ -17,8 +20,13 @@ public class Notification {
 
     @Id
     private String id;
+    private String title;
+    private String recipient;
+    private String message;
+    private Map<String, Object> payload;
     private NotificationType type;
-    private LocalDateTime notificationDate;
-    private Object content;
+    private NotificationStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime readAt;
 
 }

@@ -19,7 +19,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent
+        spring.json.type.mapping:
+          CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent,
+          EventCreatedEvent:org.example.calendarservice.kafka.EventCreatedEvent
   cloud:
     openfeign:
       circuitbreaker:

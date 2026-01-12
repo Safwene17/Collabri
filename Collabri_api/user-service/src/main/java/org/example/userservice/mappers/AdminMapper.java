@@ -1,6 +1,5 @@
-package org.example.userservice.services;
+package org.example.userservice.mappers;
 
-import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.AdminRequest;
 import org.example.userservice.dto.AdminResponse;
 import org.example.userservice.entities.Admin;

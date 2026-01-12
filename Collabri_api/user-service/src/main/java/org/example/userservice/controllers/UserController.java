@@ -20,11 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable("id") UUID id) {
-        userService.delete(id);
-        return ResponseEntity.ok(ApiResponse.ok("User deleted successfully", null));
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
@@ -50,5 +45,11 @@ public class UserController {
                                                         @RequestBody @Valid RegisterRequest request) {
         userService.update(id, request);
         return ResponseEntity.accepted().body(ApiResponse.ok("User updated successfully", null));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable("id") UUID id) {
+        userService.delete(id);
+        return ResponseEntity.ok(ApiResponse.ok("User deleted successfully", null));
     }
 }

@@ -51,8 +51,8 @@ public class SecurityConfig {
                                 "/api/v1/admins/login"
                         ).permitAll()//auth endpoints
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAnyRole("SUPER_ADMIN", "ADMIN", "USER")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth

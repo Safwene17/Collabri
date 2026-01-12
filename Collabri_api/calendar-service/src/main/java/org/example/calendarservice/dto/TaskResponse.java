@@ -10,7 +10,7 @@ public record TaskResponse(
         String title,
         String description,
         UUID calendarId,
-        Long assignedTo,
+        UUID assignedTo,
         LocalDateTime dueDate,
         TaskStatus status,
         LocalDateTime createdAt

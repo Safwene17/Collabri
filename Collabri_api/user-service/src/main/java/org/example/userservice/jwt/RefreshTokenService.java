@@ -1,5 +1,5 @@
 // file: src/main/java/org/example/userservice/services/RefreshTokenService.java
-package org.example.userservice.services;
+package org.example.userservice.jwt;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

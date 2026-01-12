@@ -7,6 +7,7 @@ import org.example.calendarservice.dto.EventRequest;
 import org.example.calendarservice.dto.EventResponse;
 import org.example.calendarservice.services.EventService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createEvent(@RequestBody @Valid EventRequest request, @RequestParam UUID calendarId) {
-        eventService.createEvent(request, calendarId);
+    public ResponseEntity<ApiResponse<Void>> createEvent(@RequestBody @Valid EventRequest request, @RequestParam UUID calendarId, Authentication authentication) {
+        eventService.createEvent(request, calendarId, authentication);
         return ResponseEntity.status(201).body(ApiResponse.ok("Event created successfully", null));
     }
 

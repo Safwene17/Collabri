@@ -7,6 +7,7 @@ import org.example.calendarservice.dto.TaskRequest;
 import org.example.calendarservice.dto.TaskResponse;
 import org.example.calendarservice.services.TaskService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createTask(@RequestBody @Valid TaskRequest request, @RequestParam UUID calendarId) {
-        taskService.createTask(request, calendarId);
+    public ResponseEntity<ApiResponse<Void>> createTask(@RequestBody @Valid TaskRequest request, @RequestParam UUID calendarId, Authentication authentication) {
+        taskService.createTask(request, calendarId, authentication);
         return ResponseEntity.status(201).body(ApiResponse.ok("Task created successfully", null));
     }
 

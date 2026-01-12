@@ -5,7 +5,6 @@ import lombok.Getter;
 public enum EmailTemplates {
     CALENDAR_INVITE("calendar-invite.html", "Calendar Invitation");
 
-
     @Getter
     private final String template;
 
