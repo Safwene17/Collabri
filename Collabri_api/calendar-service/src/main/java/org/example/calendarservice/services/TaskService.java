@@ -7,6 +7,8 @@ import org.example.calendarservice.dto.TaskResponse;
 import org.example.calendarservice.entites.Member;
 import org.example.calendarservice.entites.Task;
 import org.example.calendarservice.exceptions.CustomException;
+import org.example.calendarservice.kafka.InviteProducer;
+import org.example.calendarservice.kafka.TaskCreatedEvent;
 import org.example.calendarservice.mappers.TaskMapper;
 import org.example.calendarservice.repositories.CalendarRepository;
 import org.example.calendarservice.repositories.MemberRepository;
@@ -30,7 +32,26 @@ public class TaskService {
     private final TaskMapper taskMapper;
     private final CalendarRepository calendarRepository;
     private final MemberRepository memberRepository;
+    private final InviteProducer inviteProducer;
 
+    //-------------------------------- Publish Task Notification ---------------------------------//
+    // (Placeholder for future task notification methods)
+    public void publishTaskNotification(UUID taskId, String title, String assignTo, String createdBy, String calendarName, UUID recipipentId) {
+        // Implementation for publishing task notifications will go here
+        var taskCreatedEvent = new TaskCreatedEvent(
+                taskId,
+                title,
+                assignTo,
+                createdBy,
+                calendarName,
+                recipipentId
+        ); // Placeholder
+        inviteProducer.sendTaskCreatedNotification(taskCreatedEvent);
+        log.info("Published task created notification for task {}", taskId);
+    }
+
+
+    //-------------------------------- Task Services ---------------------------------//
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     @Transactional
     public void createTask(TaskRequest request, UUID calendarId, Authentication authentication) {
@@ -45,6 +66,20 @@ public class TaskService {
         task.setCreatedBy(userId);
         taskRepository.save(task);
         log.info("Created task {} for calendar {}", task.getId(), calendarId);
+
+        String senderEmail = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND))
+                .getEmail();
+        //-------------------------------- Publish Task Created Notification ---------------------------------//
+        publishTaskNotification(
+                task.getId(),
+                task.getTitle(),
+                assignedTo.getEmail(),
+                senderEmail,
+                task.getCalendar().getName(),
+                assignedTo.getUserId()
+        );
+        log.info("Published task created notification for task {}", task.getId());
     }
 
     @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'VIEWER')")

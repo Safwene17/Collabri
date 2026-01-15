@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record CalendarInviteEvent(
         UUID calendarId,
+        UUID userId,
         String calendarName,
         String inviterEmail,
         String destinationEmail,

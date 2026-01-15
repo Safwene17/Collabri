@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.notificationservice.kafka.calendar.CalendarInviteEvent;
 import org.example.notificationservice.kafka.calendar.EventCreatedEvent;
+import org.example.notificationservice.kafka.calendar.MemberJoinedEvent;
+import org.example.notificationservice.kafka.calendar.MemberLeftEvent;
 import org.example.notificationservice.kafka.email.EmailService;
 import org.example.notificationservice.kafka.entities.Notification;
 import org.example.notificationservice.kafka.enums.NotificationStatus;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class NotificationConsumer {
         repository.save(
                 Notification.builder()
                         .title("Calendar Invitation")
-                        .recipient(event.destinationEmail())
+                        .userId(event.userId())
                         .message("You have been invited to a calendar.")
                         .payload(Map.of(
                                 "calendarId", event.calendarId(),
@@ -39,7 +42,7 @@ public class NotificationConsumer {
                                 "destinationEmail", event.destinationEmail()
                         ))
                         .type(NotificationType.CALENDAR_INVITATION)
-                        .status(NotificationStatus.DELEIVERED)
+                        .status(NotificationStatus.DELIVERED)
                         .createdAt(LocalDateTime.now())
                         .build()
         );
@@ -49,7 +52,7 @@ public class NotificationConsumer {
             emailService.sendCalendarInvitationEmail(
                     event.calendarId(),
                     event.calendarName(),
-                    event.destinationEmail(),   // destination (recipient)
+                    event.destinationEmail(),   // destination
                     event.inviterEmail(),       // inviter (sender shown in body)
                     event.token(),
                     event.expiresAt()
@@ -64,11 +67,11 @@ public class NotificationConsumer {
     public void consumeEventCreatedNotification(EventCreatedEvent event) {
         log.info("Consumed event created message: {}", event);
 
-        // Fan-out: Create and save one notification per recipient email
-        for (String recipientEmail : event.recipientEmails()) {
+        // Fan-out: Create and save one notification per userId email
+        for (UUID recipientId : event.recipientsId()) {
             repository.save(
                     Notification.builder()
-                            .recipient(recipientEmail)
+                            .userId(recipientId)
                             .title("Event created: " + event.title())
                             .message(event.title() + " in " + event.calendarName() + " — " + event.location())
                             .payload(Map.of(
@@ -78,12 +81,88 @@ public class NotificationConsumer {
                                     "location", event.location()
                             ))
                             .type(NotificationType.EVENT_CREATED)
-                            .status(NotificationStatus.DELEIVERED)
+                            .status(NotificationStatus.DELIVERED)
                             .createdAt(LocalDateTime.now())
                             .build()
             );
         }
         log.info("Event created notifications saved for eventId={}", event.eventId());
     }
+
+    @KafkaListener(topics = "calendar-task-topic")
+    public void consumeTaskCreatedNotification(org.example.notificationservice.kafka.calendar.TaskCreatedEvent event) {
+        log.info("Consumed task created message: {}", event);
+        // Save notification to the database
+        repository.save(
+                Notification.builder()
+                        .userId(event.recipientId())
+                        .title("Task assigned: " + event.title())
+                        .message("You have been assigned a new task in " + event.calendarName())
+                        .payload(Map.of(
+                                "taskId", event.taskId().toString(),
+                                "title", event.title(),
+                                "assignTo", event.assignTo(),
+                                "createdBy", event.createdBy(),
+                                "calendarName", event.calendarName()
+                        ))
+                        .type(NotificationType.TASK_CREATED)
+                        .status(NotificationStatus.DELIVERED)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    ;
+
+    @KafkaListener(topics = "calendar-member-joined-topic")
+    public void consumeMemberJoinedNotification(MemberJoinedEvent event) {
+        log.info("Consumed member joined message: {}", event);
+        // Save notification to the database
+        for (UUID recipientId : event.recipientsId()) {
+            repository.save(
+                    Notification.builder()
+                            .title(event.username() + "has joined " + event.calendarName())
+                            .message("Check out the calendar now!")
+                            .userId(recipientId)
+                            .type(NotificationType.MEMBER_JOINED)
+                            .payload(
+                                    Map.of(
+                                            "calendarId", event.calendarId().toString(),
+                                            "calendarName", event.calendarName(),
+                                            "username", event.username()
+                                    )
+                            )
+                            .status(NotificationStatus.DELIVERED)
+                            .createdAt(LocalDateTime.now())
+                            .build()
+            );
+        }
+    }
+
+    @KafkaListener(topics = "calendar-member-left-topic")
+    public void consumeMemberLeftNotification(MemberLeftEvent event) {
+        log.info("Consumed member left message: {}", event);
+        // Save notification to the database
+        for (UUID recipientId : event.recipientsId()) {
+            repository.save(
+                    Notification.builder()
+                            .title(event.username() + "has left " + event.calendarName())
+                            .message("Check out the calendar now!")
+                            .userId(recipientId)
+                            .type(NotificationType.MEMBER_LEFT)
+                            .payload(
+                                    Map.of(
+                                            "calendarId", event.calendarId().toString(),
+                                            "calendarName", event.calendarName(),
+                                            "username", event.username()
+                                    )
+                            )
+                            .status(NotificationStatus.DELIVERED)
+                            .createdAt(LocalDateTime.now())
+                            .build()
+            );
+        }
+    }
+
 }
 

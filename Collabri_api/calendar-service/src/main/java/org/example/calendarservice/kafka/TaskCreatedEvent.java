@@ -1,14 +1,14 @@
 package org.example.calendarservice.kafka;
 
-import java.util.List;
 import java.util.UUID;
 
-public record EventCreatedEvent(
-        UUID eventId,
+public record TaskCreatedEvent(
+        UUID taskId,
         String title,
+        String assignTo,
         String createdBy,
         String calendarName,
-        String location,
-        List<UUID> recipientsId
+        UUID recipientId
+
 ) {
 }
