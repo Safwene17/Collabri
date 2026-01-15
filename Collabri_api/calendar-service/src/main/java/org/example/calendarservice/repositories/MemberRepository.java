@@ -1,8 +1,7 @@
 package org.example.calendarservice.repositories;
 
-import com.netflix.appinfo.ApplicationInfoManager;
-import org.example.calendarservice.dto.MemberResponse;
 import org.example.calendarservice.entites.Member;
+import org.example.calendarservice.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,5 +19,9 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
 
     List<Member> findAllByCalendarId(UUID calendarId);
 
+    List<Member> findAllByRoleIn(List<Role> roles);
+
     boolean existsByIdAndCalendarId(UUID memberId, UUID calendarId);
+
+    Optional<Member> findByUserId(UUID userId);
 }

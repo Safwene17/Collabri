@@ -46,7 +46,7 @@ public class EventService {
                 calendarName,
                 location,
                 memberRepository.findAllByCalendarId(calendarId).stream()
-                        .map(Member::getEmail)
+                        .map(Member::getUserId)
                         .toList()
         );
         inviteProducer.sendEventCreatedNotification(eventCreatedEvent);

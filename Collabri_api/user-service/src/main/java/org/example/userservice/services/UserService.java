@@ -28,7 +28,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @Transactional
     public void delete(UUID id) {
         User user = userRepository.findById(id)

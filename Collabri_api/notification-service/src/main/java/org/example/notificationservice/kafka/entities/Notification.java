@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 @Document(collection = "collabri-notifications")
 @NoArgsConstructor
@@ -21,7 +22,7 @@ public class Notification {
     @Id
     private String id;
     private String title;
-    private String recipient;
+    private UUID userId;
     private String message;
     private Map<String, Object> payload;
     private NotificationType type;

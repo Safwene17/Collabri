@@ -21,7 +21,16 @@ spring:
             - id: calendar
               uri: lb://calendar
               predicates:
-                - Path=/api/v1/calendars/**, /api/v1/invites/**, /api/v1/members/**, /api/v1/tasks/** , /api/v1/events/**
+                - Path=/api/v1/calendars/**,
+                  /api/v1/invites/**,
+                  /api/v1/members/**,
+                  /api/v1/tasks/** ,
+                  /api/v1/events/**
+
+            - id: notification
+              uri: lb://notification
+              predicates:
+                - Path=/api/v1/notifications/**
 
 server:
   port: 8222

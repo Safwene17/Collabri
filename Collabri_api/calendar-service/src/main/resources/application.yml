@@ -21,7 +21,10 @@ spring:
       properties:
         spring.json.type.mapping:
           CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent,
-          EventCreatedEvent:org.example.calendarservice.kafka.EventCreatedEvent
+          EventCreatedEvent:org.example.calendarservice.kafka.EventCreatedEvent,
+          TaskCreatedEvent:org.example.calendarservice.kafka.TaskCreatedEvent,
+          MemberJoinedEvent:org.example.calendarservice.kafka.MemberJoinedEvent,
+          MemberLeftEvent:org.example.calendarservice.kafka.MemberLeftEvent
   cloud:
     openfeign:
       circuitbreaker:

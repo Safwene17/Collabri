@@ -8,9 +8,11 @@ import org.example.calendarservice.entites.Calendar;
 import org.example.calendarservice.entites.CalendarInvite;
 import org.example.calendarservice.entites.Member;
 import org.example.calendarservice.enums.InviteStatus;
+import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.exceptions.CustomException;
 import org.example.calendarservice.kafka.CalendarInviteEvent;
 import org.example.calendarservice.kafka.InviteProducer;
+import org.example.calendarservice.kafka.MemberJoinedEvent;
 import org.example.calendarservice.mappers.MemberMapper;
 import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.example.calendarservice.repositories.CalendarRepository;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -69,6 +72,7 @@ public class CalendarInviteService {
         // publish plaintext token only to internal topic — notification service will send via email
         inviteProducer.sendCalendarInvitation(new CalendarInviteEvent(
                 invite.getCalendarId(),
+                callerUserId,
                 calendar.getName(),
                 inviterEmail,
                 destinationEmail,
@@ -130,6 +134,8 @@ public class CalendarInviteService {
 
             publishInviteEvent(inv, calendar, userId, destinationEmail, newPlainToken);
             return null;
+
+
         }
 
 
@@ -195,8 +201,18 @@ public class CalendarInviteService {
 
         invite.setStatus(InviteStatus.ACCEPTED);
         calendarInviteRepository.save(invite);
-
         log.info("User {} accepted invite to calendar {}", userId, calId);
+
+        //--- Future: Publish Member Activity Event ---
+        var memberJoinedEvent = new MemberJoinedEvent(
+                member.getDisplayName(),
+                member.getCalendar().getId(),
+                member.getCalendar().getName(),
+                memberRepository.findAllByRoleIn(List.of(Role.OWNER, Role.MANAGER)).stream()
+                        .map(Member::getUserId)
+                        .toList()
+        );
+        inviteProducer.sendMemberJoinedNotification(memberJoinedEvent);
         return null;
     }
 
