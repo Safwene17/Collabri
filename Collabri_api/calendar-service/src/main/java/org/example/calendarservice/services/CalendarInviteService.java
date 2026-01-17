@@ -38,14 +38,10 @@ import java.util.UUID;
 @Slf4j
 public class CalendarInviteService {
 
-    private final VerifiedUserChecker verified;
-    @Value("${frontend.invite.url:http://localhost:4200/invite-accept}")
-    private String frontendInviteUrl;
-
-    @Value("${app.invites.expire-days:7}")
+    @Value("${app.invites.expire-days}")
     private int inviteExpireDays;
 
-    @Value("${spring.mail.username:no-reply@example.com}")
+    @Value("${app.mail.username}")
     private String defaultFromAddress;
 
     private final InviteProducer inviteProducer;
