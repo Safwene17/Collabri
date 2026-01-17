@@ -89,7 +89,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Boolean>> validateEmailVerificationToken(@RequestBody TokenRequest request) {
         boolean ok = emailVerificationService.validateToken(request.token());
         return ResponseEntity.ok(ApiResponse.ok(ok ? "Token valid" : "Token invalid", ok));
-        
+
     }
 
     // Forgot password - send reset email (200 even if email missing to avoid enumeration)

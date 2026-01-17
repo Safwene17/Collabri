@@ -2,7 +2,7 @@ spring:
   application:
     name: calendar
   config:
-    import: optional:configserver:localhost:8888
+    import: optional:configserver:http://localhost:8888
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -25,34 +25,14 @@ spring:
           TaskCreatedEvent:org.example.calendarservice.kafka.TaskCreatedEvent,
           MemberJoinedEvent:org.example.calendarservice.kafka.MemberJoinedEvent,
           MemberLeftEvent:org.example.calendarservice.kafka.MemberLeftEvent
-  cloud:
-    openfeign:
-      circuitbreaker:
-        enabled: true
-resilience4j:
-  circuitbreaker:
-    instances:
-      userService:
-        registerHealthIndicator: true
-        slidingWindowSize: 10
-        minimumNumberOfCalls: 5
-        permittedNumberOfCallsInHalfOpenState: 3
-        waitDurationInOpenState: 10s
-        failureRateThreshold: 50
-  retry:
-    instances:
-      userService:
-        maxAttempts: 3
-        waitDuration: 2s
 
 management:
   endpoints:
     web:
       exposure:
-        include: health, circuitbreakers
+        include: health, circuitbreakers, circuitbreakerevents
 
 server:
-  port: 8070
+  port: ${CALENDAR_SERVICE_PORT}
 
-jwt:
-  secret: ${JWT_SECRET}
+
