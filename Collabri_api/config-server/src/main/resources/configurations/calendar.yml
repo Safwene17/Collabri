@@ -32,3 +32,8 @@ server:
   port: ${CALENDAR_SERVICE_PORT}
 
 
+app:
+  invites:
+    expire-days: 7
+  mail:
+    username: ${MAIL_FROM_ADDRESS}

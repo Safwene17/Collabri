@@ -14,7 +14,7 @@ eureka:
 
 
 jwt:
-  secret: "177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32"
+  secret: ${JWT_SECRET}
   access-token-expiration-ms: 900000     # 15 minutes
   refresh-token-expiration-ms: 604800000 # 7 days
 
