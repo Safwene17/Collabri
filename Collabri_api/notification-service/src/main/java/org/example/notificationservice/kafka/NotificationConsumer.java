@@ -2,15 +2,15 @@ package org.example.notificationservice.kafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.notificationservice.email.EmailService;
 import org.example.notificationservice.kafka.calendar.CalendarInviteEvent;
 import org.example.notificationservice.kafka.calendar.EventCreatedEvent;
 import org.example.notificationservice.kafka.calendar.MemberJoinedEvent;
 import org.example.notificationservice.kafka.calendar.MemberLeftEvent;
-import org.example.notificationservice.kafka.email.EmailService;
-import org.example.notificationservice.kafka.entities.Notification;
-import org.example.notificationservice.kafka.enums.NotificationStatus;
-import org.example.notificationservice.kafka.enums.NotificationType;
-import org.example.notificationservice.kafka.repositories.NotificationRepository;
+import org.example.notificationservice.entities.Notification;
+import org.example.notificationservice.enums.NotificationStatus;
+import org.example.notificationservice.enums.NotificationType;
+import org.example.notificationservice.repositories.NotificationRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 

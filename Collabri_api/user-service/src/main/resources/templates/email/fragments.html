@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Header Fragment -->
+<div th:fragment="header">
+    <table width="100%" cellpadding="0" cellspacing="0"
+           style="margin-bottom: 32px; border-bottom: 1px solid #2a2a2a; padding-bottom: 24px;">
+        <tr>
+            <td style="text-align: left;">
+                <h2 style="margin: 0; color: #f0f0f0; font-size: 26px; font-weight: 600;">
+                    <span th:text="${appName}">Collabri</span>
+                </h2>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- CTA Button Fragment -->
+<div th:fragment="cta-button(buttonText, actionLink)">
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+        <tr>
+            <td align="center">
+                <a th:href="${actionLink}"
+                   style="display: inline-block; padding: 14px 36px; background-color: #3b82f6; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; transition: background-color 0.2s ease; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                    <span th:text="${buttonText}">Action</span>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Expiry Notice Fragment -->
+<div th:fragment="expiry-notice(ttl, ttlUnit)">
+    <table width="100%" cellpadding="0" cellspacing="0"
+           style="margin: 24px 0; background-color: #1a1a1a; border-left: 4px solid #3b82f6; border-radius: 6px; padding: 16px;">
+        <tr>
+            <td>
+                <p style="margin: 0; color: #d1d5db; font-size: 14px; line-height: 1.5;">
+                    <strong>Security Notice:</strong> This link expires in
+                    <span th:text="${ttl}">24</span>
+                    <span th:text="${ttlUnit}">hours</span>.
+                    Never share this link with anyone.
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Help Section Fragment -->
+<div th:fragment="help-section(supportEmail)">
+    <table width="100%" cellpadding="0" cellspacing="0"
+           style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+        <tr>
+            <td>
+                <p style="margin: 0; color: #9ca3af; font-size: 13px; line-height: 1.6;">
+                    Need help? Contact us at
+                    <a th:href="'mailto:' + ${supportEmail}"
+                       style="color: #3b82f6; text-decoration: none; font-weight: 500;">
+                        <span th:text="${supportEmail}">support@collabri.com</span>
+                    </a>
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Footer Fragment -->
+<div th:fragment="footer(appName)">
+    <table width="100%" cellpadding="0" cellspacing="0"
+           style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #2a2a2a; text-align: center;">
+        <tr>
+            <td style="color: #6b7280; font-size: 12px; line-height: 1.6;">
+                <p style="margin: 0;">
+                    © <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy')}">2025</span>
+                    <span th:text="${appName}">Collabri</span>. All rights reserved.
+                </p>
+                <p style="margin: 8px 0 0; font-size: 11px;">
+                    This is an automated email. Please do not reply directly.
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

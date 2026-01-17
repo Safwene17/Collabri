@@ -61,5 +61,5 @@ frontend:
     url: http://localhost:5173
 
 server:
-  port: 8060
+  port: ${USER_SERVICE_PORT}
 

@@ -1,0 +1,50 @@
+spring:
+  mail:
+    host: ${SPRING_MAIL_HOST}  # Override via environment variable
+    port: ${SPRING_MAIL_PORT}  # Override via environment variable
+    username: ${MAIL_USERNAME}  # Override via environment variable      
+    password: ${MAIL_PASSWORD}  # Override via environment variable
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: ${SPRING_MAIL_HOST}
+          connection-timeout: 5000
+          timeout: 3000
+          write-timeout: 5000
+  data:
+    mongodb:
+      username: ${MONGO_USERNAME}  # Override via environment variable
+      password: ${MONGO_PASSWORD}
+      host: ${MONGO_HOST}  # Override via environment variable
+      port: ${MONGO_PORT}  # Override via environment variable
+      database: ${MONGO_DB}  # Override via environment variable
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: CalendarGroup
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping:
+          CalendarInviteEvent:org.example.notificationservice.kafka.calendar.CalendarInviteEvent,
+          EventCreatedEvent:org.example.notificationservice.kafka.calendar.EventCreatedEvent,
+          TaskCreatedEvent:org.example.notificationservice.kafka.calendar.TaskCreatedEvent,
+          MemberJoinedEvent:org.example.notificationservice.kafka.calendar.MemberJoinedEvent,
+          MemberLeftEvent:org.example.notificationservice.kafka.calendar.MemberLeftEvent
+server:
+  port: ${NOTIFICATION_SERVICE_PORT}
+
+app:
+  frontend:
+    invite-base: http://localhost:5173/invite   # used to build accept/decline links
+  email:
+    send-retry-count: 3
+
+

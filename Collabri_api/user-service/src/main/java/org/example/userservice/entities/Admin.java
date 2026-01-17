@@ -31,9 +31,12 @@ public class Admin implements UserDetails {
 
     private String password;
 
-
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // Bidirectional OneToMany for tokens - cascade deletions
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefreshToken> refreshTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

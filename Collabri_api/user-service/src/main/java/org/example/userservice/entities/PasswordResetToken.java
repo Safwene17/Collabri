@@ -28,9 +28,8 @@ public class PasswordResetToken {
     @Column(nullable = false)
     private boolean used = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)  // No cascade here (handled by parent)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
 
 }

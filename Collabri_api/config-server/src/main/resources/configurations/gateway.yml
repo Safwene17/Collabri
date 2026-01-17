@@ -1,0 +1,86 @@
+spring:
+  cloud:
+    discovery:
+      enabled: true
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: user
+              uri: lb://user
+              predicates:
+                - Path=/api/v1/users/**,/api/v1/auth/**,/login/oauth2/**,/oauth2/**,/api/v1/admins/**
+              filters:
+                - CircuitBreaker=gw-user
+
+            - id: calendar
+              uri: lb://calendar
+              predicates:
+                - Path=/api/v1/calendars/**,/api/v1/invites/**,/api/v1/members/**,/api/v1/tasks/**,/api/v1/events/**
+              filters:
+                - CircuitBreaker=gw-calendar
+
+            - id: notification
+              uri: lb://notification
+              predicates:
+                - Path=/api/v1/notifications/**
+              filters:
+                - CircuitBreaker=gw-notification
+
+server:
+  port: ${GATEWAY_SERVICE_PORT}
+
+resilience4j:
+  timelimiter:
+    instances:
+      gw-user:
+        timeoutDuration: 15s
+        cancelRunningFuture: true
+      gw-calendar:
+        timeoutDuration: 15s
+        cancelRunningFuture: true
+      gw-notification:
+        timeoutDuration: 15s
+        cancelRunningFuture: true
+
+  circuitbreaker:
+    instances:
+      gw-user:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+      gw-calendar:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+      gw-notification:
+        slidingWindowSize: 100
+        permittedNumberOfCallsInHalfOpenState: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+  retry:
+    instances:
+      default:
+        maxAttempts: 3
+        waitDuration: 500ms
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.loadbalancer: TRACE
+    io.github.resilience4j.circuitbreaker: DEBUG
+    io.github.resilience4j.timelimiter: DEBUG
+    org.springframework.web: DEBUG
+
+
+#faster eureka instances detection
+eureka:
+  client:
+    registryFetchIntervalSeconds: 5  # Default: 30; lower for faster detection of new/reloaded instances
+    cacheRefreshExecutorThreadPoolSize: 2  # Optional: Increase if you have many services
+    initialRegistryFetchRetryDelayMs: 500
