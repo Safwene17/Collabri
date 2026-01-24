@@ -41,6 +41,9 @@ spring:
 server:
   port: ${NOTIFICATION_SERVICE_PORT}
 
+jwt:
+    secret: ${JWT_SECRET}
+
 app:
   frontend:
     invite-base: http://localhost:5173/invite   # used to build accept/decline links

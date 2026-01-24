@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.jwt.secret:your-secret-key-min-32-characters-long}")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Bean
@@ -51,6 +51,7 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/ws/**").permitAll() // Allow WebSocket endpoint (auth handled by interceptor)
                         .anyRequest().authenticated()
                 )
                 .build();
