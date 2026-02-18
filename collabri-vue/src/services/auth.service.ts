@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useAuthStore } from "../stores/auth";
+import { useAuthStore } from "../stores/auth.store";
 import axiosInstance from "../api/axios";
 
 export class AuthService {

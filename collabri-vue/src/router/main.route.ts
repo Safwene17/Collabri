@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../stores/auth.store';
 import axios from 'axios';
 import { validateTokens } from '../utils/tokens';
 
@@ -63,8 +63,25 @@ const routes = [
     {
         path: '/home',
         name: 'home',
-        component: () => import("../pages/Home.vue"),
-        meta: { requiresAuth: true }
+        component: () => import("../components/layout/HomeLayout.vue"),
+        meta: { requiresAuth: true },
+        children: [
+            // {
+            //     path: '',
+            //     name: 'home',
+            //     component: () => import("../pages/Dashboard.vue"),
+            // },
+            // {
+            //     path: 'profile',
+            //     name: 'profile',
+            //     component: () => import("../pages/Profile.vue"),
+            // },
+            {
+                path: 'main',   // matches /home/settings
+                name: 'main',
+                component: () => import("../components/MainPage.vue"),
+            },
+        ]
     },
 ];
 
@@ -85,7 +102,6 @@ router.beforeEach(async (to, from) => {
                 { withCredentials: true }
             );
             
-            // console.log(response);
             authStore.setAccessToken(response.data.accessToken);
             
             return true;
