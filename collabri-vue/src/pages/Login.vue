@@ -5,7 +5,7 @@ import Toast from 'primevue/toast';
 import { LoginSchema, validateInputs } from '../utils/validation';
 import router from '../router/main.route';
 import { AuthService } from '../services/auth.service';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../stores/auth.store';
 import { handleRTAndValidationErrors, togglePassword } from '../utils/utils';
 
     defineOptions({
