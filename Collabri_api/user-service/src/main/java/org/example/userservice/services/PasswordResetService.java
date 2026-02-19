@@ -1,30 +1,34 @@
 package org.example.userservice.services;
 
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.ResetPasswordRequest;
 import org.example.userservice.entities.PasswordResetToken;
 import org.example.userservice.entities.User;
-//import org.example.userservice.exceptions.InvalidEmailException;
 import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.PasswordResetTokenRepository;
 import org.example.userservice.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Instant;
 import java.time.Duration;
 import java.util.HexFormat;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PasswordResetService {
@@ -33,9 +37,17 @@ public class PasswordResetService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    @Qualifier("emailTemplateEngine")
+    private final SpringTemplateEngine templateEngine;
 
     @Value("${app.reset-token-ttl-minutes}")
     private long tokenTtlMinutes;
+
+    @Value("${app.name:Collabri}")
+    private String appName;
+
+    @Value("${app.support-email:support@collabri.com}")
+    private String supportEmail;
 
     @Value("${app.frontend.reset-url}")
     private String frontendResetUrl;
@@ -58,8 +70,6 @@ public class PasswordResetService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
-        // delete any previous tokens for this user (optional)
-        // tokenRepository.deleteAllByUser(user);
         String token = UUID.randomUUID().toString();
         Instant expiresAt = Instant.now().plus(Duration.ofMinutes(tokenTtlMinutes));
 
@@ -68,47 +78,45 @@ public class PasswordResetService {
         prt.setTokenHash(hashToken(token));
         prt.setExpiresAt(expiresAt);
         tokenRepository.save(prt);
-        sendResetEmail(user.getEmail(), token, user.getFirstname());
+
+        sendResetEmailWithThymeleaf(user.getEmail(), token, user.getFirstname());
     }
 
-    private void sendResetEmail(String toEmail, String token, String firstName) {
-        userRepository.findByEmail(toEmail)
-                .orElseThrow(() -> new CustomException("Email not found", HttpStatus.NOT_FOUND));
+    /**
+     * Sends password reset email using Thymeleaf template engine.
+     * Properly escapes all variables and handles missing name gracefully.
+     */
+    private void sendResetEmailWithThymeleaf(String toEmail, String rawToken, String firstName) {
+        try {
+            String resetLink = frontendResetUrl + "?token=" + rawToken;
 
-        String resetLink = frontendResetUrl + "?token=" + token;
-        String subject = "Password Reset Instructions";
+            // Prepare template context with all variables
+            Context context = new Context();
+            context.setVariable("name", firstName != null && !firstName.isBlank() ? firstName : "there");
+            context.setVariable("actionLink", resetLink);
+            context.setVariable("ttl", tokenTtlMinutes);
+            context.setVariable("ttlUnit", tokenTtlMinutes == 1 ? "minute" : "minutes");
+            context.setVariable("appName", appName);
+            context.setVariable("supportEmail", supportEmail);
 
-        String text = """
-                Hi %s,
-                
-                We received a request to reset the password for your account.
-                
-                Click the link below to create a new password:
-                %s
-                
-                ⚠️ For security reasons, this link will expire in %d minutes.
-                
-                If you did not request a password reset, please ignore this message or contact support if you have concerns.
-                
-                Best regards,
-                %s
-                """.formatted(
-                firstName != null && !firstName.isBlank() ? firstName : "there",
-                resetLink,
-                tokenTtlMinutes,
-                "Collabri Team"
-        );
+            // Process template
+            String htmlContent = templateEngine.process("reset-password", context);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(text);
+            // Create and send MIME message
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(toEmail);
+            helper.setSubject("Reset Your " + appName + " Password");
+            helper.setFrom(mailFrom);
+            helper.setText(htmlContent, true); // true = HTML content
 
-        if (mailFrom != null && !mailFrom.isBlank()) {
-            message.setFrom(mailFrom);
+            mailSender.send(message);
+            log.info("Password reset email sent successfully to: {}", toEmail);
+
+        } catch (Exception e) {
+            log.error("Failed to send password reset email to: {}", toEmail, e);
+            throw new CustomException("Failed to send password reset email. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        mailSender.send(message);
     }
 
 

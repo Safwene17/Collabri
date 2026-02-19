@@ -1,5 +1,6 @@
 package org.example.calendarservice.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.calendarservice.enums.InviteStatus;
 import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,6 +11,7 @@ import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class InviteExpiryScheduler {
 
     private final CalendarInviteRepository inviteRepository;
@@ -26,5 +28,6 @@ public class InviteExpiryScheduler {
             inv.setTokenHash(null); // clear token to prevent reuse
         }
         inviteRepository.saveAll(pending);
+        log.info("Clearing expired invites");
     }
 }
