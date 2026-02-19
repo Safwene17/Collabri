@@ -1,50 +1,5 @@
-server:
-  port: 8040
-
 spring:
   application:
     name: notification
   config:
     import: optional:configserver:http://localhost:8888
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: safwenenacheb17@gmail.com
-    password: mzvthmscvchmocir
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: smtp.gmail.com
-          connection-timeout: 5000
-          timeout: 3000
-          write-timeout: 5000
-  data:
-    mongodb:
-      username: safwenenacheb17
-      password: safwenenacheb17
-      host: localhost
-      port: 27017
-      database: collabri-notifications
-  kafka:
-    consumer:
-      bootstrap-servers: localhost:9092
-      group-id: inviteGroup
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: '*'
-        spring.json.type.mapping: CalendarInviteEvent:org.example.notificationservice.kafka.calendar.CalendarInviteEvent
-
-
-app:
-  frontend:
-    invite-base: http://localhost:4200/invite   # used to build accept/decline links
-  email:
-    send-retry-count: 3
-

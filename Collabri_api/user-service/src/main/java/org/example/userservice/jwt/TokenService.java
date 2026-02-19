@@ -1,0 +1,78 @@
+// file: src/main/java/org/example/userservice/services/TokenService.java
+package org.example.userservice.jwt;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.example.userservice.entities.Admin;  // ADDED
+import org.example.userservice.entities.RefreshToken;
+import org.example.userservice.entities.User;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class TokenService {
+
+    private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
+
+    /**
+     * Issue access token (returned as string) + refresh token cookie.
+     */
+    public String issueTokens(UserDetails userDetails, HttpServletResponse response) {
+        String accessToken = jwtService.generateAccessToken(userDetails);
+        RefreshToken refreshToken;
+        if (userDetails instanceof User user) {
+            refreshToken = refreshTokenService.createRefreshToken(user);
+        } else if (userDetails instanceof Admin admin) {
+            refreshToken = refreshTokenService.createRefreshToken(admin);
+        } else {
+            throw new IllegalArgumentException("Unsupported user type");
+        }
+
+        ResponseCookie refreshCookie = ResponseCookie.from("REFRESH_TOKEN", refreshToken.getToken())
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("None")
+                .maxAge(jwtService.getRefreshTokenExpirationSeconds())
+                .build();
+
+        response.addHeader("Set-Cookie", refreshCookie.toString());
+        return accessToken;
+    }
+
+    /**
+     * Rotate refresh token and issue a new access token.
+     */
+    @Transactional
+    public String rotateRefreshToken(RefreshToken oldToken, UserDetails userDetails, HttpServletResponse response) {
+        refreshTokenService.revokeToken(oldToken);
+        return issueTokens(userDetails, response);
+    }
+
+    /**
+     * Clear refresh cookie on logout and revoke server-side tokens.
+     * If userDetails is null, still clear cookie.
+     */
+    public void clearRefreshToken(UserDetails userDetails, HttpServletResponse response) {
+        if (userDetails != null) {
+            if (userDetails instanceof User user) {
+                refreshTokenService.revokeAllTokensForUser(user);
+            } else if (userDetails instanceof Admin admin) {
+                refreshTokenService.revokeAllTokensForAdmin(admin);
+            }
+        }
+        ResponseCookie clearCookie = ResponseCookie.from("REFRESH_TOKEN", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(0)
+                .build();
+
+        response.addHeader("Set-Cookie", clearCookie.toString());
+    }
+}

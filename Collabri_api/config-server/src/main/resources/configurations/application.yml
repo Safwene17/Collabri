@@ -4,16 +4,63 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    instanceInfoReplicationIntervalSeconds: 5  # Optional: Faster replication if using peer Eureka servers
+    instance:
+      leaseRenewalIntervalInSeconds: 5  # Default: 30; faster heartbeats to Eureka
+      leaseExpirationDurationInSeconds: 15
   instance:
     hostname: localhost
+    instance-id: ${spring.application.name}:${random.int(1000)}
+
 
 jwt:
-  secret: "177493411er31741r321u331h2gh14ty114gh22ddf15er3e12f1g21q11122za32"
+  secret: ${JWT_SECRET}
   access-token-expiration-ms: 900000     # 15 minutes
-  refresh-token-expiration-ms: 1209600000 # 14 days
+  refresh-token-expiration-ms: 604800000 # 7 days
 
-
+#zipkin configuration
 management:
   tracing:
     sampling:
       probability: 1.0
+
+# OpenFeign Circuit Breaker and Retry Configuration
+spring:
+  devtools:
+    restart:
+      poll-interval: 2s
+      quiet-period: 1s
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true  # Enables auto-wrapping for all Feign clients
+      retry:
+        enabled: true  # Enables retry for all Feign clients
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      # Default template for Feign clients (used when no specific instance is defined)
+      default-feign:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        # recordExceptions: [...]   # add if needed
+
+      # Specific Feign client named "user" (most common case)
+      user: # <-- matches @FeignClient(name = "user")
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+
+  retry:
+    instances:
+      user:
+        maxAttempts: 3
+        waitDuration: 2s

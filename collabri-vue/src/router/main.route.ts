@@ -96,7 +96,7 @@ router.beforeEach(async (to, from) => {
     if(to.meta.requiresAuth && !authStore.accessToken) {
         try {
             const response = await axios.post(
-                "http://localhost:8222/api/v1/users/refresh",
+                "http://localhost:8222/api/v1/auth/refresh-token",
                 {},
                 { withCredentials: true }
             );

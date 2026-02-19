@@ -9,17 +9,17 @@ import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
 import org.example.userservice.repositories.EmailVerificationTokenRepository;
 import org.example.userservice.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,13 +35,23 @@ public class EmailVerificationService {
     private final EmailVerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
+    @Qualifier("emailTemplateEngine")
+    private final SpringTemplateEngine templateEngine;
 
     @Value("${app.verify-token-ttl-hours}")
     private long tokenTtlHours;
 
+    @Value("${app.name:Collabri}")
+    private String appName;
+
+    @Value("${app.support-email:support@collabri.com}")
+    private String supportEmail;
 
     @Value("${spring.mail.username}")
     private String mailFrom;
+
+    @Value("${app.frontend.verify-url:http://localhost:5173/verify-email}")
+    private String frontendVerifyUrl;
 
     private String hashToken(String rawToken) {
         try {
@@ -74,29 +84,43 @@ public class EmailVerificationService {
         token.setExpiresAt(expiresAt);
         tokenRepository.save(token);
 
-        sendVerificationEmailHtml(user.getEmail(), rawToken, user.getFirstname());
+        sendVerificationEmailWithThymeleaf(user.getEmail(), rawToken, user.getFirstname());
     }
 
-    private void sendVerificationEmailHtml(String toEmail, String rawToken, String firstName) {
-        // link now points to backend endpoint that will verify + redirect
-        // String verifyLink = backendVerifyUrl + "?token=" + rawToken;
-        String verifyLink = "http://localhost:5173/verify-email" + "?token=" + rawToken;
+    /**
+     * Sends verification email using Thymeleaf template engine.
+     * Properly escapes all variables and handles missing name gracefully.
+     */
+    private void sendVerificationEmailWithThymeleaf(String toEmail, String rawToken, String firstName) {
         try {
-            var resource = new ClassPathResource("templates/verify_email.html");
-            String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
-                    .replace("{{name}}", firstName != null ? firstName : "")
-                    .replace("{{verifyLink}}", verifyLink)
-                    .replace("{{ttl}}", String.valueOf(tokenTtlHours));
+            String verifyLink = frontendVerifyUrl + "?token=" + rawToken;
 
+            // Prepare template context with all variables
+            Context context = new Context();
+            context.setVariable("name", firstName != null && !firstName.isBlank() ? firstName : "there");
+            context.setVariable("actionLink", verifyLink);
+            context.setVariable("ttl", tokenTtlHours);
+            context.setVariable("ttlUnit", tokenTtlHours == 1 ? "hour" : "hours");
+            context.setVariable("appName", appName);
+            context.setVariable("supportEmail", supportEmail);
+
+            // Process template
+            String htmlContent = templateEngine.process("verify-email", context);
+
+            // Create and send MIME message
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(toEmail);
-            helper.setSubject("Verify your email");
-            if (mailFrom != null && !mailFrom.isBlank()) helper.setFrom(mailFrom);
-            helper.setText(html, true);
+            helper.setSubject("Verify Your " + appName + " Email Address");
+            helper.setFrom(mailFrom);
+            helper.setText(htmlContent, true); // true = HTML content
+
             mailSender.send(message);
+            log.info("Verification email sent successfully to: {}", toEmail);
+
         } catch (Exception e) {
-            throw new RuntimeException("Failed to send verification email", e);
+            log.error("Failed to send verification email to: {}", toEmail, e);
+            throw new CustomException("Failed to send verification email. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -134,14 +158,40 @@ public class EmailVerificationService {
     /**
      * Optional: used by controller to resend a verification email (silently swallow user-not-found)
      */
+    /**
+     * Resends verification email. Handles already-verified users gracefully.
+     */
     @Transactional
     public void resendVerification(ResendVerificationRequest request) {
         try {
-            createAndSendVerificationToken(request.email());
-        } catch (IllegalArgumentException ignored) {
-            log.info("Resend verification requested for non-existing email: " + request.email());
+            User user = userRepository.findByEmail(request.email())
+                    .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+
+            if (user.isVerified()) {
+                throw new CustomException("User already verified", HttpStatus.BAD_REQUEST);
+            }
+
+            // Remove previous tokens for this user
+            tokenRepository.deleteAllByUser(user);
+
+            String rawToken = UUID.randomUUID().toString();
+            String tokenHash = hashToken(rawToken);
+            Instant expiresAt = Instant.now().plus(Duration.ofHours(tokenTtlHours));
+
+            EmailVerificationToken token = new EmailVerificationToken();
+            token.setUser(user);
+            token.setTokenHash(tokenHash);
+            token.setExpiresAt(expiresAt);
+            tokenRepository.save(token);
+
+            sendVerificationEmailWithThymeleaf(user.getEmail(), rawToken, user.getFirstname());
+
+        } catch (CustomException e) {
+            log.info("Resend verification requested for non-existing email: {}", request.email());
+            // Silently swallow - don't reveal if email exists
         }
     }
+
 
     /**
      * Optional helper to check if token is valid (can be used by frontend to validate before showing final step)

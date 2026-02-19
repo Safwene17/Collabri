@@ -1,0 +1,35 @@
+// src/main/java/org/example/calendarservice/config/VerifiedUserChecker.java
+package org.example.userservice.config;
+
+import org.example.userservice.exceptions.CustomException;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component("verified")
+public class VerifiedUserChecker {
+
+    public boolean isVerified(Authentication authentication) {
+        if (!(authentication instanceof JwtAuthenticationToken jwtToken)) {
+            throw new CustomException("Invalid authentication token", HttpStatus.UNAUTHORIZED);
+        }
+
+        Jwt jwt = jwtToken.getToken();
+        List<String> roles = jwt.getClaimAsStringList("roles");
+        if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_SUPER_ADMIN")) {
+            return true; // admins bypass email verification
+        }
+
+        Boolean verified = jwt.getClaimAsBoolean("verified");
+
+        if (!Boolean.TRUE.equals(verified)) {
+            throw new CustomException("Email not verified", HttpStatus.FORBIDDEN);
+        }
+        return true;
+
+    }
+}

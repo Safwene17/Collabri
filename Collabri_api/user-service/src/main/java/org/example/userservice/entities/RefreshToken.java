@@ -22,9 +22,13 @@ public class RefreshToken {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)  // No cascade here (handled by parent)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)  // No cascade here (handled by parent)
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
 
     @Column(nullable = false)
     private Instant expiresAt;

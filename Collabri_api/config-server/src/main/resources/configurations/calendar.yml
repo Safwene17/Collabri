@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      database: postgresql
+      hibernate:
+        ddl-auto: update
+    kafka:
+      producer:
+        bootstrap-servers: localhost:9092
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        properties:
+          spring.json.type.mapping:
+            CalendarInviteEvent:org.example.calendarservice.kafka.CalendarInviteEvent,
+            EventCreatedEvent:org.example.calendarservice.kafka.EventCreatedEvent,
+            TaskCreatedEvent:org.example.calendarservice.kafka.TaskCreatedEvent,
+            MemberJoinedEvent:org.example.calendarservice.kafka.MemberJoinedEvent,
+            MemberLeftEvent:org.example.calendarservice.kafka.MemberLeftEvent
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health, circuitbreakers, circuitbreakerevents
+
+server:
+  port: ${CALENDAR_SERVICE_PORT}
+
+
+app:
+  invites:
+    expire-days: 7
+  mail:
+    username: ${MAIL_FROM_ADDRESS}
