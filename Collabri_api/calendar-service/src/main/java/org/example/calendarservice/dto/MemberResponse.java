@@ -5,7 +5,7 @@ import org.example.calendarservice.enums.Role;
 import java.util.UUID;
 
 public record MemberResponse(
-        Long id,
+        UUID id,
         UUID userId,
         String displayName,
         String email,

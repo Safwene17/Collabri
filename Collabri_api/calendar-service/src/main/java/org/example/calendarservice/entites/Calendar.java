@@ -1,6 +1,5 @@
 package org.example.calendarservice.entites;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calendarservice.enums.Visibility;
@@ -8,8 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Builder
@@ -17,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name = "calendar")
+@Table(name = "calendars")
 public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,9 +33,15 @@ public class Calendar {
 
     private String timeZone;
 
-    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Member> members;
+    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // ← LAZY for perf
+    private List<Member> members = new ArrayList<>();  // ← Set for unique members (no duplicates)
+
+    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Task> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Event> events = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -45,4 +49,25 @@ public class Calendar {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public void addMember(Member member) {
+        if (members.contains(member)) return;  // Set prevents duplicates
+        members.add(member);
+        member.setCalendar(this);
+    }
+
+    public void removeMember(Member member) {
+        members.remove(member);
+        member.setCalendar(null);
+    }
+
+    // Similar for tasks/events
+    public void addTask(Task task) {
+        tasks.add(task);
+        task.setCalendar(this);
+    }
+
+    public void addEvent(Event event) {
+        events.add(event);
+        event.setCalendar(this);
+    }
 }

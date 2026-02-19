@@ -1,11 +1,14 @@
 package org.example.calendarservice.entites;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.calendarservice.enums.Role;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,8 +21,8 @@ import java.util.UUID;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NonNull
     private UUID userId;
@@ -28,8 +31,12 @@ public class Member {
 
     @ManyToOne
     @JoinColumn(name = "calendar_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private Calendar calendar;
+
+    @OneToMany
+    @JoinColumn(name = "assigned_to")
+    private List<Task> assignedTasks = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.VIEWER;

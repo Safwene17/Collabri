@@ -6,15 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.*;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
+import org.example.userservice.jwt.RefreshTokenService;
+import org.example.userservice.mappers.UserMapper;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,16 +26,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    /**
-     * Register user (create record and send verification email).
-     * All validation should be done by controller/DTO constraints; keep extra checks here.
-     */
-
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void delete(UUID id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
+        refreshTokenService.revokeAllTokensForUser(user);
+        userRepository.delete(user);
     }
 
     public UserResponse findById(UUID id) {
@@ -43,16 +42,9 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
     }
 
-    public PageResponse<UserResponse> findAllPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> result = userRepository.findAll(pageable);
-
-        List<UserResponse> users = result.getContent().stream()
-                .map(userMapper::fromUser)
-                .toList();
-
-        return new PageResponse<>(users, result.getNumber(), result.getSize(),
-                result.getTotalElements(), result.getTotalPages());
+    public Page<UserResponse> findAllPaginated(Pageable pageable) {
+        Page<User> page = userRepository.findAll(pageable);
+        return page.map(userMapper::fromUser);
     }
 
     @Transactional

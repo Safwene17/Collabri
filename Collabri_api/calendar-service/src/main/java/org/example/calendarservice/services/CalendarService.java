@@ -69,7 +69,6 @@ public class CalendarService {
         return null;
     }
 
-    // Function to get all calendars except private ones
     public List<CalendarResponse> getAllCalendars() {
         return calendarRepository.findByVisibility(Visibility.PUBLIC)
                 .stream()

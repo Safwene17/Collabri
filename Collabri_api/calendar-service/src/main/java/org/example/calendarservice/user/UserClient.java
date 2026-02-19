@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Optional;
 import java.util.UUID;
 
-@FeignClient(name = "user-service", url = "http://localhost:8222/api/v1/users")
+@FeignClient(name = "user", fallback = UserClientFallback.class)
 public interface UserClient {
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/api/v1/users/{id}")
     Optional<UserResponse> findUserbyId(@PathVariable("id") UUID id);
 
-    @GetMapping("/by-email")
+    @GetMapping("/api/v1/users/by-email")
     Optional<UserResponse> findByEmail(@RequestParam("email") String email);
 }
