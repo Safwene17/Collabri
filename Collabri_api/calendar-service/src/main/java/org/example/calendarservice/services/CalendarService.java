@@ -69,6 +69,13 @@ public class CalendarService {
         return null;
     }
 
+    public List<CalendarResponse> getAllCalendars() {
+        return calendarRepository.findByVisibility(Visibility.PUBLIC)
+                .stream()
+                .map(calendarMapper::fromCalendar)
+                .toList();
+    }
+
     public List<CalendarResponse> searchPublicCalendars(String name) {
         List<Calendar> calendars;
 

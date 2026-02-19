@@ -18,6 +18,11 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
+    @GetMapping
+    public ResponseEntity<List<CalendarResponse>> getAllCalendars() {
+        return ResponseEntity.ok(calendarService.getAllCalendars());
+    }
+
     @PostMapping
     public ResponseEntity<Void> createCalendar(@RequestBody CalendarRequest request, Authentication authentication) {
         return ResponseEntity.ok(calendarService.createCalendar(request, authentication));

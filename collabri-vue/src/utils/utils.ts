@@ -1,5 +1,5 @@
 // Function to handle Error & Validation responses and display toasts based on error code
-export function handleRTAndValidationErrors(error: any, toast: any) { // RT refers to "Rate Limiting"
+export function handleRTAndValidationErrors(error: any, toast?: any) { // RT refers to "Rate Limiting"
     if (error.response && error.response.status === 429) {
         toast.add({
             severity: 'warn',

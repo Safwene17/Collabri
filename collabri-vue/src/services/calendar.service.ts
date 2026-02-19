@@ -1,13 +1,26 @@
 import axiosInstance from "../api/axios";
 
-class CalendarService {
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+export class CalendarService {
     constructor() {
         //
     }
 
+    // Function to Fetch all Calendars
+    async getPublicCalendars() {
+        return axiosInstance.get(`${API_URL}/calendars`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true,
+        });
+    };
+
     // Function to Create a Calendar
     async createCalendar(data: Object) {
-        return axiosInstance.post("http://localhost:8222/api/v1/calendars", data, {
+        return axiosInstance.post(`${API_URL}/calendars`, data, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -16,7 +29,7 @@ class CalendarService {
 
     // Function to Update a Calendar
     async updateCalendar(data: any) {
-        return axiosInstance.put(`http://localhost:8222/api/v1/calendars/${data.id}`, data, {
+        return axiosInstance.put(`${API_URL}/calendars/${data.id}`, data, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -25,7 +38,26 @@ class CalendarService {
 
     // Function to Delete a Calendar
     async deleteCalendar(calendarId: String | Number) {
-        return axiosInstance.put(`http://localhost:8222/api/v1/calendars/${calendarId}`, {
+        return axiosInstance.delete(`${API_URL}/calendars/${calendarId}`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
+    // Function to Search for Calendars
+    async getCalendarByID(calendarId: string | number) {
+        return axiosInstance.get(`${API_URL}/calendars/${calendarId}`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
+    // Function to Search for Calendars
+    async searchPublicCalendars(data: any) {
+        return axiosInstance.get(`${API_URL}/calendars/search`, {
+            data: data,
             headers: {
                 "Content-Type": "application/json"
             }
