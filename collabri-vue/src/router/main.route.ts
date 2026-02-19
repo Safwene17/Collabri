@@ -62,7 +62,6 @@ const routes = [
     },
     {
         path: '/home',
-        name: 'home',
         component: () => import("../components/layout/HomeLayout.vue"),
         meta: { requiresAuth: true },
         children: [
@@ -77,8 +76,8 @@ const routes = [
             //     component: () => import("../pages/Profile.vue"),
             // },
             {
-                path: 'main',   // matches /home/settings
-                name: 'main',
+                path: '',   // matches /home
+                name: 'home',
                 component: () => import("../components/MainPage.vue"),
             },
         ]

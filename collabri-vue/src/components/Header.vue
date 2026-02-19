@@ -53,7 +53,7 @@ import { AuthService } from '../services/auth.service';
                 <!-- Nav Links -->
                 <ul class="flex items-center gap-4">
                     <li>
-                        <RouterLink to="/home/main">Home</RouterLink>
+                        <RouterLink to="/home">Home</RouterLink>
                     </li>
                     <li>
                         Contact

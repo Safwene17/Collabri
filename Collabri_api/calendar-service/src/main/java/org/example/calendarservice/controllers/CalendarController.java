@@ -20,6 +20,11 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
+    @GetMapping
+    public ResponseEntity<List<CalendarResponse>> getAllCalendars() {
+        return ResponseEntity.ok(calendarService.getAllCalendars());
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<String>> createCalendar(@RequestBody @Valid CalendarRequest request, Authentication authentication) {
         calendarService.createCalendar(request, authentication);
