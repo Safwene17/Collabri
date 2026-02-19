@@ -48,8 +48,17 @@ public class CalendarService {
         member.setRole(Role.OWNER);
         calendar.addMember(member);
         calendarRepository.save(calendar);
-        log.info("Created calendar {} for user {}", calendar.getId(), userId);
-        return calendar.getId();
+        memberRepository.save(member);
+
+        return null;
+    }
+
+    // Function to get all calendars except private ones
+    public List<CalendarResponse> getAllCalendars() {
+        return calendarRepository.findByVisibility(Visibility.PUBLIC)
+                .stream()
+                .map(calendarMapper::fromCalendar)
+                .toList();
     }
 
     @Transactional(readOnly = true)
