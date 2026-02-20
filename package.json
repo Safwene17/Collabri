@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@primeuix/themes": "^2.0.3",
-    "primevue": "^4.5.4",
-    "zod": "^4.1.12"
-  }
-}

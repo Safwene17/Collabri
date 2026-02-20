@@ -4,11 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="" />
+    <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api" value="3526YcQTLevmr69KtbJQe6nOeIT" />
+    </persistenceIdMap>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -46,7 +55,7 @@
     "Spring Boot.UserServiceApplication.executor": "Run",
     "git-widget-placeholder": "safwene",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/notification-service/.env",
+    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -113,7 +122,9 @@
       <option name="presentableId" value="Default" />
       <updated>1762295871429</updated>
       <workItem from="1769264283624" duration="731000" />
-      <workItem from="1769265035695" duration="9346000" />
+      <workItem from="1769265035695" duration="9942000" />
+      <workItem from="1769354878016" duration="28000" />
+      <workItem from="1771598790220" duration="1022000" />
     </task>
     <servers />
   </component>
