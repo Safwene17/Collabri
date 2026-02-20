@@ -38,14 +38,14 @@ public class CalendarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteCalendarById(@PathVariable("id") UUID id) {
-        calendarService.deleteCalendarById(id);
+    public ResponseEntity<ApiResponse<Void>> deleteCalendarById(@PathVariable("id") UUID id, Authentication authentication) {
+        calendarService.deleteCalendarById(id, authentication);
         return ResponseEntity.status(204).body(ApiResponse.ok("Calendar deleted successfully", null));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id) {
-        calendarService.updateCalendar(request, id);
+    public ResponseEntity<ApiResponse<Void>> updateCalendar(@RequestBody @Valid CalendarRequest request, @PathVariable("id") UUID id , Authentication authentication) {
+        calendarService.updateCalendar(request, id, authentication);
         return ResponseEntity.accepted().body((ApiResponse.ok("Calendar updated successfully", null)));
     }
 
