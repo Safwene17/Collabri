@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { CalendarService } from '../services/calendar.service';
+import { safeApiCall } from '../services/helpers/apiHelper';
+import { useToast } from 'primevue/usetoast';
 
     defineOptions({
         name: "MainPage"
@@ -8,13 +10,14 @@ import { CalendarService } from '../services/calendar.service';
 
     // SETUP
     const calendarService = new CalendarService();
+    const toast = useToast();
 
     // DATA
     const isLoading = ref(false);
     const errorMessage = ref(null);
 
     // ON MOUNTED
-    onMounted(getAllCalendars);
+    onMounted(createNewCalendar);
 
     // METHODS
     async function getAllCalendars() {
@@ -40,6 +43,29 @@ import { CalendarService } from '../services/calendar.service';
         } finally {
             isLoading.value = false;
         }
+    };
+
+    async function createNewCalendar() {
+        if(isLoading.value) return;
+
+        isLoading.value = true;
+
+        // Request
+        const createResponse = await safeApiCall(() => calendarService.createCalendar(
+            {
+                name: "Team calendar",
+                description: "Calendar for sprint planning",
+                visibility: "PUBLIC",
+                timeZone: "Europe/Paris"
+            }
+        ), toast);
+
+        // Success Response
+        if(createResponse.status === 201 || createResponse.status === 200) {
+            console.log(createResponse.data)
+        }
+
+        isLoading.value = false;
     };
 
 </script>
