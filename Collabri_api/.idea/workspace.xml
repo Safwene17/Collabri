@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/calendar.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/calendar.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/org/example/gateway/config/Webconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/src/main/java/org/example/gateway/config/Webconfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../collabri-vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../collabri-vue/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +57,7 @@
     "Spring Boot.UserServiceApplication.executor": "Run",
     "git-widget-placeholder": "safwene",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api",
+    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/user-service/.env",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -63,6 +65,11 @@
     "nodejs_package_manager_path": "npm",
     "run.configurations.included.in.services": "true",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
   }
 }]]></component>
   <component name="RunDashboard">
@@ -75,7 +82,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.NotificationServiceApplication">
+  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
     <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -124,7 +131,8 @@
       <workItem from="1769264283624" duration="731000" />
       <workItem from="1769265035695" duration="9942000" />
       <workItem from="1769354878016" duration="28000" />
-      <workItem from="1771598790220" duration="1022000" />
+      <workItem from="1771598790220" duration="3747000" />
+      <workItem from="1772234257266" duration="1058000" />
     </task>
     <servers />
   </component>
