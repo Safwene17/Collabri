@@ -15,9 +15,10 @@ import { useToast } from 'primevue/usetoast';
     // DATA
     const isLoading = ref(false);
     const errorMessage = ref(null);
+    const allCalendars = ref([]);
 
     // ON MOUNTED
-    onMounted(createNewCalendar);
+    onMounted(getAllCalendars);
 
     // METHODS
     async function getAllCalendars() {
@@ -32,7 +33,7 @@ import { useToast } from 'primevue/usetoast';
             const getResponse = await calendarService.getPublicCalendars();
 
             if(getResponse.status === 200) {
-                console.log(getResponse.data);
+                allCalendars.value = getResponse.data;
             }
         } catch(error: any) {
             console.error("Error when Fetching Calendars: ", error);
@@ -43,29 +44,6 @@ import { useToast } from 'primevue/usetoast';
         } finally {
             isLoading.value = false;
         }
-    };
-
-    async function createNewCalendar() {
-        if(isLoading.value) return;
-
-        isLoading.value = true;
-
-        // Request
-        const createResponse = await safeApiCall(() => calendarService.createCalendar(
-            {
-                name: "Team calendar",
-                description: "Calendar for sprint planning",
-                visibility: "PUBLIC",
-                timeZone: "Europe/Paris"
-            }
-        ), toast);
-
-        // Success Response
-        if(createResponse.status === 201 || createResponse.status === 200) {
-            console.log(createResponse.data)
-        }
-
-        isLoading.value = false;
     };
 
 </script>
