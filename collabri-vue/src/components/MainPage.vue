@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { CalendarService } from '../services/calendar.service';
-import { safeApiCall } from '../services/helpers/apiHelper';
 import { useToast } from 'primevue/usetoast';
 
     defineOptions({
@@ -17,34 +16,34 @@ import { useToast } from 'primevue/usetoast';
     const errorMessage = ref(null);
     const allCalendars = ref([]);
 
-    // ON MOUNTED
-    onMounted(getAllCalendars);
+    // // ON MOUNTED
+    // onMounted(getAllCalendars);
 
-    // METHODS
-    async function getAllCalendars() {
-        errorMessage.value = null;
+    // // METHODS
+    // async function getAllCalendars() {
+    //     errorMessage.value = null;
 
-        if(isLoading.value) return;
+    //     if(isLoading.value) return;
 
-        isLoading.value = true;
+    //     isLoading.value = true;
 
-        try {
-            // Request
-            const getResponse = await calendarService.getPublicCalendars();
+    //     try {
+    //         // Request
+    //         const getResponse = await calendarService.getPublicCalendars();
 
-            if(getResponse.status === 200) {
-                allCalendars.value = getResponse.data;
-            }
-        } catch(error: any) {
-            console.error("Error when Fetching Calendars: ", error);
+    //         if(getResponse.status === 200) {
+    //             allCalendars.value = getResponse.data;
+    //         }
+    //     } catch(error: any) {
+    //         console.error("Error when Fetching Calendars: ", error);
 
-            if(error.message) {
-                errorMessage.value = error.message;
-            }
-        } finally {
-            isLoading.value = false;
-        }
-    };
+    //         if(error.message) {
+    //             errorMessage.value = error.message;
+    //         }
+    //     } finally {
+    //         isLoading.value = false;
+    //     }
+    // };
 
 </script>
 

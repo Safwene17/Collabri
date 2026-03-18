@@ -5,9 +5,12 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    tailwindcss(),
     vue(),
+    tailwindcss(),
   ],
+  
+  publicDir: 'public',
+  
   server: {
     port: 5000
   }
