@@ -14,8 +14,9 @@
             <node kind="database" qname="@">
               <node kind="schema" qname="@" />
             </node>
-            <node kind="database" qname="collabri_calendars" />
-            <node kind="database" qname="collabri_users">
+            <node kind="database">
+              <name qname="collabri_calendars" />
+              <name qname="collabri_users" />
               <node kind="schema" qname="public" />
             </node>
           </node>

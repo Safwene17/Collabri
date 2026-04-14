@@ -3,8 +3,10 @@ package org.example.userservice.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.entities.Admin;
+import org.example.userservice.entities.User;
 import org.example.userservice.enums.Role;
 import org.example.userservice.repositories.AdminRepository;
+import org.example.userservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,20 +23,22 @@ public class DataSeeder implements CommandLineRunner {
     @Value("${app.admin-password}")
     private String adminPassword;
 
-    private final AdminRepository adminRepository;
+    private final UserRepository  userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        if (adminRepository.count() == 0) {
-            Admin initialAdmin = Admin.builder()
-                    .name("Super Admin")
+        if (!userRepository.existsByRole(Role.SUPER_ADMIN)) {
+            User initialAdmin = User.builder()
+                    .firstname("Super ")
+                    .lastname("Admin")
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))  // Change this in prod; prompt to reset on first login
                     .role(Role.SUPER_ADMIN)
+                    .verified(true)
                     .build();
 
-            adminRepository.save(initialAdmin);
+            userRepository.save(initialAdmin);
             log.info("Initial admin created: Email=admin@example.com. Please change password immediately.");
         }
     }

@@ -38,31 +38,22 @@ public class JwtService {
     }
 
     public String generateAccessToken(UserDetails userDetails) {
+        var user = (User) userDetails;
         var now = System.currentTimeMillis();
         var roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        var builder = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", roles)
+                .claim("userId", user.getId().toString())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + accessTokenExpirationMs));
-
-        if (userDetails instanceof User user) {
-            builder
-                    .claim("userId", user.getId().toString())
-                    .claim("verified", user.isVerified());
-        } else if (userDetails instanceof Admin admin) {
-            //add adminId claims
-            builder
-                    .claim("adminId", admin.getId().toString());
-        }
-
-        return builder
+                .setExpiration(new Date(now + accessTokenExpirationMs))
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
+
     }
 
 

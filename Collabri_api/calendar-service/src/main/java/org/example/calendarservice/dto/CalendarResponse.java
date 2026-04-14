@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public record CalendarResponse(
         UUID id,
+        UUID categoryId,
         String name,
         String description,
         UUID ownerId,

@@ -5,23 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.entites.Calendar;
-import org.example.calendarservice.entites.CalendarInvite;
 import org.example.calendarservice.entites.Member;
-import org.example.calendarservice.enums.InviteStatus;
 import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.enums.Visibility;
 import org.example.calendarservice.mappers.CalendarMapper;
 import org.example.calendarservice.mappers.MemberMapper;
-import org.example.calendarservice.repositories.CalendarInviteRepository;
 import org.example.calendarservice.repositories.CalendarRepository;
+import org.example.calendarservice.repositories.CategoryRepository;
 import org.example.calendarservice.repositories.MemberRepository;
 import org.example.calendarservice.user.UserClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,15 +27,13 @@ public class CalendarService {
 
     private final CalendarRepository calendarRepository;
     private final MemberRepository memberRepository;
-    private final CalendarInviteRepository inviteRepository;
-
+    private final CategoryRepository categoryRepository;
     private final CalendarMapper calendarMapper;
     private final MemberMapper memberMapper;
-
     private final UserClient userClient;
 
 
-    public Void createCalendar(CalendarRequest request, Authentication authentication) {
+    public void createCalendar(CalendarRequest request, Authentication authentication) {
 
         // 1. AUTHENTICATION & VALIDATION
         // Extract user ID from JWT token
@@ -51,6 +44,9 @@ public class CalendarService {
         var userResponse = userClient.findUserbyId(userId).orElseThrow(() ->
                 new IllegalArgumentException("User not found")
         );
+
+        var categoryResponse = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         // 2. CREATE CALENDAR ENTITY
         Calendar calendar = calendarMapper.toCalendar(request);
@@ -63,12 +59,11 @@ public class CalendarService {
         // 4. ESTABLISH RELATIONSHIPS
         member.setCalendar(calendar);
         calendar.getMembers().add(member);
+        calendar.setCategory(categoryResponse);
 
         // 5. PERSIST TO DATABASE
         calendarRepository.save(calendar);
         memberRepository.save(member);
-
-        return null;
     }
 
     public List<CalendarResponse> getAllCalendars() {
