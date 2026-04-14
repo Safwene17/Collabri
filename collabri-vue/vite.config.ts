@@ -12,6 +12,7 @@ export default defineConfig({
   publicDir: 'public',
   
   server: {
-    port: 5000
+    port: 5173,
+    strictPort: true
   }
 })

@@ -1,7 +1,5 @@
 import axiosInstance from "../api/axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
-
+import axios from "axios";
 
 export class CalendarService {
     constructor() {
@@ -10,17 +8,12 @@ export class CalendarService {
 
     // Function to Fetch all Calendars
     async getPublicCalendars() {
-        return axiosInstance.get(`${API_URL}/calendars`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            withCredentials: true,
-        });
+        return axios.get(`http://localhost:8222/api/v1/calendars`);
     };
 
     // Function to Create a Calendar
     async createCalendar(data: Object) {
-        return axiosInstance.post(`${API_URL}/calendars`, data, {
+        return axiosInstance.post(`/calendars`, data, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -29,7 +22,7 @@ export class CalendarService {
 
     // Function to Update a Calendar
     async updateCalendar(data: any) {
-        return axiosInstance.put(`${API_URL}/calendars/${data.id}`, data, {
+        return axiosInstance.put(`/calendars/${data.id}`, data, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -38,7 +31,7 @@ export class CalendarService {
 
     // Function to Delete a Calendar
     async deleteCalendar(calendarId: String | Number) {
-        return axiosInstance.delete(`${API_URL}/calendars/${calendarId}`, {
+        return axiosInstance.delete(`/calendars/${calendarId}`, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -47,7 +40,7 @@ export class CalendarService {
 
     // Function to Search for Calendars
     async getCalendarByID(calendarId: string | number) {
-        return axiosInstance.get(`${API_URL}/calendars/${calendarId}`, {
+        return axiosInstance.get(`/calendars/${calendarId}`, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -56,7 +49,7 @@ export class CalendarService {
 
     // Function to Search for Calendars
     async searchPublicCalendars(data: any) {
-        return axiosInstance.get(`${API_URL}/calendars/search`, {
+        return axiosInstance.get(`/calendars/search`, {
             data: data,
             headers: {
                 "Content-Type": "application/json"

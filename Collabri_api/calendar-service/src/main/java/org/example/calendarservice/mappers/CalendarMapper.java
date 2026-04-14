@@ -12,8 +12,7 @@ import java.util.ArrayList;
 public class CalendarMapper {
 
     public Calendar toCalendar(CalendarRequest request) {
-        var calendar = new Calendar();
-        return calendar.builder()
+        return Calendar.builder()
                 .name(request.name())
                 .description(request.description())
                 .visibility(request.visibility())
@@ -27,6 +26,7 @@ public class CalendarMapper {
     public CalendarResponse fromCalendar(Calendar calendar) {
         return new CalendarResponse(
                 calendar.getId(),
+                calendar.getCategory().getId(),
                 calendar.getName(),
                 calendar.getDescription(),
                 calendar.getOwnerId(),

@@ -1,4 +1,8 @@
 spring:
+  cloud:
+    gateway:
+      webmvc.
+
   application:
     name: gateway
   config:

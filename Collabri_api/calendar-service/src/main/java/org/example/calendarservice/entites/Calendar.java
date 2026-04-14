@@ -33,6 +33,10 @@ public class Calendar {
 
     private String timeZone;
 
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
+
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     // ← LAZY for perf
     private List<Member> members = new ArrayList<>();  // ← Set for unique members (no duplicates)
