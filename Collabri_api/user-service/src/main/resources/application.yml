@@ -3,3 +3,9 @@ spring:
     name: user
   config:
     import: optional:configserver:http://localhost:8888
+
+springdoc:
+  api-docs:
+    path: /user/v3/api-docs
+  swagger-ui:
+    enabled: false

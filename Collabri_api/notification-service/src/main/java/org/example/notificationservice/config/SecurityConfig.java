@@ -51,6 +51,7 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/notification/v3/api-docs/**").permitAll()
                         .requestMatchers("/ws/**").permitAll() // Allow WebSocket endpoint (auth handled by interceptor)
                         .anyRequest().authenticated()
                 )

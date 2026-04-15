@@ -40,3 +40,10 @@ server:
 
 jwt:
   secret: ${JWT_SECRET}
+
+springdoc:
+  api-docs:
+    path: /calendar/v3/api-docs
+  swagger-ui:
+    enabled: false
+
