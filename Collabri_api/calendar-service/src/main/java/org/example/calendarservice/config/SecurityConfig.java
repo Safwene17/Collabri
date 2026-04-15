@@ -38,6 +38,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/calendar/v3/api-docs/**",
                                 "/actuator/circuitbreakers",
                                 "/api/v1/calendars/search",
                                 "/actuator/health"

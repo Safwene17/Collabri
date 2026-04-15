@@ -1,6 +1,7 @@
 // file: src/main/java/org/example/userservice/controllers/AdminController.java
 package org.example.userservice.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admins")
+@Tag(name = "Admin Management", description = "Endpoints for managing admin users and authentication")
 public class AdminController {
     private final AdminService adminService;
 

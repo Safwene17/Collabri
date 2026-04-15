@@ -10,7 +10,6 @@ eureka:
       leaseExpirationDurationInSeconds: 15
   instance:
     hostname: localhost
-    instance-id: ${spring.application.name}:${random.int(1000)}
 
 
 jwt:

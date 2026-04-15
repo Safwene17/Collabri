@@ -5,26 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/mappers/CalendarMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/mappers/CalendarMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/services/CalendarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/services/CalendarService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/calendar.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/calendar.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/src/main/java/org/example/gateway/config/Webconfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/src/main/java/org/example/gateway/config/Webconfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../collabri-vue/src/components/MainPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../collabri-vue/src/components/MainPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../collabri-vue/src/services/calendar.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../collabri-vue/src/services/calendar.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../collabri-vue/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../collabri-vue/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +89,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -162,7 +161,10 @@
       <workItem from="1772234257266" duration="1058000" />
       <workItem from="1772400890299" duration="11000" />
       <workItem from="1776087282299" duration="7217000" />
-      <workItem from="1776168697550" duration="9892000" />
+      <workItem from="1776168697550" duration="10292000" />
+      <workItem from="1776241887258" duration="2477000" />
+      <workItem from="1776244398673" duration="25000" />
+      <workItem from="1776244440943" duration="8520000" />
     </task>
     <servers />
   </component>
