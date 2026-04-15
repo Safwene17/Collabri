@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import org.example.userservice.entities.Admin;
 import org.example.userservice.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,9 +25,6 @@ public class JwtService {
 
     @Value("${jwt.access-token-expiration-ms}")
     private long accessTokenExpirationMs;
-
-    @Value("${jwt.refresh-token-expiration-ms}")
-    private long refreshTokenExpirationMs;
 
     private Key signingKey;
 
@@ -54,12 +50,6 @@ public class JwtService {
                 .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
 
-    }
-
-
-    public int getRefreshTokenExpirationSeconds() {
-        long seconds = refreshTokenExpirationMs / 1000L;
-        return (int) Math.min(seconds, Integer.MAX_VALUE);
     }
 
     public String extractUsername(String token) {

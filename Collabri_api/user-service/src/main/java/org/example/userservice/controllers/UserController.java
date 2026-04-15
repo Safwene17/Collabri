@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.ApiResponse;
-import org.example.userservice.dto.RegisterRequest;
+import org.example.userservice.dto.UserRequest;
 import org.example.userservice.dto.UserResponse;
 import org.example.userservice.services.UserService;
 import org.springframework.data.domain.Page;
@@ -51,7 +51,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable UUID id,
-                                                        @RequestBody @Valid RegisterRequest request) {
+                                                        @RequestBody @Valid UserRequest request) {
         userService.update(id, request);
         return ResponseEntity.accepted().body(ApiResponse.ok("User updated successfully", null));
     }

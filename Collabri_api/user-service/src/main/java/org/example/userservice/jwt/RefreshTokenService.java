@@ -3,7 +3,6 @@ package org.example.userservice.jwt;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.entities.Admin;  // ADDED
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
@@ -34,16 +33,6 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    // ADDED: Overload for Admin
-    public RefreshToken createRefreshToken(Admin admin) {
-        RefreshToken refreshToken = RefreshToken.builder()
-                .token(UUID.randomUUID().toString())
-                .expiresAt(Instant.now().plusMillis(refreshTokenExpirationMs))
-                .admin(admin)
-                .revoked(false)
-                .build();
-        return refreshTokenRepository.save(refreshToken);
-    }
 
     public void verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().isBefore(Instant.now()) || token.isRevoked()) {
@@ -57,24 +46,11 @@ public class RefreshTokenService {
         refreshTokenRepository.save(token);
     }
 
+    @Transactional
     public void revokeAllTokensForUser(User user) {
         refreshTokenRepository.deleteAllByUser(user);
     }
 
-    // ADDED: For Admin
-    public void revokeAllTokensForAdmin(Admin admin) {
-        refreshTokenRepository.deleteAllByAdmin(admin);
-    }
-
-    @Transactional
-    public void revokeOtherTokens(RefreshToken current) {
-        if (current == null) return;
-        if (current.getUser() != null) {
-            refreshTokenRepository.revokeAllExcept(current.getUser(), current.getToken());
-        } else if (current.getAdmin() != null) {
-            refreshTokenRepository.revokeAllExcept(current.getAdmin(), current.getToken());
-        }
-    }
 
     public RefreshToken findByToken(String token) {
         return refreshTokenRepository.findByToken(token)

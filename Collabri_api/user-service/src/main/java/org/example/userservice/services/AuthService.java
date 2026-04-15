@@ -2,19 +2,18 @@
 package org.example.userservice.services;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.userservice.dto.LoginRequest;
 import org.example.userservice.dto.LoginResponse;
-import org.example.userservice.dto.RegisterRequest;
+import org.example.userservice.dto.UserRequest;
 import org.example.userservice.entities.RefreshToken;
 import org.example.userservice.entities.User;
 import org.example.userservice.exceptions.CustomException;
-import org.example.userservice.jwt.JwtService;
 import org.example.userservice.jwt.RefreshTokenService;
 import org.example.userservice.jwt.TokenService;
 import org.example.userservice.mappers.UserMapper;
-import org.example.userservice.repositories.AdminRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,14 +35,12 @@ public class AuthService {
     private final EmailVerificationService emailVerificationService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AdminRepository adminRepository;  // CHANGED: Added to check for email uniqueness
 
     /**
      * Register — delegate to userService which handles mapping, persistence and send verification email.
      */
-    public void register(RegisterRequest request) {
-        if (adminRepository.existsByEmail(request.email()) || userRepository.existsByEmail(request.email())) {
+    public void register(UserRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
             throw new CustomException("Email already exists", HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -80,10 +77,10 @@ public class AuthService {
     }
 
 
+    @Transactional
     public LoginResponse refresh(String refreshTokenValue, HttpServletResponse response) {
         RefreshToken oldToken = refreshTokenService.findByToken(refreshTokenValue);
         refreshTokenService.verifyExpiration(oldToken);
-        refreshTokenService.revokeOtherTokens(oldToken);
         User user = oldToken.getUser();
         if (user == null) {
             throw new CustomException("Invalid refresh token for user", HttpStatus.UNAUTHORIZED);  // ADDED: Type check
@@ -93,47 +90,14 @@ public class AuthService {
         return new LoginResponse(newAccess);
     }
 
-    public void logout(String refreshTokenValue, String authorizationHeader, HttpServletResponse response) {
-        // NEW: Validate access token from header
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new CustomException("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED);
-        }
-        String accessToken = authorizationHeader.substring(7).trim();
-        if (accessToken.isEmpty()) {
-            throw new CustomException("Missing access token", HttpStatus.UNAUTHORIZED);
+    public void logout(String refreshTokenValue, HttpServletResponse response) {
+        if (refreshTokenValue == null || refreshTokenValue.isBlank()) {
+            throw new CustomException("Refresh token missing", HttpStatus.UNAUTHORIZED);
         }
 
-        // Validate token using JwtService
-        try {
-            if (jwtService.isTokenExpired(accessToken)) {
-                throw new CustomException("Access token expired", HttpStatus.UNAUTHORIZED);
-            }
-            // Optional: Extract username from token and match against refresh token's user for extra security
-            String tokenUsername = jwtService.extractUsername(accessToken);
-            if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
-                RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
-                User user = token.getUser();
-                if (user == null || !user.getEmail().equals(tokenUsername)) {  // CHANGED: Add type check
-                    throw new CustomException("Token mismatch", HttpStatus.UNAUTHORIZED);
-                }
-            }
-        } catch (Exception e) {
-            log.warn("Invalid access token during logout: {}", e.getMessage());
-            throw new CustomException("Invalid access token", HttpStatus.UNAUTHORIZED);
-        }
-
-        if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
-            try {
-                RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
-                refreshTokenService.revokeToken(token);
-                tokenService.clearRefreshToken(token.getUser(), response);
-            } catch (Exception ignored) {
-                log.warn("Failed to revoke refresh token {}", refreshTokenValue, ignored);
-
-            }
-        } else {
-            // still clear cookie even if token missing
-            tokenService.clearRefreshToken(null, response);
-        }
+        RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
+        UserDetails tokenOwner = token.getUser();
+        refreshTokenService.revokeToken(token);
+        tokenService.clearRefreshToken(tokenOwner, response);
     }
 }

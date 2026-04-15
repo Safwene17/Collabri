@@ -5,24 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8/storage_v2/_src_/database/collabri_users.DY1_wg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8/storage_v2/_src_/database/collabri_users.DY1_wg/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/AdminRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/AdminResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/UserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/Admin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/RefreshTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/RefreshTokenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/TokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/TokenService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/AdminMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/AdminRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +171,7 @@
       <workItem from="1776168697550" duration="10292000" />
       <workItem from="1776241887258" duration="2477000" />
       <workItem from="1776244398673" duration="25000" />
-      <workItem from="1776244440943" duration="8520000" />
+      <workItem from="1776244440943" duration="15318000" />
     </task>
     <servers />
   </component>
