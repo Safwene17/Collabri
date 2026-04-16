@@ -2,6 +2,7 @@ package org.example.notificationservice.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
@@ -25,7 +26,9 @@ public class WebSocketEventListener {
      */
     private String extractUserId(StompHeaderAccessor headerAccessor) {
         // First, try to get from session attributes
-        String userId = (String) headerAccessor.getSessionAttributes().get("userId");
+        String userId = headerAccessor.getSessionAttributes() == null
+                ? null
+                : (String) headerAccessor.getSessionAttributes().get("userId");
 
         // Fallback: get from authenticated principal (set in JwtChannelInterceptor)
         if (userId == null && headerAccessor.getUser() != null) {
@@ -81,14 +84,11 @@ public class WebSocketEventListener {
         log.debug("WebSocket subscription - sessionId: {}, userId: {}, destination: {}",
                  sessionId, userId, destination);
 
-        // Optional: Validate subscription destination matches userId
-        // Prevent users from subscribing to other users' queues
-        if (destination != null && destination.contains("/queue/notifications")) {
-            if (userId != null && !destination.contains(userId)) {
-                log.warn("Attempted unauthorized subscription - userId: {}, destination: {}",
-                        userId, destination);
-                // Note: Spring Security will handle this, but logging for monitoring
-            }
+        String expectedDestination = userId == null ? null : "/user/" + userId + "/queue/notifications";
+        if (destination == null || userId == null || !destination.equals(expectedDestination)) {
+            log.warn("Rejecting unauthorized subscription - userId: {}, destination: {}, expected: {}",
+                    userId, destination, expectedDestination);
+            throw new MessagingException("Subscription is only allowed for your own notifications queue");
         }
     }
 

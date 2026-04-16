@@ -94,7 +94,6 @@ public class AuthService {
         if (refreshTokenValue == null || refreshTokenValue.isBlank()) {
             throw new CustomException("Refresh token missing", HttpStatus.UNAUTHORIZED);
         }
-
         RefreshToken token = refreshTokenService.findByToken(refreshTokenValue);
         UserDetails tokenOwner = token.getUser();
         refreshTokenService.revokeToken(token);

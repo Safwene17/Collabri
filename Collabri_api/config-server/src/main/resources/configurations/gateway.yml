@@ -9,7 +9,7 @@ spring:
             - id: user
               uri: lb://user
               predicates:
-                - Path=/api/v1/users/**,/api/v1/auth/**,/login/oauth2/**,/oauth2/**,/api/v1/admins/**,/user/v3/api-docs,/user/v3/api-docs/**
+                - Path=/api/v1/users/**,/api/v1/auth/**,/login/oauth2/**,/oauth2/**,/api/v1/admins/**,/user/v3/api-docs,/user/v3/api-docs/**,/api/v1/dashboard/super-admin
               filters:
                 - CircuitBreaker=gw-user
 
@@ -17,7 +17,7 @@ spring:
             - id: calendar
               uri: lb://calendar
               predicates:
-                - Path=/api/v1/calendars/**,/api/v1/invites/**,/api/v1/members/**,/api/v1/tasks/**,/api/v1/events/**,/api/v1/categories/**,/calendar/v3/api-docs,/calendar/v3/api-docs/**
+                - Path=/api/v1/calendars/**,/api/v1/invites/**,/api/v1/members/**,/api/v1/tasks/**,/api/v1/events/**,/api/v1/categories/**,/calendar/v3/api-docs,/calendar/v3/api-docs/**,api/v1/dashboard/me
               filters:
                 - CircuitBreaker=gw-calendar
 

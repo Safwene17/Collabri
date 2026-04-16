@@ -4,10 +4,10 @@ package org.example.calendarservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.example.calendarservice.dto.ApiResponse;
 import org.example.calendarservice.dto.MemberResponse;
-import org.example.calendarservice.entites.Member;
 import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.services.MemberService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +28,7 @@ public class MemberController {
     }
 
     @GetMapping("/calendar-members/{calendarId}" )
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'VIEWER')")
     public ResponseEntity<ApiResponse<List<MemberResponse>>> getCalendarMembers(@PathVariable UUID calendarId) {
         List<MemberResponse> members = service.getCalendarMembers(calendarId);  // Fixed: Use DTOs
         return ResponseEntity.ok(ApiResponse.ok("Members retrieved successfully", members));
@@ -39,12 +40,14 @@ public class MemberController {
     }
 
     @DeleteMapping("/{memberId}" )
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'MANAGER')")
     public ResponseEntity<ApiResponse<Void>> removeMember(@PathVariable UUID memberId, @RequestParam UUID calendarId) {
         service.removeMember(memberId, calendarId);
         return ResponseEntity.status(204).body(ApiResponse.ok("Member removed successfully", null));
     }
 
     @PutMapping("/set-role/{memberId}" )
+    @PreAuthorize("@verified.isVerified(authentication) and @ownershipChecker.hasAccess(#calendarId, authentication, 'OWNER')")
     public ResponseEntity<ApiResponse<Void>> updateMemberRole(@PathVariable UUID memberId, @RequestParam UUID calendarId, @RequestParam Role role) {
         service.setMemberRole(memberId, calendarId, role);
         return ResponseEntity.accepted().body(ApiResponse.ok("Member role updated successfully", null));

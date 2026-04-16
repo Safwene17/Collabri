@@ -60,9 +60,7 @@ public class AuthController {
             @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshTokenCookie,
             HttpServletResponse response
     ) {
-        if (refreshTokenCookie == null || refreshTokenCookie.isBlank()) {
-            throw new CustomException("Refresh token missing", HttpStatus.UNAUTHORIZED);
-        }
+
         authService.logout(refreshTokenCookie, response);
         return ResponseEntity.ok(ApiResponse.ok("Logged out successfully", null));
     }

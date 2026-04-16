@@ -13,4 +13,11 @@ public interface CalendarRepository extends JpaRepository<Calendar, UUID> {
     List<Calendar> findByVisibilityAndNameStartingWithIgnoreCase(Visibility visibility, String name);
 
     List<Calendar> findByVisibility(Visibility visibility);
+
+    boolean existsByIdAndOwnerId(UUID id, UUID ownerId);
+
+    long countByOwnerId(UUID ownerId);
+
+    long countByOwnerIdAndVisibility(UUID ownerId, Visibility visibility);
 }
+

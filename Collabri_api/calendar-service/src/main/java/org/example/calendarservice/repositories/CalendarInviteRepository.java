@@ -14,5 +14,7 @@ public interface CalendarInviteRepository extends JpaRepository<CalendarInvite, 
     Optional<CalendarInvite> findByCalendarIdAndDestinationEmailIgnoreCase(UUID calendarId, String email);
 
     Optional<CalendarInvite> findByTokenHash(String tokenHash);      // used by accept/decline by token
+
+    long countByDestinationEmailIgnoreCaseAndStatus(String destinationEmail, InviteStatus status);
     
 }

@@ -6,30 +6,34 @@
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8/storage_v2/_src_/database/collabri_users.DY1_wg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/8291da9e-6c38-4b05-a17a-ea9e600cddb8/storage_v2/_src_/database/collabri_users.DY1_wg/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/user.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/DataSeeder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/CalendarOwnershipChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/CalendarOwnershipChecker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/CalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/CalendarController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarInviteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarInviteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/EventRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/MemberRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/TaskRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/WebSocketConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/kafka/NotificationConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/kafka/NotificationConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/repositories/NotificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/repositories/NotificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/services/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/services/NotificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/websocket/WebSocketEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/websocket/WebSocketEventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/UserServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/AdminRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/AdminResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/UserRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/Admin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/RefreshTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/RefreshTokenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/TokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/TokenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/AdminMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/AdminRepository.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AdminService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/UserServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/UserServiceApplicationTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +47,12 @@
   </component>
   <component name="CopilotUserSelectedChatMode">
     <option name="chatModeId" value="Agent" />
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="chat-panel" value="Claude Haiku 4.5" />
+      <entry key="agent-panel" value="Claude Haiku 4.5" />
+    </selectedModels>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -71,40 +81,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.CalendarServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.DiscoveryApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.GatewayApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.NotificationServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;safwene&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/user-service/.env&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.CalendarServiceApplication.executor": "Run",
+    "Spring Boot.ConfigServerApplication.executor": "Run",
+    "Spring Boot.DiscoveryApplication.executor": "Run",
+    "Spring Boot.GatewayApplication.executor": "Run",
+    "Spring Boot.NotificationServiceApplication.executor": "Run",
+    "Spring Boot.UserServiceApplication.executor": "Run",
+    "git-widget-placeholder": "safwene",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/user-service/.env",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunDashboard">
     <option name="configurationTypes">
       <set>
@@ -171,12 +181,17 @@
       <workItem from="1776168697550" duration="10292000" />
       <workItem from="1776241887258" duration="2477000" />
       <workItem from="1776244398673" duration="25000" />
-      <workItem from="1776244440943" duration="15318000" />
+      <workItem from="1776244440943" duration="17157000" />
+      <workItem from="1776330828970" duration="14606000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

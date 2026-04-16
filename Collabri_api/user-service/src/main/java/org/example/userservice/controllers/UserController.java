@@ -12,6 +12,7 @@ import org.example.userservice.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,12 +25,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-    @Operation(summary = "Get user by ID", description = "Fetch a user's details using their unique ID")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "User found"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User not found")
-    })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
         UserResponse user = userService.findById(id);
@@ -44,12 +39,14 @@ public class UserController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(Pageable page) {
         Page<UserResponse> users = userService.findAllPaginated(page);
         return ResponseEntity.ok(ApiResponse.ok("Users fetched successfully", users));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or #id == T(java.util.UUID).fromString(authentication.name)")
     public ResponseEntity<ApiResponse<Void>> updateUser(@PathVariable UUID id,
                                                         @RequestBody @Valid UserRequest request) {
         userService.update(id, request);
@@ -57,6 +54,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN') or #id == T(java.util.UUID).fromString(authentication.name)")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable("id") UUID id) {
         userService.delete(id);
         return ResponseEntity.ok(ApiResponse.ok("User deleted successfully", null));

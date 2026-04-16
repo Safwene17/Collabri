@@ -7,6 +7,7 @@ import org.example.calendarservice.dto.CalendarRequest;
 import org.example.calendarservice.dto.CalendarResponse;
 import org.example.calendarservice.services.CalendarService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +21,14 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
+    // Intentionally public to support discovery of public calendars by unauthenticated users.
     @GetMapping
     public ResponseEntity<List<CalendarResponse>> getAllCalendars() {
         return ResponseEntity.ok(calendarService.getAllCalendars());
     }
 
     @PostMapping
+    @PreAuthorize("@verified.isVerified(authentication)")  // Only verified users can create calendars
     public ResponseEntity<ApiResponse<String>> createCalendar(@RequestBody @Valid CalendarRequest request, Authentication authentication) {
         calendarService.createCalendar(request, authentication);
         return ResponseEntity.status(201).body(ApiResponse.ok("Calendar created successfully", null));

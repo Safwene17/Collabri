@@ -13,6 +13,8 @@ import java.util.UUID;
 public interface MemberRepository extends JpaRepository<Member, UUID> {
     boolean existsByUserIdAndCalendarId(UUID userId, UUID calendarId);
 
+    boolean existsByCalendarIdAndUserIdAndRoleGreaterThanEqual(UUID calendarId, UUID userId, Role role);
+
     Optional<Member> findByUserIdAndCalendarId(UUID callerUserId, UUID calendarId);
 
     boolean existsByCalendarIdAndEmailIgnoreCase(UUID calendarId, String email);
@@ -24,4 +26,9 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
     boolean existsByIdAndCalendarId(UUID memberId, UUID calendarId);
 
     Optional<Member> findByUserId(UUID userId);
+
+    long countByUserId(UUID userId);
+
+    long countByUserIdAndRole(UUID userId, Role role);
 }
+

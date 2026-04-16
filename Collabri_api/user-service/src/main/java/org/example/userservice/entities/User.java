@@ -7,12 +7,16 @@ import org.example.userservice.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -41,6 +45,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private boolean verified = false;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 
     // Bidirectional OneToMany for tokens - cascade deletions
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -2,6 +2,7 @@ package org.example.notificationservice.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -30,6 +31,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtChannelInterceptor jwtChannelInterceptor;
 
+    @Value("${websocket.allowed-origins:http://localhost:5173}")
+    private String allowedOrigins;
+
     /**
      * Register STOMP endpoints for WebSocket connections.
      * Clients connect to ws://host:port/ws
@@ -37,7 +41,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns(allowedOrigins.split(","));
 
         log.info("WebSocket STOMP endpoint registered at /ws (native WebSocket)");
     }
@@ -72,3 +76,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         log.info("JWT channel interceptor registered for WebSocket authentication");
     }
 }
+
