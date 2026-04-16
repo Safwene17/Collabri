@@ -2,7 +2,6 @@ package org.example.notificationservice.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.notificationservice.dtos.NotificationRequest;
 import org.example.notificationservice.dtos.NotificationResponse;
 import org.example.notificationservice.entities.Notification;
 import org.example.notificationservice.enums.NotificationStatus;
@@ -13,7 +12,6 @@ import org.example.notificationservice.mappers.NotificationMapper;
 import org.example.notificationservice.repositories.NotificationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -121,10 +119,7 @@ public class NotificationService {
             throw new NotificationValidationException("User ID cannot be empty");
         }
 
-        long count = notificationRepository.findByUserIdAndStatusOrderByCreatedAtDesc(
-                userId,
-                NotificationStatus.DELIVERED
-        ).size();
+        long count = notificationRepository.countByUserIdAndStatus(userId, NotificationStatus.DELIVERED);
 
         log.debug("Unread count for {}: {}", userId, count);
         return count;
@@ -212,130 +207,8 @@ public class NotificationService {
             throw new NotificationValidationException("User ID cannot be empty");
         }
 
-        List<Notification> notifications = notificationRepository.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE))
-                .getContent();
-
-        notificationRepository.deleteAll(notifications);
-        log.info("Deleted {} notifications for user: {}", notifications.size(), userId);
-    }
-
-    // ============ Legacy Methods (For Internal Use / Kafka Consumer - DEPRECATED) ============
-
-    /**
-     * @deprecated Use user-scoped methods instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public Page<NotificationResponse> getAllNotifications(Pageable pageable) {
-        log.debug("Fetching all notifications (DEPRECATED)");
-        return notificationRepository.findAll(pageable)
-                .map(notificationMapper::toResponse);
-    }
-
-    /**
-     * @deprecated Use getMyNotification instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public NotificationResponse getNotificationById(String id) {
-        log.debug("Fetching notification with id: {} (DEPRECATED)", id);
-        return notificationRepository.findById(id)
-                .map(notificationMapper::toResponse)
-                .orElseThrow(() -> new NotificationNotFoundException("Notification not found with id: " + id));
-    }
-
-    /**
-     * @deprecated Use getMyNotifications instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public Page<NotificationResponse> getNotificationsByRecipient(UUID userId, Pageable pageable) {
-        return getMyNotifications(userId, pageable);
-    }
-
-    /**
-     * @deprecated Use getMyUnreadNotifications instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public Page<NotificationResponse> getUnreadNotifications(UUID userId, Pageable pageable) {
-        return getMyUnreadNotifications(userId, pageable);
-    }
-
-    /**
-     * @deprecated Use getMyNotificationsByStatus instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public Page<NotificationResponse> getNotificationsByRecipientAndStatus(
-            UUID userId,
-            NotificationStatus status,
-            Pageable pageable) {
-        return getMyNotificationsByStatus(userId, status, pageable);
-    }
-
-    /**
-     * @deprecated Use updateMyNotification instead
-     */
-    @Deprecated
-    @Transactional
-    public NotificationResponse updateNotification(String id, NotificationRequest request) {
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new NotificationNotFoundException("Notification not found with id: " + id));
-        notificationMapper.updateFromRequest(request, notification);
-        return notificationMapper.toResponse(notificationRepository.save(notification));
-    }
-
-    /**
-     * @deprecated Use markMyNotificationAsRead instead
-     */
-    @Deprecated
-    @Transactional
-    public NotificationResponse markAsRead(String id) {
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new NotificationNotFoundException("Notification not found with id: " + id));
-        notification.setStatus(NotificationStatus.READ);
-        notification.setReadAt(LocalDateTime.now());
-        return notificationMapper.toResponse(notificationRepository.save(notification));
-    }
-
-    /**
-     * @deprecated Use markAllMyNotificationsAsRead instead
-     */
-    @Deprecated
-    @Transactional
-    public void markAllAsReadForRecipient(UUID userId) {
-        markAllMyNotificationsAsRead(userId);
-    }
-
-    /**
-     * @deprecated Use deleteMyNotification instead
-     */
-    @Deprecated
-    @Transactional
-    public void deleteNotification(String id) {
-        if (!notificationRepository.existsById(id)) {
-            throw new NotificationNotFoundException("Notification not found with id: " + id);
-        }
-        notificationRepository.deleteById(id);
-    }
-
-    /**
-     * @deprecated Use deleteAllMyNotifications instead
-     */
-    @Deprecated
-    @Transactional
-    public void deleteAllNotificationsForRecipient(UUID userId) {
-        deleteAllMyNotifications(userId);
-    }
-
-    /**
-     * @deprecated Use getMyUnreadCount instead
-     */
-    @Deprecated
-    @Transactional(readOnly = true)
-    public long getUnreadCountForRecipient(UUID userId) {
-        return getMyUnreadCount(userId);
+        notificationRepository.deleteAllByUserId(userId);
+        log.info("Deleted all notifications for user: {}", userId);
     }
 }
 

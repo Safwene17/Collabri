@@ -19,4 +19,9 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
     List<Notification> findByUserIdAndStatusOrderByCreatedAtDesc(UUID userId, NotificationStatus status);
 
+    long countByUserIdAndStatus(UUID userId, NotificationStatus status);
+
+    void deleteAllByUserId(UUID userId);
+
 }
+

@@ -2,9 +2,9 @@
 package org.example.calendarservice.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.calendarservice.entites.Calendar;
 import org.example.calendarservice.enums.Role;
 import org.example.calendarservice.repositories.CalendarRepository;
+import org.example.calendarservice.repositories.MemberRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -16,10 +16,12 @@ import java.util.UUID;
 public class CalendarOwnershipChecker {
 
     private final CalendarRepository calendarRepository;
+    private final MemberRepository memberRepository;
 
     public boolean isOwner(UUID calendarId, Authentication auth) {
         // ADDED: Bypass for admins (full access)
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"))) {
             return true;
         }
 
@@ -44,12 +46,10 @@ public class CalendarOwnershipChecker {
         try {
             UUID userId = UUID.fromString(userIdStr);
             Role reqRole = Role.valueOf(requiredRole);
-            return calendarRepository.findById(calendarId)
-                    .map(cal -> cal.getOwnerId().equals(userId) ||
-                            cal.getMembers().stream()
-                                    .anyMatch(m -> m.getUserId().equals(userId) &&
-                                            m.getRole().ordinal() >= reqRole.ordinal()))
-                    .orElse(false);
+            if (calendarRepository.existsByIdAndOwnerId(calendarId, userId)) {
+                return true;
+            }
+            return memberRepository.existsByCalendarIdAndUserIdAndRoleGreaterThanEqual(calendarId, userId, reqRole);
         } catch (Exception e) {
             return false;
         }

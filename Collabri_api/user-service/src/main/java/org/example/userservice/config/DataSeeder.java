@@ -2,10 +2,8 @@ package org.example.userservice.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.userservice.entities.Admin;
 import org.example.userservice.entities.User;
 import org.example.userservice.enums.Role;
-import org.example.userservice.repositories.AdminRepository;
 import org.example.userservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -39,7 +37,6 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             userRepository.save(initialAdmin);
-            log.info("Initial admin created: Email=admin@example.com. Please change password immediately.");
         }
     }
 }

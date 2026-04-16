@@ -1,6 +1,7 @@
 package org.example.calendarservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.example.calendarservice.enums.Visibility;
 
@@ -12,7 +13,7 @@ public record CalendarRequest(
 
         String description,
 
-        @NotBlank(message ="Category cannot empty")
+        @NotNull(message ="Category cannot empty")
         UUID categoryId,
 
         @NotNull(message = "Visibility cannot be empty")

@@ -18,6 +18,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,28 +78,29 @@ public class NotificationConsumer {
     public void consumeEventCreatedNotification(EventCreatedEvent event) {
         log.info("Consumed event created message: {}", event);
 
-        // Fan-out: Create and save one notification per userId, then push via WebSocket
+        List<Notification> notifications = new ArrayList<>();
         for (UUID recipientId : event.recipientsId()) {
-            Notification notification = repository.save(
-                    Notification.builder()
-                            .userId(recipientId)
-                            .title("Event created: " + event.title())
-                            .message(event.title() + " in " + event.calendarName() + " — " + event.location())
-                            .payload(Map.of(
-                                    "eventId", event.eventId().toString(),
-                                    "title", event.title(),
-                                    "calendarName", event.calendarName(),
-                                    "location", event.location()
-                            ))
-                            .type(NotificationType.EVENT_CREATED)
-                            .status(NotificationStatus.DELIVERED)
-                            .createdAt(LocalDateTime.now())
-                            .build()
-            );
+            notifications.add(Notification.builder()
+                    .userId(recipientId)
+                    .title("Event created: " + event.title())
+                    .message(event.title() + " in " + event.calendarName() + " — " + event.location())
+                    .payload(Map.of(
+                            "eventId", event.eventId().toString(),
+                            "title", event.title(),
+                            "calendarName", event.calendarName(),
+                            "location", event.location()
+                    ))
+                    .type(NotificationType.EVENT_CREATED)
+                    .status(NotificationStatus.DELIVERED)
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
 
-            // Push notification via WebSocket to the recipient
+        List<Notification> saved = repository.saveAll(notifications);
+        for (Notification notification : saved) {
             pushNotificationToUser(notification);
         }
+
         log.info("Event created notifications saved and pushed for eventId={}", event.eventId());
     }
 
@@ -132,27 +135,25 @@ public class NotificationConsumer {
     public void consumeMemberJoinedNotification(MemberJoinedEvent event) {
         log.info("Consumed member joined message: {}", event);
 
-        // Save notification to the database for each recipient and push via WebSocket
+        List<Notification> notifications = new ArrayList<>();
         for (UUID recipientId : event.recipientsId()) {
-            Notification notification = repository.save(
-                    Notification.builder()
-                            .title(event.username() + " has joined " + event.calendarName())
-                            .message("Check out the calendar now!")
-                            .userId(recipientId)
-                            .type(NotificationType.MEMBER_JOINED)
-                            .payload(
-                                    Map.of(
-                                            "calendarId", event.calendarId().toString(),
-                                            "calendarName", event.calendarName(),
-                                            "username", event.username()
-                                    )
-                            )
-                            .status(NotificationStatus.DELIVERED)
-                            .createdAt(LocalDateTime.now())
-                            .build()
-            );
+            notifications.add(Notification.builder()
+                    .title(event.username() + " has joined " + event.calendarName())
+                    .message("Check out the calendar now!")
+                    .userId(recipientId)
+                    .type(NotificationType.MEMBER_JOINED)
+                    .payload(Map.of(
+                            "calendarId", event.calendarId().toString(),
+                            "calendarName", event.calendarName(),
+                            "username", event.username()
+                    ))
+                    .status(NotificationStatus.DELIVERED)
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
 
-            // Push notification via WebSocket to the recipient
+        List<Notification> saved = repository.saveAll(notifications);
+        for (Notification notification : saved) {
             pushNotificationToUser(notification);
         }
     }
@@ -161,27 +162,25 @@ public class NotificationConsumer {
     public void consumeMemberLeftNotification(MemberLeftEvent event) {
         log.info("Consumed member left message: {}", event);
 
-        // Save notification to the database for each recipient and push via WebSocket
+        List<Notification> notifications = new ArrayList<>();
         for (UUID recipientId : event.recipientsId()) {
-            Notification notification = repository.save(
-                    Notification.builder()
-                            .title(event.username() + " has left " + event.calendarName())
-                            .message("Check out the calendar now!")
-                            .userId(recipientId)
-                            .type(NotificationType.MEMBER_LEFT)
-                            .payload(
-                                    Map.of(
-                                            "calendarId", event.calendarId().toString(),
-                                            "calendarName", event.calendarName(),
-                                            "username", event.username()
-                                    )
-                            )
-                            .status(NotificationStatus.DELIVERED)
-                            .createdAt(LocalDateTime.now())
-                            .build()
-            );
+            notifications.add(Notification.builder()
+                    .title(event.username() + " has left " + event.calendarName())
+                    .message("Check out the calendar now!")
+                    .userId(recipientId)
+                    .type(NotificationType.MEMBER_LEFT)
+                    .payload(Map.of(
+                            "calendarId", event.calendarId().toString(),
+                            "calendarName", event.calendarName(),
+                            "username", event.username()
+                    ))
+                    .status(NotificationStatus.DELIVERED)
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
 
-            // Push notification via WebSocket to the recipient
+        List<Notification> saved = repository.saveAll(notifications);
+        for (Notification notification : saved) {
             pushNotificationToUser(notification);
         }
     }

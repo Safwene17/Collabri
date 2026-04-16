@@ -12,7 +12,6 @@ import org.example.userservice.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UUID id, RegisterRequest request) {
+    public void update(UUID id, UserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException("User not found", HttpStatus.NOT_FOUND));
 
