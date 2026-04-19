@@ -5,35 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/CalendarOwnershipChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/config/CalendarOwnershipChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/CalendarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/CalendarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/controllers/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/dto/CalendarRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/entites/Calendar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarInviteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarInviteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/CalendarRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/EventRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/EventRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/calendar-service/src/main/java/org/example/calendarservice/repositories/TaskRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config-server/src/main/resources/configurations/gateway.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/config/WebSocketConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/kafka/NotificationConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/kafka/NotificationConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/repositories/NotificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/repositories/NotificationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/services/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/services/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/websocket/WebSocketEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/org/example/notificationservice/websocket/WebSocketEventListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/UserServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/UserServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/RefreshToken.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/jwt/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/exceptions/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/exceptions/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/mappers/UserMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/RefreshTokenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/repositories/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/UserServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/UserServiceApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/integration/AbstractIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/integration/AbstractIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/resources/application-test.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +66,20 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.AbstractIntegrationTest.contextLoads.executor": "Run",
+    "JUnit.AbstractIntegrationTest.executor": "Run",
+    "JUnit.ApplicationContextTest.executor": "Run",
+    "JUnit.UserRepositoryTest.contextLoads.executor": "Run",
+    "JUnit.UserRepositoryTest.countByCreatedAtAfter_shouldWork.executor": "Run",
+    "JUnit.UserRepositoryTest.countByRole_shouldWork.executor": "Run",
+    "JUnit.UserRepositoryTest.executor": "Run",
+    "JUnit.UserRepositoryTest.test.executor": "Run",
+    "JUnit.UserServiceApplicationTests.executor": "Run",
+    "JUnit.UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken.executor": "Run",
+    "JUnit.UserServiceTest.executor": "Run",
+    "JUnit.UserTest$BuilderAndDefaults.executor": "Run",
+    "JUnit.UserTest$RoleManagement.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
@@ -125,7 +122,84 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserServiceApplication">
+  <component name="RunManager" selected="JUnit.UserServiceTest">
+    <configuration name="UserRepositoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice.repository" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.repository.UserRepositoryTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserRepositoryTest.countByCreatedAtAfter_shouldWork" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.repository.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice.repository" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.repository.UserRepositoryTest" />
+      <option name="METHOD_NAME" value="countByCreatedAtAfter_shouldWork" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.UserServiceApplicationTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice.service.UserServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.service.UserServiceTest$Update" />
+      <option name="METHOD_NAME" value="shouldThrowWhenEmailAlreadyTaken" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice.service" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.service.UserServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -147,6 +221,11 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="JUnit.UserRepositoryTest.countByCreatedAtAfter_shouldWork" />
+      <item itemvalue="JUnit.UserServiceApplicationTests" />
+      <item itemvalue="JUnit.UserServiceTest" />
+      <item itemvalue="JUnit.UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken" />
+      <item itemvalue="JUnit.UserRepositoryTest" />
       <item itemvalue="Spring Boot.ConfigServerApplication" />
       <item itemvalue="Spring Boot.DiscoveryApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
@@ -154,6 +233,15 @@
       <item itemvalue="Spring Boot.NotificationServiceApplication" />
       <item itemvalue="Spring Boot.GatewayApplication" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserServiceTest" />
+        <item itemvalue="JUnit.UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken" />
+        <item itemvalue="JUnit.UserRepositoryTest" />
+        <item itemvalue="JUnit.UserRepositoryTest.countByCreatedAtAfter_shouldWork" />
+        <item itemvalue="JUnit.UserServiceApplicationTests" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -182,7 +270,13 @@
       <workItem from="1776241887258" duration="2477000" />
       <workItem from="1776244398673" duration="25000" />
       <workItem from="1776244440943" duration="17157000" />
-      <workItem from="1776330828970" duration="14606000" />
+      <workItem from="1776330828970" duration="14948000" />
+      <workItem from="1776599252467" duration="8702000" />
+      <workItem from="1776616383332" duration="2576000" />
+      <workItem from="1776619130272" duration="618000" />
+      <workItem from="1776619806219" duration="90000" />
+      <workItem from="1776619927263" duration="553000" />
+      <workItem from="1776620669676" duration="8523000" />
     </task>
     <servers />
   </component>

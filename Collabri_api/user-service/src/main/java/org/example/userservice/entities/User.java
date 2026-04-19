@@ -36,6 +36,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Role role = Role.USER;
 
     @Column(unique = true, nullable = false)
@@ -44,6 +45,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean verified = false;
 
     @CreatedDate

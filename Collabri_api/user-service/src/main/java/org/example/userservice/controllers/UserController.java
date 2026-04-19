@@ -25,6 +25,13 @@ public class UserController {
 
     private final UserService userService;
 
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> createUser(@Valid @RequestBody UserRequest userRequest) {
+        userService.createUser(userRequest);
+        return ResponseEntity.ok(ApiResponse.ok("User created successfully", null));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable("id") UUID id) {
         UserResponse user = userService.findById(id);
