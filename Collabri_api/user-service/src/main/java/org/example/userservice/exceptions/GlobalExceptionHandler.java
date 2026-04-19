@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.example.userservice.dto.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -39,6 +40,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             log.warn("CustomException -> {}", ex.getMessage());
         }
         return ResponseEntity.status(status).body(ApiResponse.error(ex.getMessage()));
+    }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        String message = ex.getMessage();
+        HttpStatus status = HttpStatus.CONFLICT; // default for constraints
+        
+        // Email validation errors → 422 UNPROCESSABLE_ENTITY
+        if (message != null && message.contains("Email")) {
+            status = HttpStatus.UNPROCESSABLE_ENTITY;
+        }
+        
+        log.warn("Data integrity violation: {}", message);
+        return ResponseEntity.status(status).body(ApiResponse.error(message));
     }
 
     // Handle validation errors from @Valid (request body) - Override without @ExceptionHandler
