@@ -68,23 +68,9 @@ class UserServiceTest {
         return new UserResponse(id, "John", "Doe", "john@example.com");
     }
 
-    /**
-     * Full update request — all fields populated and valid.
-     */
     private UserRequest fullRequest(String firstname, String lastname, String email, String password) {
         return new UserRequest(firstname, lastname, email, password);
     }
-
-    // -----------------------------------------------------------------------
-    // createUser()
-    //
-    // Rules:
-    //   1. Throws DataIntegrityViolationException when email already exists
-    //   2. Maps request to User entity via userMapper
-    //   3. Encodes the raw password before persisting — never stores plaintext
-    //   4. Saves the new user
-    //   5. Does NOT save when email is duplicate — repository never called
-    // -----------------------------------------------------------------------
 
     @Nested
     @DisplayName("createUser()")
@@ -158,16 +144,6 @@ class UserServiceTest {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // delete()
-    //
-    // Rules:
-    //   1. Finds user by id — throws NOT_FOUND if missing
-    //   2. Revokes all refresh tokens before deletion
-    //   3. Deletes the user
-    //   4. Token revocation happens BEFORE deletion (order matters for FK integrity)
-    // -----------------------------------------------------------------------
-
     @Nested
     @DisplayName("delete()")
     class Delete {
@@ -203,13 +179,7 @@ class UserServiceTest {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // findById()
-    //
-    // Rules:
-    //   1. Returns mapped UserResponse when user exists
-    //   2. Throws NOT_FOUND when user missing
-    // -----------------------------------------------------------------------
+
 
     @Nested
     @DisplayName("findById()")
@@ -245,14 +215,6 @@ class UserServiceTest {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // findAllPaginated()
-    //
-    // Rules:
-    //   1. Delegates to repository with the given Pageable
-    //   2. Maps every User in the page to UserResponse via userMapper
-    //   3. Returns an empty page correctly (no NPE, no mapper calls)
-    // -----------------------------------------------------------------------
 
     @Nested
     @DisplayName("findAllPaginated()")
@@ -289,13 +251,6 @@ class UserServiceTest {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // findByEmail()
-    //
-    // Rules:
-    //   1. Returns mapped UserResponse when user exists
-    //   2. Throws NOT_FOUND when user missing
-    // -----------------------------------------------------------------------
 
     @Nested
     @DisplayName("findByEmail()")
@@ -327,22 +282,6 @@ class UserServiceTest {
         }
     }
 
-    // -----------------------------------------------------------------------
-    // update()
-    //
-    // This is the most logic-dense method — every branch must be covered.
-    //
-    // Rules:
-    //   1. Throws NOT_FOUND when user missing
-    //   2. Updates firstname only when non-null and non-blank
-    //   3. Updates lastname only when non-null and non-blank
-    //   4. Updates email only when different from current AND not already taken
-    //   5. Throws UNPROCESSABLE_ENTITY when new email is already taken by another user
-    //   6. Does NOT update email when new value equals current value
-    //   7. Encodes password when provided
-    //   8. Does NOT touch password when field is null or blank
-    //   9. Saves the user after all mutations
-    // -----------------------------------------------------------------------
 
     @Nested
     @DisplayName("update()")

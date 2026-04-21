@@ -2,8 +2,8 @@ package org.example.userservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.userservice.dto.ApiResponse;
-import org.example.userservice.dto.dashboard.AdminDashboardResponse;
-import org.example.userservice.dto.dashboard.SuperAdminDashboardResponse;
+import org.example.userservice.dto.AdminDashboardResponse;
+import org.example.userservice.dto.SuperAdminDashboardResponse;
 import org.example.userservice.services.UserDashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,8 +1,8 @@
 package org.example.userservice.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.userservice.dto.dashboard.AdminDashboardResponse;
-import org.example.userservice.dto.dashboard.SuperAdminDashboardResponse;
+import org.example.userservice.dto.AdminDashboardResponse;
+import org.example.userservice.dto.SuperAdminDashboardResponse;
 import org.example.userservice.enums.Role;
 import org.example.userservice.repositories.RefreshTokenRepository;
 import org.example.userservice.repositories.UserRepository;
