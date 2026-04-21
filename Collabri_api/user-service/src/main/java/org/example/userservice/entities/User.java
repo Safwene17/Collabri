@@ -1,7 +1,6 @@
 package org.example.userservice.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.example.userservice.enums.Role;
 import org.springframework.security.core.GrantedAuthority;

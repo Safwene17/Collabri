@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("UserRepository Tests (Real PostgreSQL)")
+@DisplayName("UserRepository Tests")
 class UserRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired

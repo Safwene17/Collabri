@@ -1,4 +1,3 @@
-// src/main/java/org/example/calendarservice/config/VerifiedUserChecker.java
 package org.example.userservice.config;
 
 import org.example.userservice.exceptions.CustomException;

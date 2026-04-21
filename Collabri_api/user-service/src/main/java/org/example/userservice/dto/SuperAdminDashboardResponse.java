@@ -1,4 +1,4 @@
-package org.example.userservice.dto.dashboard;
+package org.example.userservice.dto;
 
 import java.util.Map;
 
