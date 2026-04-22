@@ -1,6 +1,6 @@
 package org.example.userservice.controller;
 
-import org.example.userservice.config.TestSecurityConfig;
+import org.example.userservice.config.SecurityConfigTest;
 import org.example.userservice.controllers.UserController;
 import org.example.userservice.dto.UserRequest;
 import org.example.userservice.dto.UserResponse;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@Import(TestSecurityConfig.class)
+@Import(SecurityConfigTest.class)
 @DisplayName("UserController Web Layer Tests")
 //@AutoConfigureMockMvc(addFilters = false) //skip all sort of security filters
 class UserControllerTest {
