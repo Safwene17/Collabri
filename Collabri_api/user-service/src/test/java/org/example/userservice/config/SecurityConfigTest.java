@@ -12,15 +12,20 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @TestConfiguration
 @EnableMethodSecurity
-public class TestSecurityConfig {
+public class SecurityConfigTest {
 
     @Bean
     public SecurityFilterChain testFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sm -> sm
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Mirror prod SecurityConfig
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/admins/login"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/by-email").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/*").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAnyRole("ADMIN", "SUPER_ADMIN")

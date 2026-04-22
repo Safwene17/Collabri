@@ -5,22 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c607bddd-cf13-4bd3-8ea6-3224062b3452" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/controller/UserDashboardControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/user-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/VerifiedUserChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/config/VerifiedUserChecker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/controllers/UserDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/dashboard/AdminDashboardResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/AdminDashboardResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/dashboard/SuperAdminDashboardResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/dto/SuperAdminDashboardResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/oauth2/CustomOAuth2UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/oauth2/OAuth2AuthenticationSuccessHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserDashboardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/org/example/userservice/services/UserDashboardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/UserServiceApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/repository/UserRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/repository/UserRepositoryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/service/UserServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/service/UserServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/config/TestSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/config/SecurityConfigTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/controller/UserControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/controller/UserControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/integration/AbstractIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/test/java/org/example/userservice/integration/AbstractIntegrationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +24,7 @@
     </persistenceIdMap>
   </component>
   <component name="CopilotUserSelectedChatMode">
-    <option name="chatModeId" value="Ask" />
+    <option name="chatModeId" value="Agent" />
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
@@ -79,77 +70,82 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JUnit.AbstractIntegrationTest.contextLoads.executor": "Run",
-    "JUnit.AbstractIntegrationTest.executor": "Run",
-    "JUnit.ApplicationContextTest.executor": "Run",
-    "JUnit.UserControllerTest (1).executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldCreateUserAsAdmin.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldCreateUserAsSuperAdmin.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldReturnBadRequestWhenPasswordTooWeak.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldReturnForbiddenForUserRole.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldReturnForbiddenWhenNotAdmin.executor": "Run",
-    "JUnit.UserControllerTest$CreateUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor": "Run",
-    "JUnit.UserControllerTest$DeleteUser.shouldDeleteUserAsAdmin.executor": "Run",
-    "JUnit.UserControllerTest$DeleteUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor": "Run",
-    "JUnit.UserControllerTest$GetAllUsers.shouldReturnForbiddenForUserRole.executor": "Run",
-    "JUnit.UserControllerTest$GetAllUsers.shouldReturnUnauthorizedWhenNotAuthenticated.executor": "Run",
-    "JUnit.UserControllerTest$GetUserByEmail.executor": "Run",
-    "JUnit.UserControllerTest$GetUserByEmail.shouldReturn400WhenEmailParamMissing.executor": "Run",
-    "JUnit.UserControllerTest$GetUserById.executor": "Run",
-    "JUnit.UserControllerTest$GetUserById.shouldReturnUserById.executor": "Run",
-    "JUnit.UserControllerTest$UpdateUser.shouldReturnBadRequestForInvalidBody.executor": "Run",
-    "JUnit.UserControllerTest$UpdateUser.shouldReturnForbiddenWhenUpdatingOtherUser.executor": "Run",
-    "JUnit.UserControllerTest$UpdateUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor": "Run",
-    "JUnit.UserControllerTest.executor": "Run",
-    "JUnit.UserRepositoryTest.contextLoads.executor": "Run",
-    "JUnit.UserRepositoryTest.countByCreatedAtAfter_shouldWork.executor": "Run",
-    "JUnit.UserRepositoryTest.countByRole_shouldWork.executor": "Run",
-    "JUnit.UserRepositoryTest.executor": "Coverage",
-    "JUnit.UserRepositoryTest.test.executor": "Run",
-    "JUnit.UserServiceApplicationTests.executor": "Run",
-    "JUnit.UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken.executor": "Run",
-    "JUnit.UserServiceTest.executor": "Coverage",
-    "JUnit.UserTest$BuilderAndDefaults.executor": "Run",
-    "JUnit.UserTest$RoleManagement.executor": "Run",
-    "JUnit.UserTest$UserDetailsContract.shouldUseEmailAsUsername.executor": "Run",
-    "JUnit.UserTest.executor": "Coverage",
-    "Maven.calendar-service [clean,install].executor": "Run",
-    "Maven.user-service [clean,install].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.CalendarServiceApplication.executor": "Run",
-    "Spring Boot.ConfigServerApplication.executor": "Run",
-    "Spring Boot.DiscoveryApplication.executor": "Run",
-    "Spring Boot.GatewayApplication.executor": "Run",
-    "Spring Boot.NotificationServiceApplication.executor": "Run",
-    "Spring Boot.UserServiceApplication.executor": "Run",
-    "git-widget-placeholder": "safwene",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/user-service/.env",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.configurations.included.in.services": "true",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.customization.CustomizationConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.AbstractIntegrationTest.contextLoads.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AbstractIntegrationTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AdminControllerTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.ApplicationContextTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AuthControllerTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.EmailVerificationServiceTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserControllerTest (1).executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldCreateUserAsAdmin.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldCreateUserAsSuperAdmin.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldReturnBadRequestWhenPasswordTooWeak.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldReturnForbiddenForUserRole.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldReturnForbiddenWhenNotAdmin.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$CreateUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$DeleteUser.shouldDeleteUserAsAdmin.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$DeleteUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetAllUsers.shouldReturnForbiddenForUserRole.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetAllUsers.shouldReturnUnauthorizedWhenNotAuthenticated.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetUserByEmail.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetUserByEmail.shouldReturn400WhenEmailParamMissing.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetUserById.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$GetUserById.shouldReturnUserById.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$UpdateUser.shouldReturnBadRequestForInvalidBody.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$UpdateUser.shouldReturnForbiddenWhenUpdatingOtherUser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest$UpdateUser.shouldReturnUnauthorizedWhenNotAuthenticated.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserControllerTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserDashboardControllerTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserDashboardControllerTests.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserRepositoryTest.contextLoads.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserRepositoryTest.countByCreatedAtAfter_shouldWork.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserRepositoryTest.countByRole_shouldWork.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserRepositoryTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserRepositoryTest.test.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceApplicationTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest$Update.shouldThrowWhenEmailAlreadyTaken.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserServiceTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.UserTest$BuilderAndDefaults.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserTest$RoleManagement.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserTest$UserDetailsContract.shouldUseEmailAsUsername.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.UserTest.executor&quot;: &quot;Coverage&quot;,
+    &quot;Maven.calendar-service [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.user-service [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.CalendarServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ConfigServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.DiscoveryApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.GatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.NotificationServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.UserServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;safwene&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/redfr/OneDrive/Documents/Career/Collabri/Collabri_api/user-service/.env&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.customization.CustomizationConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -168,65 +164,58 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.UserControllerTest$CreateUser.shouldCreateUserAsAdmin">
-    <configuration name="UserControllerTest$CreateUser.shouldCreateUserAsAdmin" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AdminControllerTest">
+    <configuration name="AdminControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="user-service" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.userservice.controller.*" />
+          <option name="PATTERN" value="org.example.userservice.controller.AdminControllerTest" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.userservice.controller.UserControllerTest" />
-      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.UserControllerTest$CreateUser" />
-      <option name="METHOD_NAME" value="shouldCreateUserAsAdmin" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="org.example.userservice.controller" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.AdminControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest$CreateUser.shouldReturnUnauthorizedWhenNotAuthenticated" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AuthControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="user-service" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.userservice.controller.*" />
+          <option name="PATTERN" value="org.example.userservice.controller.AdminControllerTest" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.userservice.controller.UserControllerTest" />
-      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.UserControllerTest$CreateUser" />
-      <option name="METHOD_NAME" value="shouldReturnUnauthorizedWhenNotAuthenticated" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="org.example.userservice.controller" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.AuthControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserControllerTest$DeleteUser.shouldReturnUnauthorizedWhenNotAuthenticated" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="EmailVerificationServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="user-service" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.userservice.controller.*" />
+          <option name="PATTERN" value="org.example.userservice.services.EmailVerificationService" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.userservice.controller.UserControllerTest" />
-      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.UserControllerTest$DeleteUser" />
-      <option name="METHOD_NAME" value="shouldReturnUnauthorizedWhenNotAuthenticated" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UserControllerTest$GetUserByEmail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="user-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.example.userservice.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.userservice.controller.UserControllerTest" />
-      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.UserControllerTest$GetUserByEmail" />
+      <option name="PACKAGE_NAME" value="org.example.userservice.service" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.service.EmailVerificationServiceTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -258,6 +247,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UserDashboardControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="user-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.userservice.controller.AdminControllerTest" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.userservice.controller" />
+      <option name="MAIN_CLASS_NAME" value="org.example.userservice.controller.UserDashboardControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -279,11 +283,11 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.UserControllerTest$CreateUser.shouldCreateUserAsAdmin" />
-      <item itemvalue="JUnit.UserControllerTest$CreateUser.shouldReturnUnauthorizedWhenNotAuthenticated" />
-      <item itemvalue="JUnit.UserControllerTest$DeleteUser.shouldReturnUnauthorizedWhenNotAuthenticated" />
+      <item itemvalue="JUnit.AdminControllerTest" />
+      <item itemvalue="JUnit.AuthControllerTest" />
       <item itemvalue="JUnit.UserControllerTest" />
-      <item itemvalue="JUnit.UserControllerTest$GetUserByEmail" />
+      <item itemvalue="JUnit.UserDashboardControllerTest" />
+      <item itemvalue="JUnit.EmailVerificationServiceTest" />
       <item itemvalue="Spring Boot.ConfigServerApplication" />
       <item itemvalue="Spring Boot.DiscoveryApplication" />
       <item itemvalue="Spring Boot.UserServiceApplication" />
@@ -293,11 +297,7 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.UserControllerTest$CreateUser.shouldCreateUserAsAdmin" />
-        <item itemvalue="JUnit.UserControllerTest" />
-        <item itemvalue="JUnit.UserControllerTest$CreateUser.shouldReturnUnauthorizedWhenNotAuthenticated" />
-        <item itemvalue="JUnit.UserControllerTest$DeleteUser.shouldReturnUnauthorizedWhenNotAuthenticated" />
-        <item itemvalue="JUnit.UserControllerTest$GetUserByEmail" />
+        <item itemvalue="JUnit.EmailVerificationServiceTest" />
       </list>
     </recent_temporary>
   </component>
@@ -338,7 +338,11 @@
       <workItem from="1776682658393" duration="2297000" />
       <workItem from="1776685277913" duration="3419000" />
       <workItem from="1776688752251" duration="11811000" />
-      <workItem from="1776778529520" duration="6683000" />
+      <workItem from="1776778529520" duration="15024000" />
+      <workItem from="1776873563050" duration="223000" />
+      <workItem from="1776873808397" duration="1198000" />
+      <workItem from="1776875555409" duration="821000" />
+      <workItem from="1776876515152" duration="5835000" />
     </task>
     <servers />
   </component>
@@ -350,16 +354,31 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Collabri_api$UserDashboardControllerTest.ic" NAME="UserDashboardControllerTest Coverage Results" MODIFIED="1776872051104" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>org.example.userservice.controller.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Collabri_api$UserDashboardControllerTests.ic" NAME="UserDashboardControllerTests Coverage Results" MODIFIED="1776872292408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>org.example.userservice.controller.*</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/Collabri_api$UserTest.ic" NAME="UserTest Coverage Results" MODIFIED="1776687423137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.example.userservice.entities.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Collabri_api$AdminControllerTest.ic" NAME="AdminControllerTest Coverage Results" MODIFIED="1776872036182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>org.example.userservice.controller.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/Collabri_api$UserServiceTest.ic" NAME="UserServiceTest Coverage Results" MODIFIED="1776688953136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.example.userservice.services.*</FILTER>
     </SUITE>
+    <SUITE FILE_PATH="coverage/Collabri_api$EmailVerificationServiceTest.ic" NAME="EmailVerificationServiceTest Coverage Results" MODIFIED="1776871814275" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>org.example.userservice.services.EmailVerificationService</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/Collabri_api$UserRepositoryTest.ic" NAME="UserRepositoryTest Coverage Results" MODIFIED="1776697390307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.example.userservice.repositories.UserRepository</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/Collabri_api$UserControllerTest.ic" NAME="UserControllerTest Coverage Results" MODIFIED="1776787046454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+    <SUITE FILE_PATH="coverage/Collabri_api$AuthControllerTest.ic" NAME="AuthControllerTest Coverage Results" MODIFIED="1776872039394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>org.example.userservice.controller.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Collabri_api$UserControllerTest.ic" NAME="UserControllerTest Coverage Results" MODIFIED="1776872046085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>org.example.userservice.controllers.UserController</FILTER>
     </SUITE>
   </component>
